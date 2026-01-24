@@ -18,7 +18,7 @@ This repository contains the source code, documentation, and resources for the T
 ## Team Members
 
 1. Tobi Emmanuel
-2. Gregory
+2. Gregory Oganesyan
 3. Neevia Vinod
 4. Leslie Thapa Magar
 
