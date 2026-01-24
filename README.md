@@ -4,10 +4,10 @@ Repository for **Team 12 Capstone Project**.
 
 ---
 
-## 📌 Project Overview
+## Project Overview
 This repository contains the source code, documentation, and resources for the Team 12 capstone project.  
 
-## 🛠️ Tech Stack
+## Tech Stack
 - Language(s): TBD  
 - Frameworks/Libraries: TBD  
 - Database: TBD  
@@ -24,6 +24,6 @@ This repository contains the source code, documentation, and resources for the T
 
 ---
 
-📄 License
+## License
 
 This project is developed for academic purposes as part of a capstone requirement.
