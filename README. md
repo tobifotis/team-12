@@ -1,0 +1,60 @@
+# Capstone Project – Sprint 0
+
+## Project Overview
+**Project Name:** Group Formation App  
+**Product Name:** Groupify  
+**Group Name:** The Survivors  
+
+Groupify is a web-based application that enables users to form groups within a shared workspace, communicate effectively, and manage tasks efficiently. The platform is designed to support collaborative environments such as academic courses, hackathons, workplaces, and personal projects.
+
+This repository contains the source code, documentation, and resources for **Team 12’s Capstone Project**. Sprint 0 focuses on understanding the project domain, defining requirements, and setting up foundational tools.
+
+---
+
+## Project Description
+Groupify allows users to create or join workspaces, build profiles highlighting their skills and availability, and form groups based on project needs. The system supports user authentication, role-based access, real-time communication, and task planning. An AI-assisted feature helps suggest optimal group members based on skills and other criteria.
+
+---
+
+## Key Features
+- User login and signup
+- Role-based access control
+- Workspace creation and management
+- User profiles with skills and availability
+- Group creation and management
+- AI-assisted member suggestion based on skills
+- Group chat
+- Task planner with per-task comment threads
+
+---
+
+## Sprint 0 Objectives
+- Understand the project problem and scope
+- Identify stakeholders and target users
+- Gather functional and non-functional requirements
+- Define initial user personas
+- Establish project management and version control tools
+- Create initial planning artifacts (Trello, Project Charter)
+
+---
+
+## Tools & Technologies
+- **Project Management:** Trello
+- **Version Control:** GitHub
+- **Development Stack:** To be determined in later sprints
+
+---
+
+## Team Members
+- Oluwatobi Emmanuel  
+- Gregory Oganesyan  
+- Leslie Thapa Magar  
+- Neevia Vinod
+- Saba Alhaidar  
+
+---
+
+## Repository Status
+**Current Phase:** Sprint 0 – Requirements Gathering & Planning  
+
+Development will begin in future sprints. Each team member will work on individual branches once implementation starts.
