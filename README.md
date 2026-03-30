@@ -67,7 +67,7 @@ Database Setup:
 - Download mysql: https://dev.mysql.com/downloads/mysql/
 - Open download and set up password
 In Terminal:
-	- mysql -u root -p
+	- mysql -u root -p (or /usr/local/mysql/bin/mysql -u root -p)
 	- CREATE DATABASE IF NOT EXISTS groupify;
 	- USE groupify;
 	- SOURCE /yourPath/schema.sql;
