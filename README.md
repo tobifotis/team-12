@@ -75,7 +75,7 @@ In Terminal:
 	- exit
 
 - npm run dev
-Visit localhost:3000 on browser
+- Visit localhost:3000 on browser
 
 ## License
 
