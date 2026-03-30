@@ -1,0 +1,546 @@
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700;900&display=swap');
+
+/* reset all elements */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    /* the base styles */
+    font-family: 'Geologica', sans-serif;
+    overflow-x: hidden;
+    background: #FFFCFB;
+}
+
+.header {
+    width: 100%;
+    height: 60px;
+    background: #FFFCFB;
+    display: flex;
+    align-items: center;
+    /* include space between logo and button */
+    justify-content: space-between;
+    padding: 0 46px;
+     position: sticky;
+    top: 0;
+    z-index: 10;
+    /* transition for both scroll and hide effects */
+    transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1), border-radius 0.4s ease;
+}
+
+/* header invisible when scrolled down */
+.header.hidden {
+    transform: translateY(-110%);
+}
+
+/* rounding corners when scrolled */
+.header.scrolled 
+{
+    border-radius: 22px;
+}
+
+.logo 
+{
+    width: 180px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.signinBut 
+{
+     font-family: 'Geologica', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #FFF5FA;
+    text-decoration: none;
+    background: linear-gradient(to right, #E2308D, #5C4185);
+    padding: 10px 28px;
+    border-radius: 15px;
+    transition: color 0.5s ease, background 0.4s ease !important;
+}
+
+.signinBut:hover 
+{
+    color: rgb(215, 205, 210) !important;
+    background: linear-gradient(to right, #d22d82, #533b78) !important;
+}
+
+/* "Get Started" button */
+.getstarted 
+{
+    font-family: 'Geologica', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #FFF5FA;
+    text-transform: uppercase;
+    background: linear-gradient(to right, #E2308D, #D22C82);
+    border-radius: 15px;
+    padding: 10px 16px;
+    text-decoration: none;
+    display:  inline-block;
+    letter-spacing: 0.4px;
+    position: relative;
+    z-index: 5;
+}
+
+/* section with flower and green background */
+.headline 
+{
+    width: 100%;
+    height: 758px;
+    position:  relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 20px;
+    overflow: hidden;
+
+    /* gradient overlayed on green gradient image, reduces blurriness */
+    background:
+    radial-gradient(ellipse 100% 33% at 52% 1%, #5EA882 0%, transparent 60%),
+    radial-gradient(ellipse 70% 25% at 30% 0%, #5AA075 0%, transparent 55%),
+    radial-gradient(ellipse 70% 25% at 70% 0%, #5EAF82 0%, transparent 55%),
+    radial-gradient(ellipse 38% 32% at 28% 18%, #5F8C56 0%, #558357 40%, transparent 70%),
+    radial-gradient(ellipse 49% 46% at 74% 42%, #5CA57A 0%, #58A075 30%, #52966C 60%, transparent 80%),
+    radial-gradient(ellipse 40% 35% at 78% 80%, #5CA57A 0%, #4E8E63 40%, transparent 70%),
+    radial-gradient(ellipse 55% 50% at 15% 52%, #2E7A65 0%, transparent 70%),
+    radial-gradient(ellipse 45% 40% at 85% 20%, #5A9E78 0%, transparent 65%),
+    radial-gradient(ellipse 63% 50% at 50% 80%, #2C7060 0%, transparent 65%),
+    radial-gradient(ellipse 40% 35% at 20% 80%, #1F6558 0%, transparent 60%),
+    radial-gradient(ellipse 52% 40% at 60% 60%, #4A9070 0%, transparent 60%),
+    radial-gradient(ellipse 35% 30% at 40% 40%, #3A8868 0%, transparent 60%),
+    radial-gradient(ellipse 65% 63% at 50% 51%, #3A8E72 0%, #2C7963 50%, transparent 80%),
+    linear-gradient(150deg, #1F6D60 0%, #2A7868 20%, #327A68 40%, #2B7B63 60%, #257365 80%, #1F6D60 100%);
+}
+
+/* green gradient on transparent overlayed on top */
+.headline::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('/images/greengradient.webp');
+    background-size: 100% 100%;
+    opacity: 0.5;
+    mix-blend-mode: soft-light;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* grain put on gradient image and css radial gradients */
+.headline::before 
+{
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size:  200px 200px;
+    opacity: 0.3;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 2;
+}
+/* text in the green section with flower */
+.headline-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 6;
+}
+/* "Groupify" */
+.headlineTitle 
+{
+    font-size: 100px;
+    font-weight: 700;
+    color: #FFF5FA;
+    line-height: 1;
+    letter-spacing: -2px;
+}
+/* "Work effectively and smarter with people at your side." */
+.headline-under 
+{
+    font-size: 20px;
+    font-weight: 400;
+    color: #FFF5FA;
+    max-width: 800px;
+}
+
+.getstarted::after 
+{
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:  linear-gradient(to right, #7e3d81, #462d6c);
+    opacity: 0;
+    transition: opacity 0.74s ease;
+    border-radius: 15px;
+    z-index: -1;
+}
+.getstarted:hover 
+{
+    color: rgb(232, 222, 227);
+}
+
+/* doing a fade for yellow transition */
+.getstarted:hover::after 
+{
+    opacity: 50 !important;
+}
+
+/* container for leaves */
+.leaves-Container {
+    position:  relative;
+    width: 100%;
+    height: 0;
+    z-index: 5;
+}
+
+.leaves {
+    position: absolute;
+    left: 50%;
+    /* overlap onto both green and pink sections */
+    top: -50px;
+    /* so it does not get in way of flower */
+    transform:  translateX(-55%);
+    width: 200px;
+}
+
+/* Container for flower */
+.flower-container {
+    position: relative;
+    width: 684px;
+    height: 602px;
+    margin-top: 18px;
+
+    z-index: 2;
+    transform: scale(0.88);
+    transform-origin: top center;
+}
+
+.flowerLayer {
+    position: absolute;
+    display: block;
+    /* done for gpu performance */
+    will-change: transform;
+}
+/* different parts of the flower */
+/* positions and width/height taken exactly from figma */
+.stem {
+    left: 238px;
+    top: 303px;
+    width:  217px;
+    height: 299px;
+    z-index: 1;
+}
+
+/* flower bulb, but back layer */
+.backbulb {
+    left: 132.67px;
+    top: 0px;
+    width: 443px;
+    height: 264.11px;
+    z-index: 2;
+}
+
+/* flower bulb, but front layer */
+.frontbulb {
+    left: 143.01px;
+    top: 10.96px;
+    width: 407.75px;
+    height: 381.61px;
+    z-index: 4;
+}
+
+/* top petal on the outer left */
+.leftTop {
+    transform: rotate(6deg);
+    left: -10px;
+    top: 120px;
+    width: 300px;
+    height: 220px;
+    z-index: 3;
+    transform-origin: right bottom;
+    animation: swayLeftTop 3.9s ease-in-out infinite alternate;
+    animation-delay: 0.2s;
+}
+/* top petal on the outer right */
+.rightTop {
+    transform: rotate(-6deg);
+    left: 395px;
+    top: 120px;
+    width: 300px;
+    height: 220px;
+    z-index: 3;
+    transform-origin: left bottom;
+    animation: swayRightTop 3.8s ease-in-out infinite alternate;
+    animation-delay: 0.2s;
+}
+/* lowest petal on the outer left */
+.leftLower {
+    left: 0px;
+    top: 335px;
+    width: 323px;
+    height: 147px;
+    z-index: 5;
+    transform-origin: right center;
+    animation: swayLeft 4.0s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+}
+/* lowest petal on the outer right  */
+.rightLower {
+    left: 361px;
+    top: 335px;
+    width: 323px;
+    height: 147px;
+    z-index: 5;
+    transform-origin: left center;
+    animation: swayRight 3.8s ease-in-out infinite alternate;
+}
+
+/* petal on the outer left, in the middle */
+.leftMiddle {
+    left: 100px;
+    top: 170px;
+    width: 210px;
+    height: 220px;
+    z-index: 6;
+    transform-origin: right bottom;
+    animation: swayLeft 3.7s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+    animation-delay: 0.2s;
+}
+/* petal on the outer right, in the middle */
+.rightMiddle {
+    left: 380px;
+    top: 170px;
+    width: 210px;
+    height: 220px;
+    z-index: 6;
+    transform-origin: left bottom;
+    animation: swayRight 3.7s ease-in-out infinite alternate;
+    animation-delay: 0.2s;
+}
+
+/* petal in middle that is symmetrical, animated to go up and down */
+.middlePetal {
+    left: 207px;
+    top: 293px;
+    width: 278px;
+    height: 117px;
+    z-index: 7;
+    transform-origin: center bottom;
+    animation: middlePetalFloat 5.0s ease-in-out infinite alternate;
+}
+/* end of flower building */
+
+/* animations for petals using keyframes */
+@keyframes swayLeft {
+    0%   { transform: rotate(0deg) scaleY(1); }
+    30%  { transform: rotate(-2deg) scaleY(1.03); }
+    60%  { transform: rotate(-3.4deg) scaleY(1.04); }
+    100% { transform: rotate(-2.2deg) scaleY(1.02); }
+}
+
+@keyframes swayRight {
+    0%   { transform: rotate(0deg) scaleY(1); }
+    25%  { transform: rotate(2deg) scaleY(1.01); }
+    55%  { transform: rotate(3.1deg) scaleY(1.04); }
+    100% { transform: rotate(2.5deg) scaleY(1.02); }
+}
+
+@keyframes swayLeftTop {
+    0%   { transform: rotate(6deg)  scaleY(1); }
+    100% { transform: rotate(3deg)  scaleY(1.04); }
+}
+
+@keyframes swayRightTop {
+    0%   { transform: rotate(-6deg) scaleY(1); }
+    100% { transform: rotate(-3deg) scaleY(1.04); }
+}
+
+@keyframes middlePetalFloat {
+    0%   { transform: translateY(0) rotate(0deg) scaleY(1); }
+    25%  { transform: translateY(-3px) rotate(0deg) scaleY(1); }
+    50%  { transform: translateY(-5px) rotate(0deg) scaleY(1.01); }
+    75%  { transform: translateY(-3px) rotate(0deg) scaleY(1); }
+    100% { transform: translateY(0) rotate(0deg) scaleY(1); }
+}
+
+/* section of website with the pink gradient background */
+.pinkSection {
+    width: 100%;
+    background: url('/images/pinkGradient.webp');
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 100px 0 120px;
+    gap: 48px;
+    overflow: hidden;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+}
+
+.pinkSectionTitle {
+    font-size: 42px;
+    font-weight: 900;
+    color: #FFF5FA;
+    text-align: center;
+    width: 100%;
+    line-height: 1.2;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.pinkSectionBody {
+    display: flex;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.footer {
+    width: 100%;
+    height: 148px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-top: 1px solid #eee;
+}
+
+.footerLogo {
+    width: 131px;
+    height: 42px;
+    object-fit: contain;
+}
+
+.copyright {
+    font-size: 16px;
+    font-weight: 200;
+    color: #164D47;
+}
+
+.pinkSectionCards {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* 3 cards that have illustrations */
+.card {
+    width: 100%;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 27%;
+    padding-right: 4%;
+    opacity: 0;
+    position: relative;
+}
+
+/* card 2 is reversed */
+.card.card2 {
+    justify-content: flex-end;
+    padding-left: 4%;
+    padding-right: 27%;
+}
+
+.illustration {
+    width: 110px;
+    height: 110px;
+    object-fit: contain !important;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 75%;
+    height: 100%;
+    border-radius: 72px 0 0 72px;
+    z-index: 0;
+}
+
+.card.card2::before {
+    right: auto;
+    left: 0;
+    border-radius: 0 72px 72px 0;
+}
+
+.card1::before { background: linear-gradient(to right, rgba(121,13,95,0.72), rgba(116,17,121,0.72)); }
+.card2::before { background: linear-gradient(to right, rgba(59,17,121,0.72), rgba(147,48,113,0.72)); }
+.card3::before { background: linear-gradient(to right, rgba(46,89,93,0.72), rgba(116,14,109,0.72)); }
+
+.cardInner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding: 24px 0;
+}
+
+.card.card2 .cardInner {
+    flex-direction: row;
+}
+
+.textInCard {
+    font-size: 24px;
+    font-weight: 600;
+    color: #FFF5FA;
+    line-height: 1.3;
+}
+
+/* Images cannot be dragged by mouse */
+img {
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+/* bee following mouse (open source code frm youtube) */
+.beeWrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 4;
+    pointer-events: none;
+    transform: translate3d(var(--mouseX, -500px), var(--mouseY, -500px), 0) translate(-50%, -50%);
+}
+
+.beeInner {
+    transition: transform 0.28s ease;
+}
+
+/* mirror bee when cursor moves left */
+.beeWrap.flipped .beeInner {
+    transform: scaleX(-1);
+}
+
+.beeCursor {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    display: block;
+    animation: beeFloat 2.8s ease-in-out infinite;
+}
+
+/* added animation for bee to bounce */
+@keyframes beeFloat {
+    0%   { transform: translateY(0px)   rotate(-4deg); }
+    25%  { transform: translateY(-8px)  rotate(3deg);  }
+    55%  { transform: translateY(-6px)  rotate(-3deg); }
+    80%  { transform: translateY(-11px) rotate(2deg);  }
+    100% { transform: translateY(0px)   rotate(-4deg); }
+}
+
+/* hidden for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) { .beeWrap { display: none; } }
+/* unavailable for touch screen */
+@media (pointer: coarse)               { .beeWrap { display: none; } }
