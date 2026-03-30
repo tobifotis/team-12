@@ -1,14 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('includes/head') %>
-  <body>
-    <%- include('includes/header') %>
+<%- include('includes/head2') %>
+<body>
 
-    <main>
-      <h1>Groupify</h1>
+<%- include('includes/header') %>
+
+<section class="headline">
+  <div class="beeWrap" aria-hidden="true">
+    <div class="beeInner">
+      <img src="/images/bee.webp" alt="" class="beeCursor">
+    </div>
+  </div>
+
+  <div class="headline-text">
+    <h1 class="headlineTitle">Groupify</h1>
+    <p class="headline-under">Work effectively and smarter with people at your side.</p>
     <% if (!user) { %>
-        <p><a href="/signup">Get Started</a> </p>
+        <a href="/signup" class="getstarted">GET STARTED</a>
     <% } %>
-    </main>
-  </body>
+  </div>
+
+  <div class="flower-container">
+    <img src="/images/stem.webp"             class="flowerLayer stem">
+    <img src="/images/backbulb.webp"         class="flowerLayer backbulb">
+    <img src="/images/lefttopouter.webp"     class="flowerLayer leftTop">
+    <img src="/images/righttopouter.webp"    class="flowerLayer rightTop">
+    <img src="/images/frontbulb.webp"        class="flowerLayer frontbulb">
+    <img src="/images/leftlowerouter.webp"   class="flowerLayer leftLower">
+    <img src="/images/rightlowerouter.webp"  class="flowerLayer rightLower">
+    <img src="/images/leftmiddleouter.webp"  class="flowerLayer leftMiddle">
+    <img src="/images/rightmiddleouter.webp" class="flowerLayer rightMiddle">
+    <img src="/images/middlepetal.webp"      class="flowerLayer middlePetal">
+  </div>
+</section>
+
+<div class="leaves-Container">
+  <img src="/images/leaves.webp" alt="" class="leaves">
+</div>
+
+<section class="pinkSection">
+  <h2 class="pinkSectionTitle">Connect With People Like Never Before</h2>
+
+  <div class="pinkSectionBody">
+    <div class="pinkSectionCards">
+
+      <div class="card card1">
+        <div class="cardInner">
+          <img src="/images/bagAndSeed.webp" alt="bag and seed" class="illustration">
+          <p class="textInCard">Plant your seed by creating a workspace</p>
+        </div>
+      </div>
+
+      <div class="card card2">
+        <div class="cardInner">
+          <p class="textInCard">Grow your plant by inviting other users</p>
+          <img src="/images/miniFlower.webp" alt="mini flower" class="illustration">
+        </div>
+      </div>
+
+      <div class="card card3">
+        <div class="cardInner">
+          <img src="/images/wateringCan.webp" alt="watering can" class="illustration">
+          <p class="textInCard">Water your plant by planning and communicating</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <img src="/images/logo.png" alt="Groupify" class="footerLogo">
+  <p class="copyright">© 2026 Groupify. All rights reserved.</p>
+</footer>
+
+<script>
+  /* image following mouse (open source code from youtube) */
+  const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch         = window.matchMedia('(pointer: coarse)').matches;
+
+  if (!isReducedMotion && !isTouch) {
+    const beeWrap  = document.querySelector('.beeWrap');
+    const headline = document.querySelector('.headline');
+
+    let targetX = -999, targetY = -999;
+    let currentX = -999, currentY = -999;
+    let lastX = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      const rect = headline.getBoundingClientRect();
+      targetX = e.clientX - rect.left;
+      targetY = e.clientY - rect.top;
+
+      if (e.clientX < lastX)      beeWrap.classList.add('flipped');
+      else if (e.clientX > lastX) beeWrap.classList.remove('flipped');
+      lastX = e.clientX;
+    });
+
+    const LERP = 0.06;
+
+    function animate() {
+      currentX += (targetX - currentX) * LERP;
+      currentY += (targetY - currentY) * LERP;
+      beeWrap.style.setProperty('--mouseX', `${currentX}px`);
+      beeWrap.style.setProperty('--mouseY', `${currentY}px`);
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  }
+
+  /* animation for pink section (bag of seed, flower, watering can) */
+  const cards = document.querySelectorAll('.card');
+  /* 2nd card slides from left */
+  const slideFrom = { 'card1': '110vw', 'card2': '-110vw', 'card3': '110vw' };
+
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const idx = [...cards].indexOf(entry.target);
+        const key = ['card1','card2','card3'].find(c => entry.target.classList.contains(c));
+        const dir = slideFrom[key] || '110vw';
+
+        entry.target.style.transform = `translateX(${dir})`;
+        entry.target.style.opacity = '0';
+
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            entry.target.style.transition = 'opacity 1.5s ease, transform 1.8s cubic-bezier(0.22, 1, 0.36, 1)';
+            entry.target.style.transform = 'translateX(0)';
+            entry.target.style.opacity = '1';
+          }, idx * 150);
+        });
+
+        cardObserver.unobserve(entry.target);
+      }
+    });
+  }, 
+  /* requires 20% of card to be seen */
+  { threshold: 0.20 });
+
+  cards.forEach(card => cardObserver.observe(card));
+</script>
+</body>
 </html>
