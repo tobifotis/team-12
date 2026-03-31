@@ -10,6 +10,7 @@ const pool = require("./config/db")
 const authRoute = require("./auth")
 const workRoute = require("./workspaces")
 const groupRoute = require("./groups")
+const skillsRoute = require("./skills-selection")
 //const profRoute = require("./profile")
 
 const app = express()
@@ -41,6 +42,7 @@ app.get("/", (req, res) => {
 
 // for the server to route to authorization, profile, workspaces, and groups routes
 app.use("/",authRoute)
+app.use("/skills-selection", skillsRoute);
 //app.use("/profile",profRoute)
 app.use("/workspaces", workRoute)
 app.use("/groups", groupRoute)
