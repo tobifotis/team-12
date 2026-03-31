@@ -69,12 +69,29 @@ router.post("/signup", async (req, res) => {
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
 
-    await pool.query(
-        "INSERT INTO User (username, email, password) VALUES (?, ?, ?)",
-        [username, email, hashedPassword]
+
+
+    const [result] = await pool.query(
+    "INSERT INTO User (username, email, password) VALUES (?, ?, ?)",
+    [username, email, hashedPassword]
     )
 
-    res.redirect("/signin")
+    const newUserID = result.insertId
+
+    const tokenVal = jwt.sign(
+        { userID: newUserID, username },
+        process.env.JWTSECRET,
+        { expiresIn: "1d" }
+    )
+
+    res.cookie("GROUPIFY", tokenVal, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "strict",
+        maxAge: 1000 * 60 * 60 * 24
+    })
+
+    res.redirect("/skills-selection")
 })
 
 // signin route
