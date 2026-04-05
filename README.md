@@ -1,4 +1,4 @@
-# Groupify
+# Groupify 
 
 Repository for **Team 12 Capstone Project**.
 
