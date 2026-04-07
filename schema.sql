@@ -134,3 +134,21 @@ CREATE TABLE IF NOT EXISTS Tasks (
     FOREIGN KEY (groupID)    REFERENCES `Group`(groupID) ON DELETE CASCADE,
     FOREIGN KEY (createdBy)  REFERENCES User(userID)     ON DELETE CASCADE
 );
+
+ALTER TABLE user_profile ADD COLUMN displayName VARCHAR(100);
+ALTER TABLE user_profile ADD COLUMN currentRole VARCHAR(100);
+ALTER TABLE user_profile ADD COLUMN organization VARCHAR(100);
+ALTER TABLE user_profile ADD COLUMN bio VARCHAR(255);
+ ALTER TABLE user_profile DROP COLUMN availability;
+ALTER TABLE user_profile DROP COLUMN skills;
+ALTER TABLE user_profile DROP COLUMN personalityType;
+ALTER TABLE user_profile ADD COLUMN profilePicture VARCHAR(255);
+
+CREATE TABLE IF NOT EXISTS Availability (
+    ID        INT AUTO_INCREMENT PRIMARY KEY,
+    userID    INT NOT NULL,
+    day    VARCHAR(100) NOT NULL,
+    start TIME NOT NULL,
+    end TIME NOT NULL,
+    FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE
+);
