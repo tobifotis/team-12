@@ -78,6 +78,11 @@ router.post("/signup", async (req, res) => {
 
     const newUserID = result.insertId
 
+    await pool.query(
+        "INSERT INTO user_profile (userID) VALUES (?)",
+        [newUserID]
+    )
+
     const tokenVal = jwt.sign(
         { userID: newUserID, username },
         process.env.JWTSECRET,
