@@ -77,6 +77,20 @@ In Terminal:
 - npm run dev
 - Visit localhost:3000 on browser
 
+## Cloudinary Setup
+Cloud Name
+	- On the Cloudinary Dashboard (homepage)
+	- Copy your Cloud Name
+API Key & API Secret
+	- Go to Settings → API Keys
+	- Copy:
+		- API Key
+		- API Secret
+Add Environment Variables in .env file
+	- CLOUDINARY_CLOUD_NAME=your_cloud_name
+	- CLOUDINARY_API_KEY=your_api_key
+	- CLOUDINARY_API_SECRET=your_api_secret
+
 ## License
 
 This project is developed for academic purposes as part of a capstone requirement.
