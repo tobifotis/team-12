@@ -428,6 +428,188 @@ input[type="radio"]:checked:after {
   top: 0.125em;
   left: 0.125em;
 }
+
+/* Profile page */
+.profile-page {
+  max-width: 980px;
+  margin: 2rem auto;
+}
+
+.profile-card {
+  border: 1px solid #b8b8b8;
+  border-radius: 10px;
+  background: #f3f3f3;
+  padding: 1.25rem;
+}
+
+.profile-header-row {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.profile-image-block {
+  min-width: 140px;
+}
+
+#profilePicturePreview {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #c7c7c7;
+  background: #ddd;
+}
+
+.profile-title-block h1 {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.profile-title-block p {
+  margin: 0.35rem 0;
+}
+
+.profile-info-box {
+  border: 1px solid #b8b8b8;
+  border-radius: 6px;
+  background: #fff;
+  padding: 0.65rem;
+  margin-top: 0.95rem;
+}
+
+.profile-info-box h3,
+.profile-bottom-grid h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.section-title-row {
+  margin-bottom: 0.4rem;
+}
+
+.profile-info-form {
+  margin: 0;
+}
+
+.profile-info-form label {
+  font-size: 0.85rem;
+  margin-bottom: 0.2rem;
+}
+
+.profile-info-form input,
+.profile-info-form textarea,
+.skill-input-row input {
+  width: 100%;
+  margin-bottom: 0.4rem;
+}
+
+.two-col-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+#bioCount {
+  margin: 0;
+  text-align: right;
+  font-size: 0.85rem;
+}
+
+.save-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#saveProfileBtn,
+#updateSkillsBtn,
+#updateAvailabilityBtn {
+  width: 100%;
+}
+
+.profile-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.9rem;
+}
+
+.skill-pills {
+  border: 1px solid #b8b8b8;
+  border-radius: 6px;
+  background: #fff;
+  min-height: 52px;
+  padding: 0.55rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.skill-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.55rem;
+}
+
+#availabilityList {
+  border: 1px solid #b8b8b8;
+  border-radius: 6px;
+  background: #fff;
+  min-height: 52px;
+  padding: 0.55rem;
+}
+
+#availabilityList p {
+  margin: 0.2rem 0;
+}
+
+.skill-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.skill-remove-btn {
+  border: 1px solid #fff;
+  background: transparent;
+  color: #fff;
+  padding: 0 0.35rem;
+  margin: 0;
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+
+#changePhotoBtn {
+  margin-top: 0.45rem;
+  margin-bottom: 0;
+}
+
+@media only screen and (max-width: 720px) {
+  .profile-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .two-col-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media only screen and (width<=720px) {
   textarea,
   select,

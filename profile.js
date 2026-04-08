@@ -13,7 +13,15 @@ const upload = multer({
   },
 });
 
-router.get("/", mustBeLoggedIn, async (req, res) => {
+router.get("/", mustBeLoggedIn, (req, res) => {
+  res.render("profile")
+})
+
+router.get("/availability", mustBeLoggedIn, (req, res) => {
+  res.render("availabilityEdit")
+})
+
+router.get("/data", mustBeLoggedIn, async (req, res) => {
   try {
     const userID = req.user.userID
 
@@ -87,8 +95,8 @@ router.patch("/update-skills", mustBeLoggedIn, async (req, res) => {
     const userID = req.user.userID
     const { skills } = req.body
 
-    if (!Array.isArray(skills) || skills.length === 0) {
-        return res.status(400).json({ success: false, message: "No skills provided" })
+    if (!Array.isArray(skills)) {
+      return res.status(400).json({ success: false, message: "Skills must be an array" })
     }
 
     try {

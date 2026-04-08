@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('includes/head') %>
+  <body>
+    <%- include('includes/header') %>
+
+    <main class="profile-page">
+      <section class="profile-card">
+        <div class="profile-header-row">
+          <div class="profile-image-block">
+            <img
+              id="profilePicturePreview"
+              src=""
+              alt="Profile picture"
+              width="120"
+              height="120"
+            />
+            <input id="profilePictureInput" name="profilePicture" type="file" accept="image/*" hidden />
+            <button type="button" id="changePhotoBtn">Change Photo</button>
+            <p id="pictureStatus"></p>
+          </div>
+
+          <div class="profile-title-block">
+            <h1 id="displayNameText">Display Name</h1>
+            <p id="currentRoleText">Current Role</p>
+            <p id="organizationText">Organization</p>
+          </div>
+        </div>
+
+        <section class="profile-info-box">
+          <div class="section-title-row">
+            <h3>Profile Information</h3>
+          </div>
+
+          <form id="profileForm" class="profile-info-form">
+            <div>
+              <label for="displayName">Display Name</label>
+              <input id="displayName" name="displayName" type="text" maxlength="80" />
+            </div>
+
+            <div class="two-col-grid">
+              <div>
+                <label for="currentRole">Current Role</label>
+                <input id="currentRole" name="currentRole" type="text" maxlength="80" />
+              </div>
+
+              <div>
+                <label for="organization">Organization</label>
+                <input id="organization" name="organization" type="text" maxlength="120" />
+              </div>
+            </div>
+
+            <div>
+              <label for="bio">Short Bio</label>
+              <textarea id="bio" name="bio" rows="3" maxlength="150"></textarea>
+              <p id="bioCount">0/150</p>
+            </div>
+
+            <div class="save-row">
+              <button type="submit" id="saveProfileBtn">Save</button>
+            </div>
+          </form>
+        </section>
+
+        <div class="profile-bottom-grid">
+          <div>
+            <h3>Skills</h3>
+
+            <div class="skill-input-row">
+              <input id="newSkillInput" type="text" placeholder="Enter skills" maxlength="40" />
+              <button type="button" id="addSkillBtn">Add</button>
+            </div>
+
+            <div id="skillsList" class="skill-pills"></div>
+            <button type="button" id="updateSkillsBtn">Update Skills</button>
+          </div>
+
+          <div>
+            <h3>Availability</h3>
+            <div id="availabilityList"></div>
+            <button type="button" id="updateAvailabilityBtn">Edit Availability</button>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <button type="button" id="editProfileBtn">Edit Profile</button>
+        </div>
+
+        <p id="profileStatus"></p>
+        <p id="skillsStatus"></p>
+      </section>
+    </main>
+
+    <script src="/js/profile-page.js"></script>
+  </body>
+</html>
