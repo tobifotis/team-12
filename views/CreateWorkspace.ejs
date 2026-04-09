@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head2') %>
+
+<body class="create-workspace-page-body">
+  <%- include('includes/header') %>
+
+  <main class="create-workspace-page">
+
+    <div class="create-workspace-card">
+      <h1>CREATE NEW WORKSPACE</h1>
+
+      <form action="/workspaces/create" method="POST">
+
+        <div class="form-group">
+          <label for="workspaceName">WORKSPACE NAME</label>
+          <input
+            type="text"
+            id="workspaceName"
+            name="workspaceName"
+            placeholder="Enter the workspace name"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="description">DESCRIPTION</label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Enter a short description"
+          ></textarea>
+        </div>
+
+        <div class="form-dates">
+          <div class="form-group">
+            <label for="startDate">START DATE</label>
+            <input type="date" id="startDate" name="startDate" required />
+          </div>
+
+          <div class="form-group">
+            <label for="endDate">END DATE</label>
+            <input type="date" id="endDate" name="endDate" required />
+          </div>
+        </div>
+
+        <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+          <ul class="error-list">
+            <% errors.forEach(e => { %>
+              <li><%= e %></li>
+            <% }) %>
+          </ul>
+        <% } %>
+
+        <button type="submit" class="btn-create">Create Workspace</button>
+
+      </form>
+
+      <a href="/workspaces" class="back-link">&lt; Dashboard</a>
+    </div>
+
+  </main>
+
+</body>
+</html>

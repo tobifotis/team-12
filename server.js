@@ -17,34 +17,46 @@ const app = express()
 
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "ejs")
+
 // middleware
 app.use(express.urlencoded({extended: false}))
 app.use(express.json()) 
 app.use(express.static(path.join(__dirname, "public")))
 app.use(cookieParser())
 app.use(attachUser)
-// make available to all ejs
+
+// make user available to all ejs templates
 app.use((req, res, next) => {
     res.locals.user = req.user || null
     next()
 })
 
-//middleware to set current page (used for header)
+// middleware to set current page (used for header)
 app.use((req, res, next) => {
     res.locals.currentPath = req.path;
     next();
 });
 
-// landing page route, only for guests, logged in users will be redirected to dashboard
+// landing page - guests only, logged in users redirect to dashboard
 app.get("/", (req, res) => {
     if (req.user) return res.redirect("/dashboard");
     res.render("Landing");
 });
 
-// for the server to route to authorization, profile, workspaces, and groups routes
-app.use("/",authRoute)
-app.use("/skills-selection", skillsRoute);
-app.use("/profile",profRoute)
+// availability routes
+app.get("/availability", (req, res) => {
+    if (!req.user) return res.redirect("/signin");
+    res.render("WeeklyAvailability");
+});
+
+app.post("/availability", async (req, res) => {
+    res.redirect("/workspaces");
+});
+
+// mounted route files
+app.use("/", authRoute)
+app.use("/skills-selection", skillsRoute)
+app.use("/profile", profRoute)
 app.use("/workspaces", workRoute)
 app.use("/groups", groupRoute)
 
@@ -55,9 +67,7 @@ app.get("/dashboard", (req, res) => {
 
 app.use((req, res) => res.status(404).send("404 - Page Not Found"));
 
-
-
-// test database connection and start server. if error, log and exit
+// test database connection and start server
 async function startServer() {
     try {
         await pool.query("SELECT 1")
@@ -67,6 +77,5 @@ async function startServer() {
         process.exit(1)
     }
 }
+
 startServer()
-
-

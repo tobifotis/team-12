@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head2') %>
+
+<body class="availability-page-body">
+  <%- include('includes/header') %>
+
+  <main class="availability-page">
+
+    <div class="availability-card">
+
+      <div class="progress-steps">
+        <div class="step done">Create Account</div>
+        <div class="step done">Enter Your Skills</div>
+        <div class="step done">Tell Us About Yourself</div>
+        <div class="step active">Set Your Availability</div>
+        <div class="step">Create/Join Workspaces</div>
+      </div>
+
+      <h1>Set Your Weekly Availability</h1>
+      <p class="availability-hint">
+        💡 Setting your availability helps us match you with teammates who have similar schedules.
+      </p>
+
+      <form action="/availability" method="POST">
+
+        <table class="availability-table">
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Available</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] %>
+            <% days.forEach(day => { %>
+              <tr class="day-row">
+                <td><%= day %></td>
+                <td>
+                  <input
+                    type="checkbox"
+                    name="available_<%= day %>"
+                    class="day-toggle"
+                    data-day="<%= day %>"
+                  />
+                </td>
+                <td>
+                  <select name="start_<%= day %>" id="start_<%= day %>" class="time-select" disabled>
+                    <option value="">-- : --</option>
+                    <% for (let h = 0; h < 24; h++) {
+                         for (let m = 0; m < 60; m += 30) {
+                           const hour = h % 12 === 0 ? 12 : h % 12;
+                           const ampm = h < 12 ? 'AM' : 'PM';
+                           const min = m === 0 ? '00' : '30';
+                           const val = `${String(h).padStart(2,'0')}:${min}`;
+                           const label = `${hour}:${min} ${ampm}`; %>
+                      <option value="<%= val %>"><%= label %></option>
+                    <% }} %>
+                  </select>
+                </td>
+                <td>
+                  <select name="end_<%= day %>" id="end_<%= day %>" class="time-select" disabled>
+                    <option value="">-- : --</option>
+                    <% for (let h = 0; h < 24; h++) {
+                         for (let m = 0; m < 60; m += 30) {
+                           const hour = h % 12 === 0 ? 12 : h % 12;
+                           const ampm = h < 12 ? 'AM' : 'PM';
+                           const min = m === 0 ? '00' : '30';
+                           const val = `${String(h).padStart(2,'0')}:${min}`;
+                           const label = `${hour}:${min} ${ampm}`; %>
+                      <option value="<%= val %>"><%= label %></option>
+                    <% }} %>
+                  </select>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+
+        <div class="availability-actions">
+          <button type="submit" class="btn-create">CONFIRM</button>
+          <a href="/workspaces" class="skip-link">Skip For Now &gt;</a>
+        </div>
+
+      </form>
+    </div>
+
+  </main>
+
+  <script>
+    document.querySelectorAll('.day-toggle').forEach(checkbox => {
+      checkbox.addEventListener('change', function () {
+        const day = this.dataset.day;
+        const startSel = document.getElementById('start_' + day);
+        const endSel = document.getElementById('end_' + day);
+        startSel.disabled = !this.checked;
+        endSel.disabled = !this.checked;
+      });
+    });
+  </script>
+
+</body>
+</html>
