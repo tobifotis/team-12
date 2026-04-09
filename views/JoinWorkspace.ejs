@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head2') %>
+
+<body>
+  <%- include('includes/header') %>
+
+  <main class="join-workspace-page">
+
+    <div class="join-workspace-card">
+      <h1>JOIN A WORKSPACE</h1>
+
+      <form action="/workspaces/join" method="POST">
+
+        <div class="form-group">
+          <label for="joinCode">WORKSPACE CODE</label>
+          <input
+            type="text"
+            id="joinCode"
+            name="joinCode"
+            placeholder="Enter the workspace code"
+            required
+          />
+        </div>
+
+        <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+          <ul class="error-list">
+            <% errors.forEach(e => { %>
+              <li><%= e %></li>
+            <% }) %>
+          </ul>
+        <% } %>
+
+        <button type="submit" class="btn-create">Join Workspace</button>
+
+      </form>
+
+      <a href="/workspaces" class="back-link">&lt; Dashboard</a>
+    </div>
+
+  </main>
+
+</body>
+</html>
