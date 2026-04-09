@@ -22,7 +22,61 @@ router.get("/", mustBeLoggedIn, async (req, res) => {
     }
 });
 
-// POST create new workspace (original - from workspaces page)
+// GET create workspace page
+router.get("/create", mustBeLoggedIn, (req, res) => {
+    res.render("CreateWorkspace", { errors: [] });
+});
+
+// GET join workspace page
+router.get("/join-page", mustBeLoggedIn, (req, res) => {
+    res.render("JoinWorkspace", { errors: [] });
+});
+
+// POST create workspace (from CreateWorkspace page)
+router.post("/create", mustBeLoggedIn, async (req, res) => {
+    const errors = [];
+    let { workspaceName, description, startDate, endDate } = req.body;
+
+    workspaceName = typeof workspaceName === "string" ? workspaceName.trim() : "";
+    description = typeof description === "string" ? description.trim() : "";
+
+    if (!workspaceName) errors.push("Workspace name is required!");
+    if (workspaceName.length < 3) errors.push("Workspace name must be at least 3 characters");
+    if (workspaceName.length > 100) errors.push("Workspace name cannot exceed 100 characters");
+    if (!startDate) errors.push("Start date is required!");
+    if (!endDate) errors.push("End date is required!");
+    if (startDate && endDate && startDate > endDate) errors.push("End date must be after start date");
+
+    if (errors.length) {
+        return res.render("CreateWorkspace", { errors });
+    }
+
+    try {
+        let joinCode, isUnique = false;
+        while (!isUnique) {
+            joinCode = crypto.randomBytes(5).toString("hex").toUpperCase();
+            const [existing] = await pool.query("SELECT workspaceID FROM Workspace WHERE joinCode = ?", [joinCode]);
+            if (existing.length === 0) isUnique = true;
+        }
+
+        const [result] = await pool.query(
+            "INSERT INTO Workspace (workspaceName, ownerName, userID, joinCode) VALUES (?, ?, ?, ?)",
+            [workspaceName, req.user.username, req.user.userID, joinCode]
+        );
+
+        await pool.query(
+            "INSERT INTO User_Workspace (userID, workspaceID, isOwner) VALUES (?, ?, ?)",
+            [req.user.userID, result.insertId, true]
+        );
+
+        res.redirect("/workspaces");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Database error");
+    }
+});
+
+// POST create workspace (original inline form - kept for backward compatibility)
 router.post("/", mustBeLoggedIn, async (req, res) => {
     const errors = [];
     let { workspaceName } = req.body;
@@ -97,61 +151,12 @@ router.post("/join", mustBeLoggedIn, async (req, res) => {
             );
         }
 
-        const [workspaces] = await pool.query(
-            "SELECT w.* FROM Workspace w JOIN User_Workspace uw ON w.workspaceID = uw.workspaceID WHERE uw.userID = ?",
-            [req.user.userID]
-        );
-        res.render("workspaces", { workspaces, errors });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Database error");
-    }
-});
-
-// GET create workspace page
-router.get("/create", mustBeLoggedIn, (req, res) => {
-    res.render("CreateWorkspace", { errors: [] });
-});
-
-// POST create workspace (from CreateWorkspace page - includes description and dates)
-router.post("/create", mustBeLoggedIn, async (req, res) => {
-    const errors = [];
-    let { workspaceName, description, startDate, endDate } = req.body;
-
-    workspaceName = typeof workspaceName === "string" ? workspaceName.trim() : "";
-    description = typeof description === "string" ? description.trim() : "";
-
-    if (!workspaceName) errors.push("Workspace name is required!");
-    if (workspaceName.length < 3) errors.push("Workspace name must be at least 3 characters");
-    if (workspaceName.length > 100) errors.push("Workspace name cannot exceed 100 characters");
-    if (!startDate) errors.push("Start date is required!");
-    if (!endDate) errors.push("End date is required!");
-    if (startDate && endDate && startDate > endDate) errors.push("End date must be after start date");
-
-    if (errors.length) {
-        return res.render("CreateWorkspace", { errors });
-    }
-
-    try {
-        let joinCode, isUnique = false;
-        while (!isUnique) {
-            joinCode = crypto.randomBytes(5).toString("hex").toUpperCase();
-            const [existing] = await pool.query("SELECT workspaceID FROM Workspace WHERE joinCode = ?", [joinCode]);
-            if (existing.length === 0) isUnique = true;
+        if (errors.length) {
+            return res.render("JoinWorkspace", { errors });
         }
 
-        const [result] = await pool.query(
-            "INSERT INTO Workspace (workspaceName, ownerName, userID, joinCode) VALUES (?, ?, ?, ?)",
-            [workspaceName, req.user.username, req.user.userID, joinCode]
-        );
-
-        await pool.query(
-            "INSERT INTO User_Workspace (userID, workspaceID, isOwner) VALUES (?, ?, ?)",
-            [req.user.userID, result.insertId, true]
-        );
-
         res.redirect("/workspaces");
+
     } catch (err) {
         console.error(err);
         res.status(500).send("Database error");

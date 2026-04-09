@@ -144,6 +144,7 @@ img, video {
   height: auto;
 }
 
+/* Workspace page */
 .workspace-page {
   background: #0b0b0b;
   color: white;
@@ -176,12 +177,13 @@ img, video {
 }
 
 .workspace-right-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-.workspace-left h2, .workspace-right h2 {
+.workspace-left h2,
+.workspace-right h2 {
   font-size: 36px;
   margin-bottom: 25px;
 }
@@ -194,14 +196,16 @@ img, video {
   border-radius: 10px;
 }
 
-.workspace-right input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  margin-bottom: 15px;
-  background: #1c1c1c;
-  color: white;
+.workspace-entry-buttons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.or-text {
+  font-size: 16px;
+  color: #ffffff;
 }
 
 .btn-yellow {
@@ -212,10 +216,30 @@ img, video {
   padding: 10px 18px;
   font-weight: bold;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .btn-yellow:hover {
   background: #ffcc00;
+  color: black;
+}
+
+.btn-dark {
+  background: #111111;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-dark:hover {
+  background: #222222;
+  color: white;
 }
 
 /* Profile page */

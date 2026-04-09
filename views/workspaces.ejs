@@ -9,7 +9,6 @@
 
   <!-- LEFT PANEL -->
   <section class="workspace-left">
-
     <h2>Your Workspaces</h2>
 
     <% if (workspaces.length === 0) { %>
@@ -17,68 +16,27 @@
     <% } %>
 
     <% workspaces.forEach(workspace => { %>
-
       <div class="workspace-card">
-        <div class="workspace-title">
-          <%= workspace.workspaceName %>
-        </div>
-
-        <div class="workspace-code">
-          Code: <%= workspace.joinCode %>
-        </div>
+        <div class="workspace-title"><%= workspace.workspaceName %></div>
+        <div class="workspace-code">Code: <%= workspace.joinCode %></div>
       </div>
-
     <% }) %>
-
   </section>
 
   <!-- RIGHT PANEL -->
   <section class="workspace-right">
+    <div class="workspace-right-inner">
 
-  <div class="workspace-right-inner">
+      <h2>Enter a New Workspace</h2>
 
-    <!-- CREATE WORKSPACE -->
+      <div class="workspace-entry-buttons">
+        <a href="/workspaces/create" class="btn-yellow">Create Workspace</a>
+        <span class="or-text">Or</span>
+        <a href="/workspaces/join-page" class="btn-dark">Join Workspace</a>
+      </div>
 
-    <div>
-      <h2>Create Workspace</h2>
-
-      <form action="/workspaces" method="POST">
-        <input
-          type="text"
-          name="workspaceName"
-          placeholder="Workspace name"
-          required
-        />
-
-        <button class="btn-yellow">
-          Create Workspace
-        </button>
-      </form>
     </div>
-
-
-    <!-- JOIN WORKSPACE -->
-
-    <div>
-      <h2>Join Workspace</h2>
-
-      <form action="/workspaces/join" method="POST">
-        <input
-          type="text"
-          name="joinCode"
-          placeholder="Workspace code"
-          required
-        />
-
-        <button class="btn-yellow">
-          Join Workspace
-        </button>
-      </form>
-    </div>
-
-  </div>
-
-</section>
+  </section>
 
 </main>
 
