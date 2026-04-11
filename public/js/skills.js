@@ -22,14 +22,23 @@ function renderSkills() {
     container.innerHTML = "";
 
     skills.forEach((skill, index) => {
-        const skillEl = document.createElement("span");
-        skillEl.textContent = skill;
+        const skillEl = document.createElement("div");
         skillEl.classList.add("skill-tag");
 
-        skillEl.onclick = () => {
+        const text = document.createElement("span");
+        text.textContent = skill;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "X";
+        removeBtn.classList.add("remove-btn");
+
+        removeBtn.onclick = () => {
             skills.splice(index, 1);
             renderSkills();
         };
+
+        skillEl.appendChild(text);
+        skillEl.appendChild(removeBtn);
 
         container.appendChild(skillEl);
     });
