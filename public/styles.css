@@ -242,6 +242,88 @@ img, video {
   color: white;
 }
 
+/*Skills Page*/
+.skills-page {
+  background: linear-gradient(135deg, #ffb6e3, #d3fde3);
+  min-height: 100vh;
+  grid-column: 1 / -1; 
+  padding: 2rem 0;
+}
+
+.skills-page {
+  display: block;
+}
+
+.skills-page input {
+  outline: none;
+}
+
+.skills-page button {
+  border: none !important;
+  outline: none;
+}
+
+.skills-page button:focus {
+  outline: none;
+}
+
+.skills-page fieldset {
+  background-color: white;
+  width: 710px;
+  height: 300px;
+  border-radius: 12px;
+  margin: auto;
+  border: none;
+  outline: none;
+}
+
+.skills-page .skill-tag {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f1f1;
+  color: rgb(32, 32, 32);
+  padding: 6px 10px;
+  margin: 5px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.skills-page .remove-btn {
+  margin-left: 8px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.skills-page .remove-btn:hover {
+  background: #444;
+}
+
+
+.skills-page .confirm-container {
+  text-align: center;
+  margin-top: 10px;
+}
+
+
+.skills-page .skip-link {
+  display: block;
+  text-align: center;
+  color: rgb(36, 36, 36);
+  margin-top: 10px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
 /* Profile page */
 .profile-page { max-width: 980px; margin: 2rem auto; }
 .profile-card { border: 1px solid #b8b8b8; border-radius: 10px; background: #f3f3f3; padding: 1.25rem; }
