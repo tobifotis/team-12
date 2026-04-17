@@ -95,10 +95,11 @@ router.post("/signup", async (req, res) => {
     )
 
     const newUserID = result.insertId
+    const profilePicture = "https://res.cloudinary.com/dv8cbso62/image/upload/v1775672475/groupify/profile-pictures/kka0hc3m1zzhr8olulb5.jpg"
 
     await pool.query(
-        "INSERT INTO user_profile (userID) VALUES (?)",
-        [newUserID]
+        "INSERT INTO user_profile (userID, profilePicture) VALUES (?, ?)",
+        [newUserID, profilePicture]
     )
 
     const tokenVal = jwt.sign(
