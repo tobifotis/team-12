@@ -17,59 +17,32 @@
                 alt="Profile picture"
                 class="profile-picture"
               />
-              <input id="profilePictureInput" name="profilePicture" type="file" accept="image/*" hidden />
-              <button type="button" id="changePhotoBtn" class="change-photo-btn edit-mode">Change Photo</button>
-              <p id="pictureStatus" class="status-text"></p>
             </div>
 
             <div class="profile-title-block">
               <h1 id="displayNameText" class="display-name">Display Name</h1>
-              <p id="currentRoleText" class="current-role"><span class="icon">💼</span> Current Role</p>
-              <p id="organizationText" class="organization"><span class="icon">🏢</span> Organization</p>
+              <p id="currentRoleText" class="current-role icon-line">
+                <img src="/images/briefcase.svg" class="icon-img" alt="Briefcase icon" />
+                <span id="currentRoleValue">Current Role</span>
+              </p>
+              <p id="organizationText" class="organization icon-line">
+                <img src="/images/location.svg" class="icon-img" alt="Location icon" />
+                <span id="organizationValue">Organization</span>
+              </p>
             </div>
           </div>
 
-          <form id="profileForm" class="profile-info-form">
-            <div class="form-section edit-mode" style="display: none;">
-              <label for="displayName">Display Name</label>
-              <input id="displayName" name="displayName" type="text" maxlength="80" />
+          <div class="bio-section">
+            <div id="bioView" class="bio-box">
+              <h3>Short Bio</h3>
+              <p id="bioViewText" class="bio-text"></p>
             </div>
-
-            <div class="form-row edit-mode" style="display: none;">
-              <div class="form-section">
-                <label for="currentRole">Current Role</label>
-                <input id="currentRole" name="currentRole" type="text" maxlength="80" />
-              </div>
-
-              <div class="form-section">
-                <label for="organization">Organization</label>
-                <input id="organization" name="organization" type="text" maxlength="120" />
-              </div>
-            </div>
-
-            <div class="bio-section">
-              <div id="bioView" class="bio-box">
-                <h3>Short Bio</h3>
-                <p id="bioViewText" class="bio-text"></p>
-              </div>
-
-              <div class="form-section edit-mode" style="display: none;">
-                <label for="bio">Short Bio</label>
-                <textarea id="bio" name="bio" rows="3" maxlength="150"></textarea>
-                <p id="bioCount" class="char-count">0/150</p>
-              </div>
-            </div>
-          </form>
+          </div>
 
           <div class="profile-grid">
-          <div class="profile-section">
+            <div class="profile-section">
               <h3>Skills</h3>
               <div id="skillsList" class="skill-pills view-mode"></div>
-              <div class="skill-input-row edit-mode" style="display: none;">
-                <input id="newSkillInput" type="text" placeholder="Enter skills" maxlength="40" />
-                <button type="button" id="addSkillBtn" class="add-btn">Add</button>
-              </div>
-              <button type="button" id="updateSkillsBtn" class="action-btn edit-mode" style="display: none;">Update Skills</button>
             </div>
 
             <div class="profile-section">
@@ -79,12 +52,10 @@
           </div>
 
           <div class="profile-actions">
-            <button type="submit" id="saveProfileBtn" class="save-btn">Save</button>
             <button type="button" id="editProfileBtn" class="edit-btn">Edit Profile</button>
           </div>
 
           <p id="profileStatus" class="status-text"></p>
-          <p id="skillsStatus" class="status-text"></p>
         </div>
       </section>
     </main>

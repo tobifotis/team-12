@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('includes/head2') %>
+  <link rel="stylesheet" href="/profile.css" />
+  <body>
+    <%- include('includes/header') %>
+
+    <main class="profile-page">
+      <section class="profile-card">
+        <div class="profile-content">
+          <div class="edit-profile-header">
+            <div class="edit-profile-image-block">
+              <img
+                id="editProfilePicturePreview"
+                src=""
+                alt="Profile picture"
+                class="profile-picture"
+              />
+              <input id="editProfilePictureInput" name="profilePicture" type="file" accept="image/*" hidden />
+              <h1 id="editDisplayNameText" class="display-name">Display Name</h1>
+              <button type="button" id="editChangePhotoBtn" class="change-photo-btn">Change Photo</button>
+              <p id="editPictureStatus" class="status-text"></p>
+            </div>
+
+            <button type="button" id="editCancelBtn" class="cancel-btn-top">CANCEL</button>
+          </div>
+
+          <form id="editProfileForm" class="edit-profile-form">
+            <div class="edit-sections-container">
+              <!-- Profile Information Section -->
+              <div class="edit-section-wrapper profile-info-wrapper">
+                <h2 class="edit-section-title">PROFILE INFORMATION</h2>
+                <div class="edit-section-box profile-info-section">
+                  <div class="form-section">
+                    <label for="editDisplayName">Display Name*</label>
+                    <input id="editDisplayName" name="displayName" type="text" maxlength="80" required />
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-section">
+                      <label for="editCurrentRole">Current Role*</label>
+                      <input id="editCurrentRole" name="currentRole" type="text" maxlength="80" required />
+                    </div>
+
+                    <div class="form-section">
+                      <label for="editOrganization">Organization*</label>
+                      <input id="editOrganization" name="organization" type="text" maxlength="120" required />
+                    </div>
+                  </div>
+
+                  <div class="bio-form-section">
+                    <label for="editBio">Short Bio</label>
+                    <textarea id="editBio" name="bio" rows="3" maxlength="150"></textarea>
+                    <p id="editBioCount" class="char-count">0/150</p>
+                  </div>
+
+                  <div class="profile-info-actions">
+                    <button type="submit" id="editSaveProfileBtn" class="save-btn">SAVE</button>
+                  </div>
+                  <p id="editProfileStatus" class="status-text"></p>
+                </div>
+              </div>
+
+              <!-- Skills Section -->
+              <div class="edit-section-wrapper skills-wrapper">
+                <h2 class="edit-section-title">SKILLS</h2>
+                <div class="edit-section-box skills-section">
+                  <div class="skill-input-row">
+                    <input id="editNewSkillInput" type="text" placeholder="Enter Skills (ex: Creative Direction)" maxlength="40" />
+                    <button type="button" id="editAddSkillBtn" class="add-btn">ADD</button>
+                  </div>
+                  <div id="editSkillsList" class="skill-pills"></div>
+                  <button type="button" id="editUpdateSkillsBtn" class="update-btn">UPDATE SKILLS</button>
+                  <p id="editSkillsStatus" class="status-text"></p>
+                </div>
+              </div>
+
+              <!-- Availability Section -->
+              <div class="edit-section-wrapper availability-wrapper">
+                <h2 class="edit-section-title">AVAILABILITY</h2>
+                <div class="edit-section-box availability-section">
+                  <div id="editAvailabilityList" class="availability-list"></div>
+                  <button type="button" id="editEditAvailabilityBtn" class="update-btn">EDIT AVAILABILITY</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script src="/js/edit-profile-page.js"></script>
+  </body>
+</html>

@@ -17,6 +17,10 @@ router.get("/", mustBeLoggedIn, (req, res) => {
   res.render("Profile")
 })
 
+router.get("/edit", mustBeLoggedIn, (req, res) => {
+  res.render("EditProfile")
+})
+
 router.get("/availability", mustBeLoggedIn, (req, res) => {
   res.render("WeeklyAvailability")
 })

@@ -52,7 +52,6 @@ body {
   height: 200px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 0.75rem;
   background: #f0f0f0;
 }
 
@@ -96,7 +95,7 @@ body {
 }
 
 .form-section {
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .form-section label {
@@ -133,7 +132,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .bio-section {
@@ -167,8 +166,16 @@ body {
   min-height: 1.5rem;
 }
 
-.icon {
-  margin-right: 0.5rem;
+.icon-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-img {
+  width: 18px;
+  height: 18px;
+  display: block; /* removes baseline weirdness */
 }
 
 .char-count {
@@ -395,6 +402,368 @@ body {
   color: #666;
 }
 
+/* Edit Profile Page Styles */
+
+.edit-profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.edit-profile-image-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 30px;
+}
+
+.edit-profile-image-block .profile-picture {
+  width: 150px;
+  height: 150px;
+}
+
+.edit-profile-image-block .display-name {
+  margin: 0;
+  font-size: 2rem;
+  text-align: center;
+  color: #333;
+}
+
+.change-photo-btn {
+  background: white;
+  color: #333;
+  border: 2px solid #000;
+  padding: 0.6rem 1.5rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.change-photo-btn:hover {
+  background: #f5f5f5;
+}
+
+.cancel-btn-top {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  padding: 0.6rem 1.5rem;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid #d32f2f;
+  background: #d32f2f;
+  color: white;
+  transition: all 0.25s ease;
+}
+.cancel-btn-top:hover {
+  background: #b71c1c;
+  border-color: #b71c1c;
+}
+
+.edit-profile-form {
+  margin: 0;
+  padding: 0;
+}
+
+.edit-sections-container {
+  background: #e8e8e8;
+  padding: 2rem;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 2rem;
+  row-gap: 0.5rem;
+  box-shadow: 
+    inset 0 2px 6px rgba(0, 0, 0, 0.05),
+    0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.skill-pill {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.edit-section-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.profile-info-wrapper {
+  grid-column: 1 / -1;
+}
+
+.edit-section-title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #333;
+  text-transform: uppercase;
+}
+
+.edit-section-box {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+.edit-section-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.edit-section-box h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #333;
+  text-transform: uppercase;
+}
+
+.profile-info-section {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-info-section label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.profile-info-section input,
+.profile-info-section textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.profile-info-section input:focus,
+.profile-info-section textarea:focus {
+  outline: none;
+  border-color: #E2308D;
+  box-shadow: 0 0 0 2px rgba(226, 48, 141, 0.1);
+}
+
+.bio-form-section label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.bio-form-section textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.bio-form-section .char-count {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-row .form-section {
+  margin-bottom: 0;
+}
+
+.profile-info-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.profile-info-actions .save-btn {
+  display: inline-block;
+  background: #333;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  transition: background 0.3s ease;
+}
+
+.profile-info-actions .save-btn:hover {
+  background: #555;
+}
+
+.skills-section {
+  grid-column: auto;
+}
+
+.skills-section .skill-input-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.skills-section .skill-input-row input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.skills-section .skill-input-row input:focus {
+  outline: none;
+  border-color: #E2308D;
+}
+
+.skills-section .add-btn {
+  padding: 0.75rem 1rem;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  transition: background 0.3s ease;
+}
+
+.skills-section .add-btn:hover {
+  background: #555;
+}
+
+.skills-section .skill-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  min-height: 50px;
+  padding: 0.75rem;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  align-content: flex-start;
+}
+
+.skills-section .skill-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: #333;
+  color: white;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.skills-section .skill-remove-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+  line-height: 1;
+}
+
+.skills-section .update-btn {
+  display: block;
+  width: 100%;
+  background: white;
+  color: #333;
+  border: 2px solid #333;
+  padding: 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.skills-section .update-btn:hover {
+  background: #f5f5f5;
+}
+
+.availability-section {
+  grid-column: auto;
+}
+
+.availability-section .availability-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  min-height: 100px;
+  padding: 0.75rem;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.availability-section .availability-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 0.75rem;
+}
+
+.availability-section .availability-day {
+  font-weight: 700;
+  color: #333;
+  font-size: 0.85rem;
+}
+
+.availability-section .availability-time {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.availability-section .update-btn {
+  display: block;
+  width: 100%;
+  background: white;
+  color: #333;
+  border: 2px solid #333;
+  padding: 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.availability-section .update-btn:hover {
+  background: #f5f5f5;
+}
+
 /* Responsive Design */
 
 /* Large desktops (1400px and up) */
@@ -461,6 +830,25 @@ body {
     display: grid;
     grid-template-columns: 70px 1fr;
     gap: 0.5rem;
+  }
+
+  /* Edit Profile Responsive */
+  .edit-sections-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .profile-info-section {
+    grid-column: auto;
+  }
+
+  .skills-section {
+    grid-column: auto;
+  }
+
+  .availability-section {
+    grid-column: auto;
   }
 
   .availability-day {
@@ -640,4 +1028,15 @@ body {
   .availability-time {
     font-size: 0.9rem;
   }
+}
+
+.skills-section .update-btn,
+.availability-section .update-btn {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.skills-section .update-btn:hover,
+.availability-section .update-btn:hover {
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
 }
