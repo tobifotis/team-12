@@ -10,6 +10,7 @@ const pool = require("./config/db")
 const authRoute = require("./auth")
 const workRoute = require("./workspaces")
 const groupRoute = require("./groups")
+const profDetailRoute = require("./profile-details")
 const skillsRoute = require("./skills-selection")
 const profRoute = require("./profile")
 
@@ -55,6 +56,7 @@ app.post("/availability", async (req, res) => {
 
 // mounted route files
 app.use("/", authRoute)
+app.use("/profile-details", profDetailRoute)
 app.use("/skills-selection", skillsRoute)
 app.use("/profile", profRoute)
 app.use("/workspaces", workRoute)
