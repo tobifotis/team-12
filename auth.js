@@ -115,7 +115,7 @@ router.post("/signup", async (req, res) => {
         maxAge: 1000 * 60 * 60 * 24
     })
 
-    res.redirect("/skills-selection")
+    res.redirect("/profile-details")
 })
 
 // signin route
