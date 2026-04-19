@@ -2227,3 +2227,253 @@ img {
     text-align: center;
     margin: 0;
 }
+/*Profile Details*/
+.profile-page {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile-page button,
+.profile-page input,
+.profile-page textarea,
+.profile-page select {
+    font-family: inherit;
+}
+
+.profile-page input,
+.profile-page textarea {
+    padding: 10px 12px;
+    font-size: 14px;
+}
+
+.profile-page .changeButton{
+    background-color: white;
+    color: black;
+    font-size: 14px;
+    border:none;
+    border-radius: 13px;
+    width: 150px;
+    padding:10px;
+}
+
+.profile-page .profile-pic img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    background-color: white;
+    border-radius: 50%;
+    padding: 2px;
+}
+
+.profile-page .profile-details{
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    gap: 60px;
+    background: rgba(255, 255, 255, 0.25);
+    padding: 30px;
+    border-radius: 20px;
+}
+
+.profile-page .left-side {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 15px; 
+}
+
+.profile-page .right-side{
+    flex: 3;
+    max-width: 700px;
+    width: 100%;
+    padding-left: 40px;
+    border-left: 1px solid #ccc;
+}
+
+.profile-page .box1 input,
+.profile-page .box2 input,
+.profile-page .box3 input {
+    border-radius: 15px;
+    font-size: 14px;
+    background-color: white;
+    color: black;
+    width: 100%;
+    border: none;
+}
+
+.profile-page .parent{
+    display:flex;
+    gap:15px;
+    width: 100%;
+}
+
+.profile-page .parent .box2,
+.profile-page .parent .box3 {
+    flex: 1; 
+}
+
+.profile-page .box1,
+.profile-page .parent,
+.profile-page .box4 {
+    margin-bottom: 20px;
+}
+
+.profile-page .postSubmit{
+  text-align: center;
+  margin-top: 10px;
+}
+
+.profile-page .skip-link {
+  display: block;
+  text-align: center;
+  color: rgb(0, 0, 0);
+  margin-top: 10px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.profile-page .skip-link:hover {
+  text-decoration: underline;
+}
+
+.profile-page .box4 textarea {
+    border-radius: 15px;
+    font-size: 14px;
+    background-color: white;
+    width: 100%;
+    height: 150px;
+    padding: 12px;
+    color: black;
+    resize: none;
+    vertical-align: top;
+    border: none;
+}
+
+.profile-page #charCount {
+    font-size: 12px;
+    color: gray;
+    text-align: right;
+}
+
+/* Skills Page */
+
+.skills-page {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.skills-page button,
+.skills-page input,
+.skills-page textarea,
+.skills-page select {
+    font-family: inherit;
+}
+
+.skills-page input,
+.skills-page textarea {
+    padding: 10px 12px;
+    font-size: 14px;
+}
+
+.skills-page .skills-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.25);
+  padding: 30px;
+  border-radius: 20px;
+}
+
+.skills-page .enter-skills {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.skills-page .enter-skills input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 15px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.skills-page .enter-skills .authButton {
+  padding: 0;
+  width: 150px;
+  height: 40px;
+  font-size: 14px;
+  margin-top: 0;
+}
+
+.skills-page fieldset {
+  background-color: white;
+  width: 100%;
+  min-height: 225px;
+  border-radius: 15px;
+  margin-top: 10px;
+  border: none;
+  padding: 15px;
+}
+
+.skills-page .skill-tag {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f1f1;
+  color: rgb(32, 32, 32);
+  padding: 6px 10px;
+  margin: 5px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.skills-page .remove-btn {
+  margin-left: 8px;
+  background: black;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.skills-page .remove-btn:hover {
+  background: #444;
+}
+
+.skills-page .confirm-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.skills-page .skip-link {
+  display: block;
+  text-align: center;
+  color: rgb(36, 36, 36);
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+.skills-page .skip-link:hover {
+  text-decoration: underline;
+}
