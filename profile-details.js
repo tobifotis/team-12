@@ -5,18 +5,15 @@ const pool = require("./config/db");
 const { mustBeLoggedIn } = require("./middleware/auth");
 const multer = require("multer");
 const path = require("path");
+const cloudinary = require("cloudinary").v2;
+const streamifier = require("streamifier");
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "public/uploads/");
-    },
-    filename: (req, file, cb) => {
-        const uniqueName = Date.now() + path.extname(file.originalname);
-        cb(null, uniqueName);
-    }
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5 MB
+  },
 });
-
-const upload = multer({ storage });
 
 router.get("/", mustBeLoggedIn, async (req, res) => {
     try {
@@ -35,16 +32,36 @@ router.get("/", mustBeLoggedIn, async (req, res) => {
 });
 
 router.post("/save-profile", mustBeLoggedIn, upload.single("profilePicture"), async (req, res) => {
-    const { displayName, currentRole, organization, bio } = req.body;
-
-    // this will exist ONLY if user uploaded a file
-    const profilePicture = req.file ? `/uploads/${req.file.filename}` : null;
+    const { displayName, currentRole, organization, bio} = req.body;
+    const userID = req.user.userID;
 
     try {
-        const [rows] = await pool.query(
-            "SELECT profileID FROM User_Profile WHERE userID = ?",
-            [req.user.userID]
-        );
+      let profilePicture = null;
+      if (req.file) {
+        const uploadFromBuffer = () =>
+          new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                folder: "groupify/profile-pictures",
+                resource_type: "image",
+              },
+              (error, result) => {
+                if (error) return reject(error);
+                resolve(result);
+              }
+            );
+
+            streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+          });
+
+        const result = await uploadFromBuffer();
+        profilePicture = result.secure_url;
+      }
+      // check if profile exists
+      const [rows] = await pool.query(
+        "SELECT profileID FROM User_Profile WHERE userID = ?",
+        [userID]
+      );
 
         if (rows.length > 0) {
             if (profilePicture) {
@@ -52,14 +69,14 @@ router.post("/save-profile", mustBeLoggedIn, upload.single("profilePicture"), as
                     `UPDATE User_Profile 
                      SET displayName=?, currentRole=?, organization=?, bio=?, profilePicture=?
                      WHERE userID=?`,
-                    [displayName, currentRole, organization, bio, profilePicture, req.user.userID]
+                    [displayName, currentRole, organization, bio, profilePicture, userID]
                 );
             } else {
                 await pool.query(
                     `UPDATE User_Profile 
                      SET displayName=?, currentRole=?, organization=?, bio=?
                      WHERE userID=?`,
-                    [displayName, currentRole, organization, bio, req.user.userID]
+                    [displayName, currentRole, organization, bio, userID]
                 );
             }
         } else {
@@ -81,5 +98,6 @@ router.post("/save-profile", mustBeLoggedIn, upload.single("profilePicture"), as
         });
     }
 });
+
 
 module.exports = router;
