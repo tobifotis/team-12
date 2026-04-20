@@ -4,10 +4,15 @@
   </a>
   <nav>
     <% if (user) { %>
-      <a href="/profile" class="profileBtn">
-        <img src="<%= user.profilePicture || '/images/default-profile.png' %>" alt="Profile" class="profilePicture">
-      </a>
-      <a href="/logout" class="signinBut">LOG OUT</a>
+      <div class="profile-dropdown-container">
+        <a href="#" class="profileBtn" id="profileBtn">
+          <span class="profile-initial"><%= user.username ? user.username.charAt(0).toUpperCase() : '?' %></span>
+        </a>
+        <div class="profile-dropdown" id="profileDropdown">
+          <a href="/profile" class="dropdown-item">View Profile</a>
+          <a href="/logout" class="dropdown-item">Log Out</a>
+        </div>
+      </div>
     <% } else { %>
       <a href="/signin" class="signinBut">SIGN IN</a>
     <% } %>
@@ -15,6 +20,7 @@
 </header>
 
 <script>
+  // Scroll functionality (existing)
   const header = document.querySelector('.header');
   let lastScrollY = window.scrollY;
   let ticking = false;
@@ -40,6 +46,26 @@
         ticking = false;
       });
       ticking = true;
+    }
+  });
+
+  // Profile dropdown functionality (new)
+  document.addEventListener('DOMContentLoaded', () => {
+    const profileBtn = document.getElementById('profileBtn');
+    const dropdown = document.getElementById('profileDropdown');
+    
+    if (profileBtn && dropdown) {
+      profileBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        dropdown.classList.toggle('active');
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!profileBtn.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.remove('active');
+        }
+      });
     }
   });
 </script>
