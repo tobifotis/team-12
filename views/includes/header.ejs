@@ -6,8 +6,18 @@
     <% if (user) { %>
       <div class="profile-dropdown-container">
         <a href="#" class="profileBtn" id="profileBtn">
-          <span class="profile-initial"><%= user.username ? user.username.charAt(0).toUpperCase() : '?' %></span>
-        </a>
+          <% if (user.profilePicture) { %>
+            <img 
+            src="<%= user.profilePicture %>" 
+            alt="Profile" 
+            class="profilePicture"
+            >
+            <% } else { %>
+              <span class="profile-initial">
+                <%= user.username ? user.username.charAt(0).toUpperCase() : '?' %>
+              </span>
+              <% } %>
+            </a>
         <div class="profile-dropdown" id="profileDropdown">
           <a href="/profile" class="dropdown-item">View Profile</a>
           <a href="/logout" class="dropdown-item">Log Out</a>
