@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('includes/header') %>
+<%- include('includes/banner') %>
 <%- include('includes/head2') %>
 
-<body style="background: linear-gradient(150deg, #ffd1ea, #d6ffef); min-height: 100vh;">
+<body style="background-image: url('/images/background.png');
+  background-size: cover;       
+  background-position: center;  
+  background-repeat: no-repeat; min-height: 100vh;">
 
 <main class="profile-page">
   <% if (errors && errors.length) { %>
@@ -25,49 +28,46 @@
   <h1 style="color:black; text-align: center;">Tell Us About Yourself</h1>
 
   <br />
-
-  <div class="profile-details">
-    <div class="left-side">
-      <div class="profile-pic">
-        <img id="preview" src="/images/userProf.png" alt="Profile" />
+  <form id="profDetails" action="/profile-details/save-profile" method="POST" enctype="multipart/form-data">
+    <div class="profile-details">
+      <div class="left-side">
+        <div class="profile-pic">
+          <img id="preview" src="/images/prof.png" alt="Profile" />
+        </div>
+        <input id="profilePictureInput" name="profilePicture" type="file" accept="image/*" hidden />
+        <label class="changeButton" for="profilePictureInput">Change Photo</label>
       </div>
-      <button class="changeButton">Change Photo</button>
-    </div>
 
-    <div class="right-side">
-      <form id="profDetails" action="/profile-details/save-profile" method="POST">
-        
-        <div class="box1">
-          <label for="displayName">Display Name*</label>
-          <input type="text" id="displayName" name="displayName" placeholder="Enter The Name You Want To Go By" required />
-        </div>
-
-        <div class="parent">
-          <div class="box2">       
-            <label for="currentRole">Current Role*</label>
-            <input type="text" id="currentRole" name="currentRole" placeholder="Select your Role" required />
+      <div class="right-side">
+          <div class="box1">
+            <label for="displayName">Display Name*</label>
+            <input type="text" id="displayName" name="displayName" placeholder="Enter The Name You Want To Go By" required />
           </div>
 
-          <div class="box3">  
-            <label for="organization">Organization*</label>
-            <input type="text" id="organization" name="organization" placeholder="Enter School or Company" required />
+          <div class="parent">
+            <div class="box2">       
+              <label for="currentRole">Current Role*</label>
+              <input type="text" id="currentRole" name="currentRole" placeholder="Select your Role" required />
+            </div>
+
+            <div class="box3">  
+              <label for="organization">Organization*</label>
+              <input type="text" id="organization" name="organization" placeholder="Enter School or Company" required />
+            </div>
+          </div>
+
+          <div class="box4"> 
+            <label for="bio">Short Bio</label>
+            <textarea 
+              id="bio" 
+              name="bio" 
+              maxlength="150"
+              placeholder="Tell us a little about yourself"></textarea>
+            <p id="charCount">(0 / 150)</p>
           </div>
         </div>
-
-        <div class="box4"> 
-          <label for="bio">Short Bio</label>
-          <textarea 
-            id="bio" 
-            name="bio" 
-            maxlength="150"
-            placeholder="Tell us a little about yourself"></textarea>
-          <p id="charCount">(0 / 150)</p>
-        </div>
-
-      </form>
     </div>
-  </div>
-
+  </form>
   <br />
 
   <div class="postSubmit">
@@ -88,6 +88,17 @@ const counter = document.getElementById("charCount");
 
 bio.addEventListener("input", () => {
     counter.textContent = bio.value.length + " / 150";
+});
+
+const fileInput = document.getElementById("profilePictureInput");
+const preview = document.getElementById("preview");
+
+fileInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+
+  if (file) {
+    preview.src = URL.createObjectURL(file);
+  }
 });
 </script>
 

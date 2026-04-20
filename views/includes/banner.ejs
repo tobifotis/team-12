@@ -1,0 +1,56 @@
+<header class="header">
+  <a href="/" class="logoLink">
+    <img src="/images/logo.webp" alt="Groupify" class="logo">
+  </a>
+</header>
+
+<script>
+  // Scroll functionality (existing)
+  const header = document.querySelector('.header');
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY > lastScrollY && currentScrollY > 80) {
+          header.classList.add('hidden');
+        } else {
+          header.classList.remove('hidden');
+        }
+
+        if (currentScrollY > 10) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+
+        lastScrollY = currentScrollY;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  // Profile dropdown functionality (new)
+  document.addEventListener('DOMContentLoaded', () => {
+    const profileBtn = document.getElementById('profileBtn');
+    const dropdown = document.getElementById('profileDropdown');
+    
+    if (profileBtn && dropdown) {
+      profileBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        dropdown.classList.toggle('active');
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!profileBtn.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.remove('active');
+        }
+      });
+    }
+  });
+</script>
