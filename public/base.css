@@ -485,7 +485,7 @@ nav {
 /* section of website with the pink gradient background */
 .pinkSection {
     width: 100%;
-    background: url('/images/pinkGradient.webp');
+    background: url('/images/pinkgradient.webp');
     background-size: cover;
     display: flex;
     flex-direction: column;
