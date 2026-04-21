@@ -72,22 +72,27 @@ router.get("/data", mustBeLoggedIn, async (req, res) => {
 });
 
 router.patch("/save", mustBeLoggedIn, async (req, res) => {
-    const userID = req.user.userID
-    const { displayName, currentRole, organization, bio } = req.body
+    const userID = req.user.userID;
+    const { displayName, currentRole, organization, bio } = req.body;
 
     try {
-        await pool.query(
-            'UPDATE user_profile SET displayName = ?, currentRole = ?, organization = ?, bio = ? WHERE userID = ?',
-            [displayName, currentRole, organization, bio, userID]
-        )
-        res.json({ message: "Profile updated successfully" })
-    } catch (err) {
-        console.error(err)
-        res.status(500).json({ error: "Failed to update profile" })
-    }
-    
+        await pool.query(`
+            INSERT INTO user_profile (userID, displayName, currentRole, organization, bio)
+            VALUES (?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+                displayName = VALUES(displayName),
+                currentRole = VALUES(currentRole),
+                organization = VALUES(organization),
+                bio = VALUES(bio)
+        `, [userID, displayName, currentRole, organization, bio]);
 
-})
+        res.json({ message: "Profile updated successfully" });
+
+    } catch (err) {
+        console.error("PROFILE SAVE ERROR:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
 
 router.patch("/update-skills", mustBeLoggedIn, async (req, res) => {
     const userID = req.user.userID
