@@ -18,6 +18,7 @@
       </div>
 
       <h1>Set Your Weekly Availability</h1>
+      <p id="formMessage" class="form-message" style="display:none;"></p>
       <p class="availability-hint">
         💡 Setting your availability helps us match you with teammates who have similar schedules.
       </p>
@@ -90,16 +91,54 @@
   </main>
 
   <script>
-    document.querySelectorAll('.day-toggle').forEach(checkbox => {
-      checkbox.addEventListener('change', function () {
-        const day = this.dataset.day;
-        const startSel = document.getElementById('start_' + day);
-        const endSel = document.getElementById('end_' + day);
-        startSel.disabled = !this.checked;
-        endSel.disabled = !this.checked;
-      });
+  const form = document.querySelector("form");
+  const messageEl = document.getElementById("formMessage");
+
+  // Enable/disable time selects
+  document.querySelectorAll('.day-toggle').forEach(checkbox => {
+    checkbox.addEventListener('change', function () {
+      const day = this.dataset.day;
+      const startSel = document.getElementById('start_' + day);
+      const endSel = document.getElementById('end_' + day);
+      startSel.disabled = !this.checked;
+      endSel.disabled = !this.checked;
     });
-  </script>
+  });
+
+  // 🔥 Handle form submit with fetch
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    messageEl.style.display = "none";
+
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch("/availability", {
+        method: "POST",
+        body: new URLSearchParams(formData)
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        // redirect on success
+        window.location.href = "/workspaces";
+      } else {
+        // show error
+        messageEl.innerText = data.message;
+        messageEl.style.color = "red";
+        messageEl.style.display = "block";
+      }
+
+    } catch (err) {
+      console.error(err);
+      messageEl.innerText = "Something went wrong. Try again.";
+      messageEl.style.color = "red";
+      messageEl.style.display = "block";
+    }
+  });
+</script>
 
 </body>
 </html>
