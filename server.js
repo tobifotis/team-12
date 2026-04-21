@@ -25,6 +25,10 @@ app.use(express.static(path.join(__dirname, "public")))
 app.use(cookieParser())
 app.use(attachUser)
 
+app.get("/healthz", (req, res) => {
+    res.status(200).send("OK")
+})
+
 // make user available to all ejs templates
 app.use((req, res, next) => {
     res.locals.user = req.user || null
@@ -152,7 +156,11 @@ app.use((req, res) => res.status(404).send("404 - Page Not Found"));
 async function startServer() {
     try {
         await pool.query("SELECT 1")
-        app.listen(3000, () => console.log("Running on http://localhost:3000"))
+        const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+    console.log(`Running on port ${PORT}`)
+})
     } catch (err) {
         console.error("Could not connect to MySQL:", err.message)
         process.exit(1)
