@@ -3,7 +3,6 @@ const express = require("express")
 const cookieParser = require("cookie-parser")
 const path = require("path")
 const { attachUser } = require("./middleware/auth")
-const { mustBeGuest } = require("./middleware/auth")
 const pool = require("./config/db")
 
 // mounting routes for server to use 
@@ -51,10 +50,90 @@ app.get("/availability", (req, res) => {
 });
 
 app.post("/availability", async (req, res) => {
-    res.redirect("/workspaces");
-});
+    let connection
 
-// mounted route files
+    try {
+        const userId = req.user?.userID || req.user?.id
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized"
+            })
+        }
+
+        const days = [
+            'Monday','Tuesday','Wednesday','Thursday',
+            'Friday','Saturday','Sunday'
+        ]
+
+        const availability = []
+
+        days.forEach(day => {
+            const isAvailable = req.body[`available_${day}`] === "on"
+
+            if (isAvailable) {
+                const start = req.body[`start_${day}`]
+                const end = req.body[`end_${day}`]
+
+                if (start && end) {
+                    availability.push({ day, start, end })
+                }
+            }
+        })
+
+        if (availability.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Select at least one valid time slot"
+            })
+        }
+
+        connection = await pool.getConnection()
+        await connection.beginTransaction()
+
+        await connection.query(
+            "DELETE FROM Availability WHERE userID = ?",
+            [userId]
+        )
+
+        const insertQuery = `
+            INSERT INTO Availability (userID, day, start, end)
+            VALUES (?, ?, ?, ?)
+        `
+
+        for (const slot of availability) {
+            await connection.query(insertQuery, [
+                userId,
+                slot.day,
+                slot.start,
+                slot.end
+            ])
+        }
+
+        await connection.commit()
+
+        return res.json({
+            success: true,
+            message: "Availability saved successfully"
+        })
+
+    } catch (err) {
+        console.error(err)
+
+        if (connection) await connection.rollback()
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to save availability"
+        })
+
+    } finally {
+        if (connection) connection.release()
+    }
+})
+
+/* ---------------- ROUTES ---------------- */
 app.use("/", authRoute)
 app.use("/profile-details", profDetailRoute)
 app.use("/skills-selection", skillsRoute)
