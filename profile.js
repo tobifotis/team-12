@@ -27,39 +27,32 @@ router.get("/availability", mustBeLoggedIn, (req, res) => {
 
 router.get("/data", mustBeLoggedIn, async (req, res) => {
   try {
-    const userID = req.user.userID
+    const userID = req.user.userID;
 
-    // get profile info
     const [profileRows] = await pool.query(
       `SELECT displayName, currentRole, organization, bio, profilePicture
        FROM user_profile
        WHERE userID = ?`,
       [userID]
-    )
+    );
 
-    // get skills
     const [skillRows] = await pool.query(
-      `SELECT skills
-       FROM skills
-       WHERE userID = ?`,
+      `SELECT skills FROM Skills WHERE userID = ?`,
       [userID]
-    )
+    );
 
-    // get availability
     const [availabilityRows] = await pool.query(
-      `SELECT day, start, end
-       FROM availability
-       WHERE userID = ?`,
+      `SELECT day, start, end FROM Availability WHERE userID = ?`,
       [userID]
-    )
+    );
 
-    const profile = profileRows[0] || {}
+    const profile = profileRows?.[0] || {};
 
-    const skills = skillRows.map(row => row.skills)
+    const skills = (skillRows || []).map(row => row.skills);
 
-    const availability = {}
-    for (const row of availabilityRows) {
-      availability[row.day] = [row.start, row.end]
+    const availability = {};
+    for (const row of availabilityRows || []) {
+      availability[row.day] = [row.start, row.end];
     }
 
     res.json({
@@ -70,12 +63,13 @@ router.get("/data", mustBeLoggedIn, async (req, res) => {
       skills,
       profilePicture: profile.profilePicture || "",
       availability
-    })
+    });
+
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: "Failed to fetch profile" })
+    console.error("PROFILE DATA ERROR:", err);
+    res.status(500).json({ error: err.message });
   }
-})
+});
 
 router.patch("/save", mustBeLoggedIn, async (req, res) => {
     const userID = req.user.userID
