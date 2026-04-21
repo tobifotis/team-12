@@ -43,9 +43,9 @@ router.post("/create", mustBeLoggedIn, async (req, res) => {
     if (!workspaceName) errors.push("Workspace name is required!");
     if (workspaceName.length < 3) errors.push("Workspace name must be at least 3 characters");
     if (workspaceName.length > 100) errors.push("Workspace name cannot exceed 100 characters");
-    if (!startDate) errors.push("Start date is required!");
-    if (!endDate) errors.push("End date is required!");
-    if (startDate && endDate && startDate > endDate) errors.push("End date must be after start date");
+    // if (!startDate) errors.push("Start date is required!");
+    // if (!endDate) errors.push("End date is required!");
+    // if (startDate && endDate && startDate > endDate) errors.push("End date must be after start date");
 
     if (errors.length) {
         return res.render("CreateWorkspace", { errors });

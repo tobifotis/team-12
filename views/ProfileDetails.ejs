@@ -1,13 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('includes/banner') %>
 <%- include('includes/head2') %>
 
-<body style="background-image: url('/images/background.png');
-  background-size: cover;       
-  background-position: center;  
-  background-repeat: no-repeat; min-height: 100vh;">
+<body>
 
+<svg class="profile-background-svg" viewBox="0 0 1440 829" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g filter="url(#filter0_i_1295_539)">
+    <rect width="1440" height="829" fill="url(#paint0_radial_1295_539)"/>
+  </g>
+  <defs>
+    <filter id="filter0_i_1295_539" x="-21" y="0" width="1461" height="929" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dx="-21" dy="121"/>
+      <feGaussianBlur stdDeviation="50"/>
+      <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0476042 0 0 0 0 0.0852961 0 0 0 0 0.424523 0 0 0 0.4 0"/>
+      <feBlend mode="normal" in2="shape" result="effect1_innerShadow_1295_539"/>
+    </filter>
+    <radialGradient id="paint0_radial_1295_539" cx="0" cy="0" r="1" gradientTransform="matrix(534 896.5 -1560.19 883.968 353.5 -1.43084e-05)" gradientUnits="userSpaceOnUse">
+      <stop offset="0.238923" stop-color="#183B80"/>
+      <stop offset="0.548077" stop-color="#5478C0"/>
+      <stop offset="1" stop-color="#2A6571"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<img class="profile-flowers" src="/images/skillsFlowers.webp" alt="" />
+
+<%- include('includes/banner') %>
 <main class="profile-page">
   <% if (errors && errors.length) { %>
     <% errors.forEach(error => { %>
@@ -25,7 +47,7 @@
 
   <br>
 
-  <h1 style="color:black; text-align: center;">Tell Us About Yourself</h1>
+  <h1>Tell Us About Yourself</h1>
 
   <br />
   <form id="profDetails" action="/profile-details/save-profile" method="POST" enctype="multipart/form-data">

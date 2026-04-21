@@ -5,40 +5,54 @@
 <body>
   <%- include('includes/header') %>
 
-  <main class="join-workspace-page">
+<main class="join-workspace-page">
 
-    <div class="join-workspace-card">
-      <h1>JOIN A WORKSPACE</h1>
+  <svg class="jwBACK" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1440 829" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1440" height="829" fill="url(#paint0_radial_1188_681)"/>
+    <defs>
+      <radialGradient id="paint0_radial_1188_681" cx="0" cy="0" r="1" gradientTransform="matrix(331 651.913 -1132.39 544.334 389 177.087)" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#070959"/>
+        <stop offset="0.537498" stop-color="#271F67"/>
+        <stop offset="1" stop-color="#0B2D3C"/>
+      </radialGradient>
+    </defs>
+  </svg>
+  
+  <img src="/images/joinworkspacestars.webp" class="jwstars" alt="">
 
-      <form action="/workspaces/join" method="POST">
+  <div class="jwscene">
+    <img src="/images/joinGlow.webp" class="jwglow" alt="">
+    <img src="/images/buildings.webp" class="buildings citylights1" alt="">
+    <img src="/images/buildingsLightOn.webp"  class="buildings citylights2" alt="">
+    <img src="/images/buildingsLightOn2.webp" class="buildings citylights3" alt="">
+    <img src="/images/catblock.png"      class="catblock"  alt="">
+    <img src="/images/cattail.png"       class="cattail"   alt="">
+    <img src="/images/cat.png"           class="cat"       alt="">
+  </div>
 
-        <div class="form-group">
-          <label for="joinCode">WORKSPACE CODE</label>
-          <input
-            type="text"
-            id="joinCode"
-            name="joinCode"
-            placeholder="Enter the workspace code"
-            required
-          />
-        </div>
+  <div class="join-workspace-card">
+    <h1>JOIN A WORKSPACE</h1>
+    <p class="jwp-subtitle">Enter a valid join code</p>
 
-        <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
-          <ul class="error-list">
-            <% errors.forEach(e => { %>
-              <li><%= e %></li>
-            <% }) %>
-          </ul>
-        <% } %>
+    <form action="/workspaces/join" method="POST" class="jwp-form">
+      <input type="text" id="joinCode" name="joinCode" class="jwp-input" placeholder="Join Code" required />
+      <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+        <ul class="error-list">
+          <% errors.forEach(e => { %>
+            <li><%= e %></li>
+          <% }) %>
+        </ul>
+      <% } %>
+      <button type="submit" class="jwp-joinbtn">JOIN</button>
+    </form>
 
-        <button type="submit" class="btn-create">Join Workspace</button>
+    <a href="/workspaces" class="jwbacktext">
+      <img src="/images/joinworkspaceBackBUTTON.svg" class="jwbackBut" alt="">
+      Dashboard
+    </a>
+  </div>
 
-      </form>
-
-      <a href="/workspaces" class="back-link">&lt; Dashboard</a>
-    </div>
-
-  </main>
+</main>
 
 </body>
 </html>

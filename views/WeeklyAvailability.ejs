@@ -2,104 +2,165 @@
 <html lang="en">
 <%- include('includes/head2') %>
 
-<body class="availability-page-body">
-  <%- include('includes/header') %>
+<body>
 
-  <main class="availability-page">
+<svg class="profile-background-svg" viewBox="0 0 1440 829" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g filter="url(#filter0_i_1295_539)">
+    <rect width="1440" height="829" fill="url(#paint0_radial_1295_539)"/>
+  </g>
+  <defs>
+    <filter id="filter0_i_1295_539" x="-21" y="0" width="1461" height="929" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dx="-21" dy="121"/>
+      <feGaussianBlur stdDeviation="50"/>
+      <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0476042 0 0 0 0 0.0852961 0 0 0 0 0.424523 0 0 0 0.4 0"/>
+      <feBlend mode="normal" in2="shape" result="effect1_innerShadow_1295_539"/>
+    </filter>
+    <radialGradient id="paint0_radial_1295_539" cx="0" cy="0" r="1" gradientTransform="matrix(534 896.5 -1560.19 883.968 353.5 -1.43084e-05)" gradientUnits="userSpaceOnUse">
+      <stop offset="0.238923" stop-color="#183B80"/>
+      <stop offset="0.548077" stop-color="#5478C0"/>
+      <stop offset="1" stop-color="#2A6571"/>
+    </radialGradient>
+  </defs>
+</svg>
 
-    <div class="availability-card">
+<%- include('includes/banner') %>
 
-      <div class="progress-steps">
-        <div class="step done">Create Account</div>
-        <div class="step done">Enter Your Skills</div>
-        <div class="step done">Tell Us About Yourself</div>
-        <div class="step active">Set Your Availability</div>
-        <div class="step">Create/Join Workspaces</div>
-      </div>
+<main class="availability-page">
 
-      <h1>Set Your Weekly Availability</h1>
-      <p class="availability-hint">
-        💡 Setting your availability helps us match you with teammates who have similar schedules.
-      </p>
+  <div class="progress-steps">
+    <div class="step done">Create Account</div>
+    <div class="step done">Tell Us About Yourself</div>
+    <div class="step done">Enter Your Skills</div>
+    <div class="step active">Set Your Availability</div>
+    <div class="step">Create/Join Workspaces</div>
+  </div>
 
-      <form action="/availability" method="POST">
+  <br>
 
-        <table class="availability-table">
-          <thead>
-            <tr>
-              <th>Day</th>
-              <th>Available</th>
-              <th>Start Time</th>
-              <th>End Time</th>
+  <h1 class="availability-title">Set Your Weekly Availability</h1>
+  <p id="formMessage" class="form-message" style="display:none;"></p>
+
+  <div class="availability-card">
+
+    <p class="availability-hint">
+      <img src="/images/lightbulbWeekly.svg" alt="" class="availability-hint-icon">
+      Setting your availability helps us match you with teammates who have similar schedules.
+    </p>
+
+    <form action="/availability" method="POST">
+
+      <table class="availability-table">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Available</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] %>
+          <% days.forEach(day => { %>
+            <tr class="day-row">
+              <td><%= day %></td>
+              <td>
+                <input
+                  type="checkbox"
+                  name="available_<%= day %>"
+                  class="day-toggle"
+                  data-day="<%= day %>"
+                />
+              </td>
+              <td>
+                <select name="start_<%= day %>" id="start_<%= day %>" class="time-select" disabled>
+                  <option value="">-- : --</option>
+                  <% for (let h = 0; h < 24; h++) {
+                       for (let m = 0; m < 60; m += 30) {
+                         const hour = h % 12 === 0 ? 12 : h % 12;
+                         const ampm = h < 12 ? 'AM' : 'PM';
+                         const min = m === 0 ? '00' : '30';
+                         const val = `${String(h).padStart(2,'0')}:${min}`;
+                         const label = `${hour}:${min} ${ampm}`; %>
+                    <option value="<%= val %>"><%= label %></option>
+                  <% }} %>
+                </select>
+              </td>
+              <td>
+                <select name="end_<%= day %>" id="end_<%= day %>" class="time-select" disabled>
+                  <option value="">-- : --</option>
+                  <% for (let h = 0; h < 24; h++) {
+                       for (let m = 0; m < 60; m += 30) {
+                         const hour = h % 12 === 0 ? 12 : h % 12;
+                         const ampm = h < 12 ? 'AM' : 'PM';
+                         const min = m === 0 ? '00' : '30';
+                         const val = `${String(h).padStart(2,'0')}:${min}`;
+                         const label = `${hour}:${min} ${ampm}`; %>
+                    <option value="<%= val %>"><%= label %></option>
+                  <% }} %>
+                </select>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            <% const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] %>
-            <% days.forEach(day => { %>
-              <tr class="day-row">
-                <td><%= day %></td>
-                <td>
-                  <input
-                    type="checkbox"
-                    name="available_<%= day %>"
-                    class="day-toggle"
-                    data-day="<%= day %>"
-                  />
-                </td>
-                <td>
-                  <select name="start_<%= day %>" id="start_<%= day %>" class="time-select" disabled>
-                    <option value="">-- : --</option>
-                    <% for (let h = 0; h < 24; h++) {
-                         for (let m = 0; m < 60; m += 30) {
-                           const hour = h % 12 === 0 ? 12 : h % 12;
-                           const ampm = h < 12 ? 'AM' : 'PM';
-                           const min = m === 0 ? '00' : '30';
-                           const val = `${String(h).padStart(2,'0')}:${min}`;
-                           const label = `${hour}:${min} ${ampm}`; %>
-                      <option value="<%= val %>"><%= label %></option>
-                    <% }} %>
-                  </select>
-                </td>
-                <td>
-                  <select name="end_<%= day %>" id="end_<%= day %>" class="time-select" disabled>
-                    <option value="">-- : --</option>
-                    <% for (let h = 0; h < 24; h++) {
-                         for (let m = 0; m < 60; m += 30) {
-                           const hour = h % 12 === 0 ? 12 : h % 12;
-                           const ampm = h < 12 ? 'AM' : 'PM';
-                           const min = m === 0 ? '00' : '30';
-                           const val = `${String(h).padStart(2,'0')}:${min}`;
-                           const label = `${hour}:${min} ${ampm}`; %>
-                      <option value="<%= val %>"><%= label %></option>
-                    <% }} %>
-                  </select>
-                </td>
-              </tr>
-            <% }) %>
-          </tbody>
-        </table>
+          <% }) %>
+        </tbody>
+      </table>
 
-        <div class="availability-actions">
-          <button type="submit" class="btn-create">CONFIRM</button>
-          <a href="/workspaces" class="skip-link">Skip For Now &gt;</a>
-        </div>
+      <div class="availability-actions">
+        <button type="submit" class="authButton">CONFIRM</button>
+        <a href="/workspaces" class="skip-link">Skip For Now &gt;</a>
+      </div>
+    </form>
+  </div>
 
-      </form>
-    </div>
+</main>
 
-  </main>
+<script>
+  const form = document.querySelector("form");
+  const messageEl = document.getElementById("formMessage");
 
-  <script>
-    document.querySelectorAll('.day-toggle').forEach(checkbox => {
-      checkbox.addEventListener('change', function () {
-        const day = this.dataset.day;
-        const startSel = document.getElementById('start_' + day);
-        const endSel = document.getElementById('end_' + day);
-        startSel.disabled = !this.checked;
-        endSel.disabled = !this.checked;
-      });
+  document.querySelectorAll('.day-toggle').forEach(checkbox => {
+    checkbox.addEventListener('change', function () {
+      const day = this.dataset.day;
+      const startSel = document.getElementById('start_' + day);
+      const endSel = document.getElementById('end_' + day);
+      startSel.disabled = !this.checked;
+      endSel.disabled = !this.checked;
     });
-  </script>
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    messageEl.style.display = "none";
+
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch("/availability", {
+        method: "POST",
+        body: new URLSearchParams(formData)
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        window.location.href = "/workspaces";
+      } else {
+        messageEl.innerText = data.message;
+        messageEl.style.color = "red";
+        messageEl.style.display = "block";
+      }
+    } catch (err) {
+      console.error(err);
+      messageEl.innerText = "Something went wrong. Try again.";
+      messageEl.style.color = "red";
+      messageEl.style.display = "block";
+    }
+  });
+</script>
 
 </body>
 </html>

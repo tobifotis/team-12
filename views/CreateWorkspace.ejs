@@ -7,56 +7,67 @@
 
   <main class="create-workspace-page">
 
-    <div class="create-workspace-card">
-      <h1>CREATE NEW WORKSPACE</h1>
+    <img src="/images/sun.webp" class="cw-sun" alt="">
+    
+    <div class="card-wrapper">
+      <div class="create-workspace-card">
+        <h1>CREATE NEW WORKSPACE</h1>
 
-      <form action="/workspaces/create" method="POST">
+        <form action="/workspaces/create" method="POST">
 
-        <div class="form-group">
-          <label for="workspaceName">WORKSPACE NAME</label>
-          <input
-            type="text"
-            id="workspaceName"
-            name="workspaceName"
-            placeholder="Enter the workspace name"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="description">DESCRIPTION</label>
-          <textarea
-            id="description"
-            name="description"
-            placeholder="Enter a short description"
-          ></textarea>
-        </div>
-
-        <div class="form-dates">
           <div class="form-group">
-            <label for="startDate">START DATE</label>
-            <input type="date" id="startDate" name="startDate" required />
+            <label for="workspaceName">WORKSPACE NAME</label>
+            <input
+              type="text"
+              id="workspaceName"
+              name="workspaceName"
+              placeholder="Enter the workspace name"
+              required
+            />
           </div>
 
           <div class="form-group">
-            <label for="endDate">END DATE</label>
-            <input type="date" id="endDate" name="endDate" required />
+            <label for="description">DESCRIPTION</label>
+            <textarea
+              id="description"
+              name="description"
+              placeholder="Enter a short description"
+            ></textarea>
           </div>
-        </div>
 
-        <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
-          <ul class="error-list">
-            <% errors.forEach(e => { %>
-              <li><%= e %></li>
-            <% }) %>
-          </ul>
-        <% } %>
+          <%#
+          <div class="form-dates">
+            <div class="form-group">
+              <label for="startDate">START DATE</label>
+              <input type="date" id="startDate" name="startDate" required />
+            </div>
+            <div class="form-group">
+              <label for="endDate">END DATE</label>
+              <input type="date" id="endDate" name="endDate" required />
+            </div>
+          </div>
+          %>
 
-        <button type="submit" class="btn-create">Create Workspace</button>
+          <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+            <ul class="error-list">
+              <% errors.forEach(e => { %>
+                <li><%= e %></li>
+              <% }) %>
+            </ul>
+          <% } %>
 
-      </form>
+          <button type="submit" class="btn-create">CREATE WORKSPACE</button>
 
-      <a href="/workspaces" class="back-link">&lt; Dashboard</a>
+        </form>
+
+        <a href="/workspaces" class="cwbacktext">
+          <img src="/images/createworkBackButton.svg" class="jwbackBut" alt="">
+          Dashboard
+        </a>
+      </div>
+      
+      <img src="/images/topCloud.webp" class="cloudTop" alt="">
+      <img src="/images/bottomCloud.webp" class="cloudBottom" alt="">
     </div>
 
   </main>
