@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head2') %>
+
+<body class="group-suggestions-page">
+  <%- include('includes/header') %>
+
+  <div class="userWorkPage">
+    <main class="userWorkGroupList">
+
+      <div class="workspacetitleTop">
+        <a href="/workspaces/<%= workspace.workspaceID %>" class="userWorkbackButDimensions">
+          <img src="/images/workspacebackBut.svg" alt="Back" class="userWorkbackBut userWorkbackButNORMAL">
+          <img src="/images/workspacebackHOVER.svg" alt="Back" class="userWorkbackBut userWorkbackButHOVER">
+        </a>
+        <h1 class="workspaceNameTitle"><%= workspace.workspaceName %></h1>
+      </div>
+
+      <div class="suggestionsMain">
+        <h1 class="suggestionsHello">Hello, <%= user.username %>.</h1>
+        <p class="suggestionsSubtitle">Your Optimal Group Suggestions Await You.</p>
+
+        <div class="suggestionsResults">
+          <p>Suggestions coming soon.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>
