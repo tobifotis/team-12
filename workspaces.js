@@ -197,4 +197,30 @@ router.get("/:workspaceID", mustBeLoggedIn, async (req, res) => {
   }
 });
 
+// GET AI group suggestions page (placeholder for now)
+router.get("/:workspaceID/suggestions", mustBeLoggedIn, async (req, res) => {
+  try {
+    const workspaceID = req.params.workspaceID;
+    const [workspaceRows] = await pool.query("SELECT * FROM Workspace WHERE workspaceID = ?", [workspaceID]);
+    if (workspaceRows.length === 0) {
+      return res.status(404).redirect("/workspaces");
+    }
+    const workspace = workspaceRows[0];
+
+    // Check user access
+    const [accessRows] = await pool.query(
+      "SELECT * FROM User_Workspace WHERE workspaceID = ? AND userID = ?",
+      [workspaceID, req.user.userID]
+    );
+    if (accessRows.length === 0) {
+      return res.status(403).redirect("/workspaces");
+    }
+
+    res.render("GroupSuggestions", { workspace, user: req.user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database error");
+  }
+});
+
 module.exports = router;
