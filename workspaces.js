@@ -163,6 +163,38 @@ router.post("/join", mustBeLoggedIn, async (req, res) => {
     }
 });
 
+router.post("/:workspaceID/rename", mustBeLoggedIn, async (req, res) => {
+  const workspaceName = typeof req.body.workspaceName === "string" ? req.body.workspaceName.trim() : "";
+  if (workspaceName.length < 3 || workspaceName.length > 100) {
+    return res.redirect(`/workspaces/${req.params.workspaceID}`);
+  }
+  try {
+    const [result] = await pool.query(
+      "UPDATE Workspace SET workspaceName = ? WHERE workspaceID = ? AND userID = ?",
+      [workspaceName, req.params.workspaceID, req.user.userID]
+    );
+    if (!result.affectedRows) return res.status(403).redirect("/workspaces");
+    res.redirect(`/workspaces/${req.params.workspaceID}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database error");
+  }
+});
+
+router.post("/:workspaceID/delete", mustBeLoggedIn, async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "DELETE FROM Workspace WHERE workspaceID = ? AND userID = ?",
+      [req.params.workspaceID, req.user.userID]
+    );
+    if (!result.affectedRows) return res.status(403).redirect("/workspaces");
+    res.redirect("/workspaces");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database error");
+  }
+});
+
 // Join group page.
 router.get("/:workspaceID/join-groups", mustBeLoggedIn, async (req, res) => {
   try {
@@ -241,7 +273,11 @@ router.get("/:workspaceID", mustBeLoggedIn, async (req, res) => {
       ORDER BY g.createdAt DESC
     `, [workspaceID, req.user.userID]);
 
-    res.render("user_workspace", { workspace, groups });
+    res.render("user_workspace", {
+      workspace,
+      groups,
+      isWorkspaceOwner: Number(workspace.userID) === Number(req.user.userID)
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send("Database error");
