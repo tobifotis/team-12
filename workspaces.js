@@ -163,6 +163,57 @@ router.post("/join", mustBeLoggedIn, async (req, res) => {
     }
 });
 
+// Join group page.
+router.get("/:workspaceID/join-groups", mustBeLoggedIn, async (req, res) => {
+  try {
+    const workspaceID = req.params.workspaceID;
+    const [workspaceRows] = await pool.query("SELECT * FROM Workspace WHERE workspaceID = ?", [workspaceID]);
+    const [accessRows] = await pool.query(
+      "SELECT 1 FROM User_Workspace WHERE workspaceID = ? AND userID = ?",
+      [workspaceID, req.user.userID]
+    );
+    if (!workspaceRows.length || !accessRows.length) return res.redirect("/workspaces");
+
+    const [groups] = await pool.query(`
+      SELECT g.groupID, g.groupName, g.ownerName
+      FROM \`Group\` g
+      WHERE g.workspaceID = ?
+        AND NOT EXISTS (
+          SELECT 1 FROM User_Group ug WHERE ug.groupID = g.groupID AND ug.userID = ?
+        )
+      ORDER BY g.createdAt DESC
+    `, [workspaceID, req.user.userID]);
+
+    const publicGroups = groups.map(group => ({
+      id: group.groupID,
+      name: group.groupName,
+      owner: group.ownerName
+    }));
+    const invites = [];
+
+    res.render("JoinGroup", { workspace: workspaceRows[0], publicGroups, invites, message: req.query.message || "" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database error");
+  }
+});
+
+router.post("/:workspaceID/join-groups/:groupID", mustBeLoggedIn, async (req, res) => {
+  try {
+    const { workspaceID, groupID } = req.params;
+    const [groups] = await pool.query("SELECT groupID FROM `Group` WHERE groupID = ? AND workspaceID = ?", [groupID, workspaceID]);
+    if (!groups.length) return res.redirect(`/workspaces/${workspaceID}/join-groups?message=That+group+is+no+longer+available.`);
+    await pool.query(
+      "INSERT IGNORE INTO User_Group (userID, workspaceID, groupID, isOwner) VALUES (?, ?, ?, 'false')",
+      [req.user.userID, workspaceID, groupID]
+    );
+    res.redirect(`/workspaces/${workspaceID}/join-groups?message=Request+sent!+You+have+been+added+to+the+group.`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database error");
+  }
+});
+
 // GET specific user workspace with groups
 router.get("/:workspaceID", mustBeLoggedIn, async (req, res) => {
   try {
