@@ -58,9 +58,9 @@
             </a>
           </div>
 
-          <button class="userWorkJoin" onclick="document.getElementById('join-group-modal').style.display='flex'">
+          <a href="/workspaces/<%= workspace.workspaceID %>/join-groups" class="userWorkJoin">
             Join a Group
-          </button>
+          </a>
 
           <!-- <div class="aibuttonrow">
             <button class="userWork-AI">
@@ -83,15 +83,6 @@
       </div>
 
     </main>
-  </div>
-
-  <!-- Simple Modal for Join Group -->
-  <div id="join-group-modal" class="modal" style="display:none;">
-    <div class="modal-content">
-      <span class="close" onclick="this.parentElement.parentElement.style.display='none'">&times;</span>
-      <h3>Join Group</h3>
-      <p>Placeholder: Select or enter group join code.</p>
-    </div>
   </div>
 
 </body>

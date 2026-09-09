@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head2') %>
+
+<body class="user-workspace-page">
+  <%- include('includes/header') %>
+
+  <div class="userWorkPage joinGroupPage">
+    <img src="/images/UserWorkspaceBack.webp" alt="" class="userWorkBackground">
+    <main class="userWorkGroupList joinGroupContent">
+      <div class="workspacetitleTop">
+        <a href="/workspaces/<%= workspace.workspaceID %>" class="userWorkbackButDimensions" aria-label="Back to workspace">
+          <img src="/images/workspacebackBut.svg" alt="" class="userWorkbackBut userWorkbackButNORMAL">
+          <img src="/images/workspacebackHOVER.svg" alt="" class="userWorkbackBut userWorkbackButHOVER">
+        </a>
+        <h1 class="workspaceNameTitle"><%= workspace.workspaceName %></h1>
+      </div>
+
+      <% if (message) { %>
+        <p class="joinGroupMessage"><%= message %></p>
+      <% } %>
+
+      <div class="joinGroupPanels">
+        <section class="joinGroupPanel joinGroupInvites">
+          <h2>Group Invites</h2>
+          <% if (invites.length === 0) { %>
+            <p class="joinGroupEmpty">You do not have any pending invitations.</p>
+          <% } %>
+          <% invites.forEach(invite => { %>
+            <article class="joinGroupCard inviteCard">
+              <h3><%= invite.name %></h3>
+              <p>Invited by <%= invite.owner %></p>
+              <span class="groupIdLabel">Group ID: <%= invite.id %></span>
+              <div class="joinGroupActions">
+                <button type="button" class="joinSmallButton">Accept</button>
+                <button type="button" class="joinSmallButton joinDeclineButton">Decline</button>
+              </div>
+            </article>
+          <% }) %>
+        </section>
+
+        <section class="joinGroupPanel publicGroups">
+          <div class="publicGroupsHeading">
+            <div>
+              <h2>Public Groups</h2>
+              <p>Pick a group to start collaborating.</p>
+            </div>
+            <span class="groupCount"><%= publicGroups.length %> available</span>
+          </div>
+          <div class="publicGroupsGrid">
+            <% if (publicGroups.length === 0) { %>
+              <p class="joinGroupEmpty publicGroupsEmpty">There are no public groups to join yet.</p>
+            <% } %>
+            <% publicGroups.forEach(group => { %>
+              <article class="joinGroupCard publicGroupCard">
+                <h3><%= group.name %></h3>
+                <p>Owner: <%= group.owner %></p>
+                <span class="groupIdLabel">Group ID: <%= group.id %></span>
+                <form method="post" action="/workspaces/<%= workspace.workspaceID %>/join-groups/<%= group.id %>">
+                  <button type="submit" class="joinWideButton">Request to Join</button>
+                </form>
+              </article>
+            <% }) %>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>
