@@ -1746,6 +1746,74 @@ body:has(.create-workspace-page) .header {
 .userWorkDropDownDim.open:hover .userWorkDropDownCLICKED {
   filter: brightness(0.84);
 }
+.workspaceMenu { position: relative; }
+.workspaceMenuOptions {
+  position: absolute;
+  top: 32px;
+  right: 0;
+  z-index: 5;
+  display: none;
+  min-width: 128px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 245, 250, .55);
+  border-radius: 10px;
+  background: #5f3d74;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, .28);
+}
+.workspaceMenu.open .workspaceMenuOptions { display: block; }
+.workspaceMenuOptions button {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #fff5fa;
+  padding: 10px 14px;
+  text-align: left;
+  font: 600 14px 'Geologica', sans-serif;
+  cursor: pointer;
+}
+.workspaceMenuOptions button:hover { background: rgba(255, 245, 250, .16); }
+.workspaceMenuOptions .workspaceDeleteOption { color: #ffd7e5; }
+.workspaceModal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(24, 13, 42, .5);
+}
+.workspaceModal.is-open { display: flex; }
+.workspaceModalDialog {
+  position: relative;
+  width: min(100%, 390px);
+  padding: 26px;
+  border: 2px solid rgba(203, 175, 240, .72);
+  border-radius: 18px;
+  background: linear-gradient(to bottom, #8666bc, #963c96);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, .4);
+  color: #fff5fa;
+}
+.workspaceModalDialog h2 { margin: 0 30px 12px 0; color: #fff5fa; font: 700 1.55rem 'Geologica', sans-serif; }
+.workspaceModalDialog p { margin: 0; color: rgba(255,245,250,.88); font-size: .95rem; line-height: 1.45; }
+.workspaceModalDialog label { display: block; margin: 14px 0 6px; font: 600 .85rem 'Geologica', sans-serif; }
+.workspaceModalDialog input {
+  width: 100%;
+  border: 1px solid rgba(255,245,250,.65);
+  border-radius: 9px;
+  padding: 10px 12px;
+  background: rgba(255,245,250,.96);
+  color: #3a2342;
+  font: 500 1rem 'Geologica', sans-serif;
+}
+.workspaceModalClose { position: absolute; top: 12px; right: 15px; border: 0; background: transparent; color: #fff5fa; font-size: 1.8rem; line-height: 1; cursor: pointer; }
+.workspaceModalActions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+.workspaceModalActions button { border: 0; border-radius: 999px; padding: 9px 15px; color: #fff5fa; font: 700 .82rem 'Geologica', sans-serif; cursor: pointer; }
+.workspaceModalCancel { background: rgba(255,245,250,.18); }
+.workspaceModalPrimary { background: #4f285b; }
+.workspaceModalDelete { background: #7d254e; }
+.workspaceModalActions button:hover { filter: brightness(1.12); }
 
 /* container for left and right sides */
 .userWorkContainer {

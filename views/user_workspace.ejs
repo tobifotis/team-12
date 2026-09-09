@@ -15,11 +15,19 @@
           <img src="/images/workspacebackHOVER.svg" alt="Back" class="userWorkbackBut userWorkbackButHOVER">
         </a>
         <h1 class="workspaceNameTitle"><%= workspace.workspaceName %></h1>
-        <button class="userWorkDropDownDim" onclick="this.classList.toggle('open')">
-          <img src="/images/workspacedropdown.svg" alt="Dropdown" class="userWorkDropDown userWorkDropDownNORMAL">
-          <img src="/images/workspacedropdownHOVER.svg" alt="Dropdown" class="userWorkDropDown userWorkDropDownHOVER">
-          <img src="/images/workspacedropdownCLICKED.svg" alt="Dropdown" class="userWorkDropDown userWorkDropDownCLICKED">
-        </button>
+        <% if (isWorkspaceOwner) { %>
+          <div class="workspaceMenu">
+            <button class="userWorkDropDownDim" type="button" aria-label="Workspace options" onclick="this.closest('.workspaceMenu').classList.toggle('open'); this.classList.toggle('open')">
+              <img src="/images/workspacedropdown.svg" alt="" class="userWorkDropDown userWorkDropDownNORMAL">
+              <img src="/images/workspacedropdownHOVER.svg" alt="" class="userWorkDropDown userWorkDropDownHOVER">
+              <img src="/images/workspacedropdownCLICKED.svg" alt="" class="userWorkDropDown userWorkDropDownCLICKED">
+            </button>
+            <div class="workspaceMenuOptions">
+              <button type="button" data-workspace-name="<%= workspace.workspaceName %>" onclick="workspaceModal.openRename(this.dataset.workspaceName)">Rename</button>
+              <button type="button" class="workspaceDeleteOption" onclick="workspaceModal.openDelete()">Delete</button>
+            </div>
+          </div>
+        <% } %>
       </div>
 
       <div class="userWorkContainer">
@@ -84,6 +92,63 @@
 
     </main>
   </div>
+
+  <% if (isWorkspaceOwner) { %>
+    <div id="workspace-modal" class="workspaceModal" aria-hidden="true">
+      <section class="workspaceModalDialog" role="dialog" aria-modal="true" aria-labelledby="workspace-modal-title">
+        <button class="workspaceModalClose" type="button" aria-label="Close" onclick="workspaceModal.close()">&times;</button>
+
+        <form id="rename-modal-form" method="post" action="/workspaces/<%= workspace.workspaceID %>/rename">
+          <h2 id="workspace-modal-title">Rename workspace</h2>
+          <label for="rename-workspace-input">Workspace name</label>
+          <input id="rename-workspace-input" name="workspaceName" type="text" maxlength="100" required>
+          <div class="workspaceModalActions">
+            <button type="button" class="workspaceModalCancel" onclick="workspaceModal.close()">Cancel</button>
+            <button type="submit" class="workspaceModalPrimary">Save name</button>
+          </div>
+        </form>
+
+        <form id="delete-modal-form" method="post" action="/workspaces/<%= workspace.workspaceID %>/delete" hidden>
+          <h2>Delete workspace?</h2>
+          <p>This will permanently delete the workspace and all of its groups.</p>
+          <div class="workspaceModalActions">
+            <button type="button" class="workspaceModalCancel" onclick="workspaceModal.close()">Cancel</button>
+            <button type="submit" class="workspaceModalDelete">Delete workspace</button>
+          </div>
+        </form>
+      </section>
+    </div>
+    <script>
+      window.workspaceModal = {
+        modal: document.getElementById('workspace-modal'),
+        renameForm: document.getElementById('rename-modal-form'),
+        deleteForm: document.getElementById('delete-modal-form'),
+        openRename(currentName) {
+          this.renameForm.hidden = false;
+          this.deleteForm.hidden = true;
+          this.modal.classList.add('is-open');
+          this.modal.setAttribute('aria-hidden', 'false');
+          const input = document.getElementById('rename-workspace-input');
+          input.value = currentName;
+          input.focus();
+          input.select();
+        },
+        openDelete() {
+          this.renameForm.hidden = true;
+          this.deleteForm.hidden = false;
+          this.modal.classList.add('is-open');
+          this.modal.setAttribute('aria-hidden', 'false');
+        },
+        close() {
+          this.modal.classList.remove('is-open');
+          this.modal.setAttribute('aria-hidden', 'true');
+        }
+      };
+      workspaceModal.modal.addEventListener('click', (event) => {
+        if (event.target === workspaceModal.modal) workspaceModal.close();
+      });
+    </script>
+  <% } %>
 
 </body>
 </html>
