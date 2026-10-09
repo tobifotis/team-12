@@ -3,6 +3,7 @@ const router = express.Router();
 const crypto = require("crypto");
 const pool = require("./config/db");
 const { mustBeLoggedIn } = require("./middleware/auth");
+const { getSuggestionsForUser } = require("./utils/matchmaking");
 
 // GET user's workspaces
 router.get("/", mustBeLoggedIn, async (req, res) => {
@@ -303,7 +304,14 @@ router.get("/:workspaceID/suggestions", mustBeLoggedIn, async (req, res) => {
       return res.status(403).redirect("/workspaces");
     }
 
-    res.render("GroupSuggestions", { workspace, user: req.user });
+    // ?mode=similar or ?mode=complementary (default)
+    const mode = req.query.mode === "similar" ? "similar" : "complementary";
+
+    const { suggestions, warnings } = await getSuggestionsForUser(
+      pool, workspaceID, req.user.userID, { skillMode: mode }
+    );
+
+    res.render("GroupSuggestions", { workspace, user: req.user, suggestions, warnings, mode });
   } catch (err) {
     console.error(err);
     res.status(500).send("Database error");

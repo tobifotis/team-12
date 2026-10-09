@@ -20,8 +20,50 @@
         <h1 class="suggestionsHello">Hello, <%= user.username %>.</h1>
         <p class="suggestionsSubtitle">Your Optimal Group Suggestions Await You.</p>
 
+        <!-- skills mode toggle -->
+        <div class="suggestionsModeToggle">
+          <a href="?mode=complementary" class="<%= mode === 'complementary' ? 'active' : '' %>">Complementary skills</a>
+          <a href="?mode=similar" class="<%= mode === 'similar' ? 'active' : '' %>">Similar skills</a>
+        </div>
+
+        <% warnings.forEach(w => { %>
+          <p class="suggestionsWarning"><%= w %></p>
+        <% }) %>
+
         <div class="suggestionsResults">
-          <p>Suggestions coming soon.</p>
+          <% if (suggestions.length === 0) { %>
+            <p>No suggestions yet.</p>
+          <% } else { %>
+            <% suggestions.forEach(s => { %>
+              <div class="suggestionCard">
+                <% if (s.profilePicture) { %>
+                  <img class="suggestionAvatar" src="<%= s.profilePicture %>" alt="">
+                <% } %>
+                <div class="suggestionInfo">
+                  <h3><%= s.displayName || s.username %> <small>@<%= s.username %></small></h3>
+                  <p class="suggestionMatch"><%= s.matchPercent %>% match</p>
+
+                  <p>
+                    <% if (s.noOverlap) { %>
+                      No shared availability yet
+                    <% } else { %>
+                      <%= s.overlapHours %> hrs/week of shared availability
+                    <% } %>
+                  </p>
+
+                  <% if (s.skills.length) { %>
+                    <p class="suggestionSkills">
+                      <% s.skills.forEach(skill => { %>
+                        <span class="skillTag <%= s.sharedSkills.includes(skill) ? 'skillShared' : 'skillNew' %>"><%= skill %></span>
+                      <% }) %>
+                    </p>
+                  <% } else { %>
+                    <p>No skills listed</p>
+                  <% } %>
+                </div>
+              </div>
+            <% }) %>
+          <% } %>
         </div>
       </div>
 
