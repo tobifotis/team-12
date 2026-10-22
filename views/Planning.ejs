@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('includes/head2') %>
+<link rel="stylesheet" href="/planning.css" />
 
 <body class="user-workspace-page">
   <%- include('includes/header') %>
@@ -54,16 +55,27 @@
         <% }) %>
       </section>
 
-      <!-- WEEKLY CALENDAR (filled in by JavaScript) -->
-      <aside class="planningCalendar">
-        <h2 class="planningColumnTitle">Tasks</h2>
-        <div class="planningWeekNav">
-          <button type="button" id="weekPrev">&lt;</button>
-          <span id="weekLabel"></span>
-          <button type="button" id="weekNext">&gt;</button>
+      <!-- CALENDAR (filled in by JavaScript) -->
+      <aside class="planningCalendar" aria-labelledby="calendarTitle">
+        <div class="planningCalendarHeader">
+          <div>
+            <p class="planningEyebrow">Your schedule</p>
+            <h2 id="calendarTitle" class="planningColumnTitle">Tasks</h2>
+          </div>
+          <div class="planningCalendarControls">
+            <div class="planningViewToggle" role="group" aria-label="Calendar view">
+              <button type="button" class="active" id="monthViewBtn" aria-pressed="true">Month</button>
+              <button type="button" id="weekViewBtn" aria-pressed="false">Week</button>
+            </div>
+            <div class="planningWeekNav" aria-label="Calendar period">
+              <button type="button" id="weekPrev" aria-label="Previous period">&#8249;</button>
+              <span id="weekLabel" aria-live="polite"></span>
+              <button type="button" id="weekNext" aria-label="Next period">&#8250;</button>
+            </div>
+          </div>
         </div>
-        <div id="weekDays" class="planningWeekDays"></div>
-        <div id="dayTasks" class="planningDayTasks"></div>
+        <div id="weekDays" class="planningWeekDays" role="group" aria-label="Choose a day"></div>
+        <section id="dayTasks" class="planningDayTasks" aria-live="polite" aria-label="Tasks due on selected day"></section>
       </aside>
 
     </div>
