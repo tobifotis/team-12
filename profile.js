@@ -14,7 +14,10 @@ const upload = multer({
 });
 
 router.get("/", mustBeLoggedIn, (req, res) => {
-  res.render("Profile")
+  res.render("profile", {
+    profileUser: req.user,
+    isOwnProfile: true
+  })
 })
 
 router.get("/edit", mustBeLoggedIn, (req, res) => {
@@ -74,6 +77,70 @@ router.get("/data", mustBeLoggedIn, async (req, res) => {
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: "Failed to fetch profile" })
+  }
+})
+
+router.get("/:userID", mustBeLoggedIn, async (req, res) => {
+  const profileUserID = Number(req.params.userID)
+  if (!Number.isSafeInteger(profileUserID) || profileUserID < 1) {
+    return res.status(400).send("Invalid user ID")
+  }
+
+  try {
+    const [users] = await pool.query(
+      "SELECT userID, username FROM User WHERE userID = ?",
+      [profileUserID]
+    )
+    if (!users.length) return res.status(404).send("Profile not found")
+
+    const profileUser = users[0]
+    const isOwnProfile = Number(req.user.userID) === Number(profileUser.userID)
+    if (isOwnProfile) return res.redirect("/profile")
+
+    return res.render("profile", { profileUser, isOwnProfile })
+  } catch (err) {
+    console.error("Unable to load member profile:", err)
+    return res.status(500).send("Unable to load profile")
+  }
+})
+
+router.get("/:userID/data", mustBeLoggedIn, async (req, res) => {
+  const profileUserID = Number(req.params.userID)
+  if (!Number.isSafeInteger(profileUserID) || profileUserID < 1) {
+    return res.status(400).json({ error: "Invalid user ID" })
+  }
+
+  try {
+    const [users] = await pool.query(
+      "SELECT userID, username FROM User WHERE userID = ?",
+      [profileUserID]
+    )
+    if (!users.length) return res.status(404).json({ error: "Profile not found" })
+
+    const [profileRows] = await pool.query(
+      `SELECT displayName, currentRole, organization, bio, profilePicture
+       FROM user_profile
+       WHERE userID = ?`,
+      [profileUserID]
+    )
+    const [skillRows] = await pool.query(
+      "SELECT skills FROM skills WHERE userID = ?",
+      [profileUserID]
+    )
+
+    const profile = profileRows[0] || {}
+    return res.json({
+      username: users[0].username,
+      displayName: profile.displayName || "",
+      currentRole: profile.currentRole || "",
+      organization: profile.organization || "",
+      bio: profile.bio || "",
+      skills: skillRows.map(row => row.skills),
+      profilePicture: profile.profilePicture || ""
+    })
+  } catch (err) {
+    console.error("Unable to fetch member profile:", err)
+    return res.status(500).json({ error: "Failed to fetch profile" })
   }
 })
 

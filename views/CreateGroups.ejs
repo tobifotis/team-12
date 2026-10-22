@@ -4,80 +4,94 @@
 
 <body class="create-workspace-page-body">
   <%- include('includes/header') %>
+  <svg style="display:none;">
+    <filter id="displacementFilter">
+      <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="turbulence" />
+      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="170" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </svg>
 
   <main class="create-workspace-page">
+    <img src="/images/sun.webp" class="cw-sun" alt="">
 
-    <div class="create-workspace-card">
-      <h1>CREATE NEW GROUP</h1>
+    <div class="card-wrapper">
+      <div class="create-workspace-card">
+        <h1>CREATE NEW GROUP</h1>
 
-      <form action="/groups/create" method="POST">
-        <input type="hidden" name="workspaceID" value="<%= workspaceID %>" />
+        <form action="/groups/create" method="POST" class="create-group-form">
+          <input type="hidden" name="workspaceID" value="<%= workspaceID %>" />
 
-        <div class="form-group">
-          <label for="groupName">GROUP NAME</label>
-          <input
-            type="text"
-            id="groupName"
-            name="groupName"
-            placeholder="Enter the group name"
-            value="<%= formData.groupName || '' %>"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="description">DESCRIPTION</label>
-          <textarea
-            id="description"
-            name="description"
-            class="group-description"
-            placeholder="Enter a short description"
-          ><%= formData.description || '' %></textarea>
-        </div>
-
-        <fieldset class="group-choice-group">
-          <legend>VISIBILITY</legend>
-          <div class="group-choice-options">
-            <label class="group-choice-option">
-              <input type="radio" name="visibility" value="private" <%= formData.visibility !== 'public' ? 'checked' : '' %> />
-              <span>Private</span>
-            </label>
-            <label class="group-choice-option">
-              <input type="radio" name="visibility" value="public" <%= formData.visibility === 'public' ? 'checked' : '' %> />
-              <span>Public</span>
-            </label>
+          <div class="form-group create-group-name">
+            <label for="groupName">GROUP NAME</label>
+            <input
+              type="text"
+              id="groupName"
+              name="groupName"
+              placeholder="Enter the group name"
+              value="<%= formData.groupName || '' %>"
+              required
+            />
           </div>
-        </fieldset>
 
-        <fieldset class="group-choice-group">
-          <legend>JOIN TYPE</legend>
-          <div class="group-choice-options">
-            <label class="group-choice-option">
-              <input type="radio" name="joinType" value="request" <%= formData.joinType !== 'open' ? 'checked' : '' %> />
-              <span>Request to join</span>
-            </label>
-            <label class="group-choice-option">
-              <input type="radio" name="joinType" value="open" <%= formData.joinType === 'open' ? 'checked' : '' %> />
-              <span>Open</span>
-            </label>
+          <div class="form-group create-group-description">
+            <label for="description">DESCRIPTION</label>
+            <textarea
+              id="description"
+              name="description"
+              class="group-description"
+              placeholder="Enter a short description"
+            ><%= formData.description || '' %></textarea>
           </div>
-        </fieldset>
 
-        <% if (errors.length > 0) { %>
-          <ul class="error-list">
-            <% errors.forEach(e => { %>
-              <li><%= e %></li>
-            <% }) %>
-          </ul>
-        <% } %>
+          <fieldset class="group-choice-group create-group-visibility">
+            <legend>VISIBILITY</legend>
+            <div class="group-choice-options">
+              <label class="group-choice-option">
+                <input type="radio" name="visibility" value="private" <%= formData.visibility !== 'public' ? 'checked' : '' %> />
+                <span>Private</span>
+              </label>
+              <label class="group-choice-option">
+                <input type="radio" name="visibility" value="public" <%= formData.visibility === 'public' ? 'checked' : '' %> />
+                <span>Public</span>
+              </label>
+            </div>
+          </fieldset>
 
-        <button type="submit" class="btn-create group-create-submit">Create Group</button>
-      </form>
+          <fieldset class="group-choice-group create-group-join-type">
+            <legend>JOIN TYPE</legend>
+            <div class="group-choice-options">
+              <label class="group-choice-option">
+                <input type="radio" name="joinType" value="request" <%= formData.joinType !== 'open' ? 'checked' : '' %> />
+                <span>Request to join</span>
+              </label>
+              <label class="group-choice-option">
+                <input type="radio" name="joinType" value="open" <%= formData.joinType === 'open' ? 'checked' : '' %> />
+                <span>Open</span>
+              </label>
+            </div>
+          </fieldset>
 
-      <a href="/workspaces/<%= workspaceID %>" class="cwbacktext">
-        <img src="/images/createworkBackButton.svg" class="jwbackBut" alt="">
-        Workspace
-      </a>
+          <% if (errors.length > 0) { %>
+            <ul class="error-list">
+              <% errors.forEach(e => { %>
+                <li><%= e %></li>
+              <% }) %>
+            </ul>
+          <% } %>
+
+          <button type="submit" class="btn-create group-create-submit">Create Group</button>
+        </form>
+
+        <a href="/workspaces/<%= workspaceID %>" class="cwbacktext">
+          <span class="userWorkbackButDimensions">
+            <img src="/images/whiteArrow.svg" alt="" class="userWorkbackBut">
+          </span>
+          <span>Workspace</span>
+        </a>
+      </div>
+
+      <img src="/images/topCloud.webp" class="cloudTop" alt="">
+      <img src="/images/bottomCloud.webp" class="cloudBottom" alt="">
     </div>
 
   </main>

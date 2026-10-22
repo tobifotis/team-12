@@ -27,7 +27,10 @@
     <main class="profile-page">
       <section class="profile-card">
 
-        <div class="profile-content loaded" data-username="<%= user.username %>">
+        <div class="profile-content loaded"
+             data-username="<%= profileUser.username %>"
+             data-profile-id="<%= profileUser.userID %>"
+             data-own-profile="<%= isOwnProfile %>">
           <div class="profile-header-section">
             <div class="profile-image-block">
               <img
@@ -67,24 +70,28 @@
               </div>
             </div>
 
-            <div class="profile-section">
-              <h3>Availability</h3>
-              <div id="availabilityList" class="availability-list">
-                <div class="availability-row">
-                <span class="availability-day skeleton">Monday</span>
-                <span class="availability-time skeleton">00:00 AM - 00:00 PM</span>
+            <% if (isOwnProfile) { %>
+              <div class="profile-section">
+                <h3>Availability</h3>
+                <div id="availabilityList" class="availability-list">
+                  <div class="availability-row">
+                    <span class="availability-day skeleton">Monday</span>
+                    <span class="availability-time skeleton">00:00 AM - 00:00 PM</span>
+                  </div>
+                  <div class="availability-row">
+                    <span class="availability-day skeleton">Tuesday</span>
+                    <span class="availability-time skeleton">00:00 AM - 00:00 PM</span>
+                  </div>
+                </div>
               </div>
-              <div class="availability-row">
-                <span class="availability-day skeleton">Tuesday</span>
-                <span class="availability-time skeleton">00:00 AM - 00:00 PM</span>
-              </div>
-              </div>
-            </div>
+            <% } %>
           </div>
 
-          <div class="profile-actions">
-            <button type="button" id="editProfileBtn" class="edit-btn">Edit Profile</button>
-          </div>
+          <% if (isOwnProfile) { %>
+            <div class="profile-actions">
+              <button type="button" id="editProfileBtn" class="edit-btn">Edit Profile</button>
+            </div>
+          <% } %>
 
           <p id="profileStatus" class="status-text"></p>
         </div>
