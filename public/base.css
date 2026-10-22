@@ -1137,7 +1137,7 @@ body:has(.create-workspace-page) .header {
     padding: 0;
 }
 
-.create-workspace-page > .create-workspace-card .group-choice-group {
+.create-workspace-page .create-workspace-card .group-choice-group {
     align-self: stretch;
     box-sizing: border-box;
     width: 100%;
@@ -1159,8 +1159,48 @@ body:has(.create-workspace-page) .header {
     gap: 18px;
 }
 
-.create-workspace-page > .create-workspace-card .group-choice-options {
+.create-workspace-page .create-workspace-card .group-choice-options {
     justify-content: flex-start;
+}
+
+.create-group-form {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch !important;
+}
+
+.create-group-form > input[type="hidden"] {
+    display: none;
+}
+
+.create-group-form .group-description {
+    height: 130px;
+}
+
+.create-group-name {
+    grid-area: 1 / 1;
+}
+
+.create-group-visibility {
+    grid-area: 1 / 2;
+}
+
+.create-group-description {
+    grid-area: 2 / 1;
+}
+
+.create-group-join-type {
+    grid-area: 2 / 2;
+}
+
+.create-group-form .group-create-submit {
+    grid-column: 1 / -1;
+    margin-top: 0;
+    justify-self: center;
+}
+
+.create-group-form .error-list {
+    grid-column: 1 / -1;
 }
 
 .group-choice-option {
@@ -1377,6 +1417,19 @@ body:has(.create-workspace-page) .footer {
   }
 
   .cw-sun { width: 170px; }
+
+  .create-group-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .create-group-form > * {
+    grid-area: auto;
+  }
+
+  .create-group-form .group-create-submit,
+  .create-group-form .error-list {
+    grid-column: 1;
+  }
 }
 
 @media (max-width: 480px) {
@@ -6455,4 +6508,3 @@ html body:has(.availability-page) .header.header.scrolled {
 .joinGroupInvites .joinGroupEmpty {
   text-align: center;
 }
-

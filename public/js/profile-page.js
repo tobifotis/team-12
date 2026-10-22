@@ -119,13 +119,17 @@ function setProfileFields(data) {
 
   currentSkills = Array.isArray(data.skills) ? [...data.skills] : [];
   renderSkills();
-  renderAvailability(data.availability || {});
+  if (availabilityList) renderAvailability(data.availability || {});
   clearSkeletons();
 }
 
 async function loadProfile() {
   try {
-    const response = await fetch("/profile/data");
+    const profileContent = document.querySelector(".profile-content");
+    const profileID = profileContent.dataset.profileId;
+    const isOwnProfile = profileContent.dataset.ownProfile === "true";
+    const dataUrl = isOwnProfile ? "/profile/data" : `/profile/${encodeURIComponent(profileID)}/data`;
+    const response = await fetch(dataUrl);
     const data = await response.json();
 
     if (!response.ok) {
@@ -141,9 +145,11 @@ async function loadProfile() {
   }
 }
 
-editProfileBtn.addEventListener("click", () => {
-  window.location.href = "/profile/edit";
-});
+if (editProfileBtn) {
+  editProfileBtn.addEventListener("click", () => {
+    window.location.href = "/profile/edit";
+  });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     const interBubble = document.querySelector('.interactive');

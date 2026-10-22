@@ -1,6 +1,8 @@
 require("dotenv").config()
 const express = require("express")
+const http = require("http")
 const cookieParser = require("cookie-parser")
+const { Server } = require("socket.io")
 const path = require("path")
 const { attachUser } = require("./middleware/auth")
 const pool = require("./config/db")
@@ -13,8 +15,12 @@ const profDetailRoute = require("./profile-details")
 const skillsRoute = require("./skills-selection")
 const profRoute = require("./profile")
 const planningRoute = require("./planning")
+const groupChat = require("./group-chat")
 
 const app = express()
+const server = http.createServer(app)
+const io = new Server(server)
+groupChat.attachGroupChatSockets(io)
 
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "ejs")
@@ -140,6 +146,7 @@ app.use("/profile-details", profDetailRoute)
 app.use("/skills-selection", skillsRoute)
 app.use("/profile", profRoute)
 app.use("/workspaces", workRoute)
+app.use("/groups", groupChat.router)
 app.use("/groups", groupRoute)
 app.use("/groups", planningRoute)
 app.use("/workspaces", require("./joinGroups"))
@@ -154,7 +161,7 @@ app.use((req, res) => res.status(404).send("404 - Page Not Found"));
 async function startServer() {
     try {
         await pool.query("SELECT 1")
-        app.listen(3000, () => console.log("Running on http://localhost:3000"))
+        server.listen(3000, () => console.log("Running on http://localhost:3000"))
     } catch (err) {
         console.error("Could not connect to MySQL:", err.message)
         process.exit(1)
