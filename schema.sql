@@ -188,3 +188,33 @@ CREATE TABLE IF NOT EXISTS Team_Request (
     FOREIGN KEY (workspaceID) REFERENCES Workspace(workspaceID)   ON DELETE CASCADE,
     FOREIGN KEY (userID)      REFERENCES User(userID)             ON DELETE CASCADE
 );
+
+/*Individual Messages in groups and workspaces*/
+CREATE TABLE IF NOT EXISTS DirectMessage (
+    messageID   INT AUTO_INCREMENT PRIMARY KEY,
+
+    workspaceID INT NOT NULL,
+    groupID     INT NULL,
+
+    senderID    INT NOT NULL,
+    recipientID INT NOT NULL,
+    content     TEXT NOT NULL,
+
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (workspaceID)
+        REFERENCES Workspace(workspaceID)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (groupID)
+        REFERENCES `Team`(groupID)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (senderID)
+        REFERENCES User(userID)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (recipientID)
+        REFERENCES User(userID)
+        ON DELETE CASCADE
+);

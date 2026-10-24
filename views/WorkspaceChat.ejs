@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head2') %>
+
+<body class="user-workspace-page group-chat-body">
+  <%- include('includes/header') %>
+
+  <div class="userWorkPage group-chat-background" aria-hidden="true">
+    <svg class="wb-svg">
+      <defs>
+        <filter id="workspace-bubb">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+          <feColorMatrix in="blur" mode="matrix"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+          <feBlend in="SourceGraphic" in2="goo" />
+        </filter>
+      </defs>
+    </svg>
+    <div class="wb-gradients-container">
+      <div class="wb-g1"></div>
+      <div class="wb-g2"></div>
+      <div class="wb-g3"></div>
+      <div class="wb-g4"></div>
+      <div class="wb-g5"></div>
+      <div class="wb-g6"></div>
+      <div class="wb-g7"></div>
+      <div class="wb-g8"></div>
+      <div class="wb-g9"></div>
+    </div>
+  </div>
+
+  <main class="group-chat-page"
+        id="workspace-chat"
+        data-workspace-id="<%= workspace.workspaceID %>"
+        data-current-user-id="<%= currentUserID %>">
+
+    <aside class="chat-sidebar" aria-label="Conversations">
+      <div class="chat-sidebar-heading">
+        <a class="chat-back-link"
+           href="/workspaces"
+           aria-label="Back to workspaces">
+          <img src="/images/workspacebackBut.svg" alt="">
+        </a>
+        <h1>Chat</h1>
+      </div>
+
+      <div class="chat-tabs" role="tablist" aria-label="Conversation type">
+        <button class="chat-tab"
+                id="individual-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="individual-conversations">
+          Individual
+        </button>
+
+        <button class="chat-tab is-active"
+                id="group-tab"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="workspace-conversations">
+          Workspace
+        </button>
+      </div>
+
+      <div class="chat-conversation-list"
+           id="workspace-conversations"
+           role="tabpanel"
+           aria-labelledby="group-tab">
+
+        <% conversations.forEach(conversation => { %>
+          <a class="chat-conversation<%= Number(conversation.workspaceID) === Number(workspace.workspaceID) ? ' is-selected' : '' %>"
+             href="/workspaces/<%= conversation.workspaceID %>/chat"
+             <%= Number(conversation.workspaceID) === Number(workspace.workspaceID) ? 'aria-current="page"' : '' %>>
+
+            <span class="chat-avatar chat-conversation-avatar" aria-hidden="true"><%= conversation.workspaceName.trim().charAt(0).toUpperCase() %></span>
+
+            <span class="chat-conversation-name"><%= conversation.workspaceName %></span>
+          </a>
+        <% }) %>
+      </div>
+
+      <div class="chat-individual-placeholder"
+           id="individual-conversations"
+           role="tabpanel"
+           aria-labelledby="individual-tab"
+           hidden>
+        Individual messaging is not available yet.
+      </div>
+    </aside>
+
+    <section class="chat-panel" aria-label="Workspace conversation">
+      <header class="chat-panel-header">
+        <span class="chat-avatar chat-group-avatar" aria-hidden="true"><%= workspace.workspaceName.trim().charAt(0).toUpperCase() %></span>
+        <h2><%= workspace.workspaceName %></h2>
+      </header>
+
+      <div class="chat-messages"
+           id="chat-messages"
+           role="log"
+           aria-live="polite"
+           aria-relevant="additions text"
+           aria-label="Messages">
+        <p class="chat-feedback" id="chat-loading">Loading messages…</p>
+      </div>
+
+      <p class="chat-feedback chat-status"
+         id="chat-status"
+         role="status"
+         aria-live="polite"></p>
+
+      <form class="chat-composer" id="chat-form">
+        <label class="visually-hidden" for="chat-input">Type your message</label>
+
+        <textarea id="chat-input"
+                  name="content"
+                  placeholder="Message your workspace..."
+                  maxlength="2000"
+                  rows="1"
+                  required></textarea>
+
+        <button type="submit" id="chat-send" aria-label="Send message">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3.5 11.2 20 3.8l-5.4 16.5-3.2-6.9-7.9-2.2Z"></path>
+            <path d="m11.4 13.4 4.2-4.2"></path>
+          </svg>
+          <span>Send</span>
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <script src="/socket.io/socket.io.js" defer></script>
+  <script src="/js/workspace-chat.js" defer></script>
+</body>
+</html>
