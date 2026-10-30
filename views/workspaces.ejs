@@ -143,6 +143,18 @@
       });
     });
   });
+
+  const homeEl = document.querySelector('.homepage');
+  const groundEl = document.querySelector('.ground, .groundNoWorkspace');
+
+  if (homeEl && groundEl) {
+    const setGroundHeight = () => {
+      homeEl.style.setProperty('--ground-h', groundEl.offsetHeight + 'px');
+    };
+    setGroundHeight();
+    groundEl.addEventListener('load', setGroundHeight);
+    new ResizeObserver(setGroundHeight).observe(groundEl);
+  }
 </script>
 </body>
 </html>

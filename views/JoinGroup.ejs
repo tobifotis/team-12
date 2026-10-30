@@ -6,7 +6,7 @@
   <svg style="display:none;">
     <filter id="displacementFilter">
       <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="turbulence" />
-      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="100" xChannelSelector="R" yChannelSelector="G" />
+      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="2" xChannelSelector="R" yChannelSelector="G" />
     </filter>
   </svg>
   <%- include('includes/header') %>
@@ -30,9 +30,23 @@
           <section class="joinGroupPanel joinGroupInvites">
             <h2>Group Requests</h2>
             <div class="joinGroupScroll">
-              <% if (invites.length === 0) { %>
-                <p class="joinGroupEmpty">No pending requests for your groups.</p>
+              <% if (invites.length === 0 && groupInvites.length === 0) { %>
+                <p class="joinGroupEmpty">No pending requests or invitations.</p>
               <% } %>
+              <% groupInvites.forEach(gi => { %>
+                <article class="joinGroupCard inviteCard">
+                  <h3><%= gi.inviter %></h3>
+                  <p>Invited you to join <strong><%= gi.groupName %></strong></p>
+                  <div class="joinGroupActions">
+                    <form method="post" action="/workspaces/<%= workspace.workspaceID %>/join-groups/invites/<%= gi.groupID %>/accept">
+                      <button type="submit" class="joinSmallButton">Accept</button>
+                    </form>
+                    <form method="post" action="/workspaces/<%= workspace.workspaceID %>/join-groups/invites/<%= gi.groupID %>/decline">
+                      <button type="submit" class="joinSmallButton joinDeclineButton">Deny</button>
+                    </form>
+                  </div>
+                </article>
+              <% }) %>
               <% invites.forEach(invite => { %>
                 <article class="joinGroupCard inviteCard">
                   <h3><%= invite.requester %></h3>
@@ -48,7 +62,7 @@
                 </article>
               <% }) %>
             </div>
-              <% if (invites.length === 0) { %>
+              <% if (invites.length === 0 && groupInvites.length === 0) { %>
                 <img class="sleepingRosie" src="/images/sleepingRosie.webp" alt="">
               <% } %>
           </section>
@@ -89,5 +103,15 @@
 
   <%- include('includes/workspaceModal') %>
   <%- include('includes/footer') %>
+<script>
+  const joinMsg = document.querySelector(".joinGroupMessage");
+  if (joinMsg) {
+    history.replaceState(null, "", location.pathname);
+    setTimeout(() => {
+      joinMsg.classList.add("fade");
+      setTimeout(() => joinMsg.remove(), 400);
+    }, 3000);
+    }
+</script>
 </body>
 </html>

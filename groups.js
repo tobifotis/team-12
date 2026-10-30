@@ -3,12 +3,32 @@ const router = express.Router()
 const pool = require("./config/db")
 const { mustBeLoggedIn } = require("./middleware/auth")
 
-function renderCreateGroup(res, workspaceID, errors = [], formData = {}) {
+async function renderCreateGroup(res, workspaceID, errors = [], formData = {}) {
+    let workspace = { workspaceID, workspaceName: "Workspace" }
+    let isWorkspaceOwner = false
+    try {
+        const [rows] = await pool.query(
+            "SELECT workspaceID, workspaceName FROM Workspace WHERE workspaceID = ?",
+            [workspaceID]
+        )
+        if (rows.length) workspace = rows[0]
+
+        const [own] = await pool.query(
+            "SELECT isOwner FROM User_Workspace WHERE workspaceID = ? AND userID = ?",
+            [workspaceID, res.req.user.userID]
+        )
+        isWorkspaceOwner = Number(own[0]?.isOwner) === 1
+    } catch (err) {
+        console.error(err)
+    }
+
     return res.status(errors.length ? 400 : 200).render("CreateGroups", {
-        workspaceID,
+        workspace,
+        isWorkspaceOwner,
+        message: "",
         errors,
         formData
-    });
+    })
 }
 
 router.get("/create", mustBeLoggedIn, async (req, res) => {
@@ -125,6 +145,7 @@ router.get("/:groupID", mustBeLoggedIn, async (req, res) => {
             group,
             workspace: workspaceRows[0],
             members,
+            currentUserID: req.user.userID,
             isGroupOwner: Number(group.userID) === Number(req.user.userID),
             message: req.query.message || ""
         })
@@ -181,6 +202,52 @@ router.post("/:groupID/delete", mustBeLoggedIn, async (req, res) => {
         if (!rows.length) return res.status(403).redirect("/workspaces")
         await pool.query("DELETE FROM `Team` WHERE groupID = ? AND userID = ?", [req.params.groupID, req.user.userID])
         return res.redirect(`/workspaces/${rows[0].workspaceID}`)
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send("Database error")
+    }
+})
+
+router.post("/:groupID/leave", mustBeLoggedIn, async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            "SELECT workspaceID, userID FROM `Team` WHERE groupID = ?",
+            [req.params.groupID]
+        )
+        if (!rows.length) return res.redirect("/workspaces")
+        if (Number(rows[0].userID) === Number(req.user.userID)) {
+            return res.redirect(`/groups/${req.params.groupID}`)
+        }
+        await pool.query(
+            "DELETE FROM User_Team WHERE groupID = ? AND userID = ? AND isOwner = 0",
+            [req.params.groupID, req.user.userID]
+        )
+        return res.redirect(`/workspaces/${rows[0].workspaceID}`)
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send("Database error")
+    }
+})
+
+router.post("/:groupID/members/:memberID/remove", mustBeLoggedIn, async (req, res) => {
+    const { groupID, memberID } = req.params
+    const back = (msg) => res.redirect(`/groups/${groupID}?message=${encodeURIComponent(msg)}`)
+    try {
+        const [groups] = await pool.query(
+            "SELECT groupID FROM `Team` WHERE groupID = ? AND userID = ?",
+            [groupID, req.user.userID]
+        )
+        if (!groups.length) return res.status(403).redirect("/workspaces")
+
+        if (Number(memberID) === Number(req.user.userID)) {
+            return back("The owner can't be removed from the group.")
+        }
+
+        const [result] = await pool.query(
+            "DELETE FROM User_Team WHERE groupID = ? AND userID = ? AND isOwner = 0",
+            [groupID, memberID]
+        )
+        return back(result.affectedRows ? "Member removed." : "That person is no longer in this group.")
     } catch (err) {
         console.error(err)
         return res.status(500).send("Database error")

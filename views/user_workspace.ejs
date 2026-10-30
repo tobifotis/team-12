@@ -136,13 +136,36 @@
     <%- include('includes/workspaceModal') %>
     <%- include('includes/footer') %>
 <script>
+  window.addEventListener('pageshow', e => {
+    const nav = performance.getEntriesByType('navigation')[0];
+    if (e.persisted || (nav && nav.type === 'back_forward')) location.reload();
+  });
 
   const copyBtn = document.getElementById('copyJoinCodeBtn');
   if (copyBtn) {
     copyBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText(copyBtn.dataset.code);
+      const code = copyBtn.dataset.code;
+
       copyBtn.classList.add('copied');
       setTimeout(() => copyBtn.classList.remove('copied'), 1500);
+
+      const fallbackCopy = () => {
+        const t = document.createElement('textarea');
+        t.value = code;
+        t.style.position = 'fixed';
+        t.style.opacity = '0';
+        document.body.appendChild(t);
+        t.focus();
+        t.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        t.remove();
+      };
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(code).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
     });
   }
 </script>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head2') %>
+<link rel="stylesheet" href="/profile.css" />
+
+<body class="profiledBody">
+
+<div class="blob-container">
+  <svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="goo">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+      </filter>
+    </defs>
+  </svg>
+  <div class="blob-goo">
+    <div class="interactive"></div>
+  </div>
+</div>
+
+<svg style="display:none;">
+  <filter id="displacementFilter">
+    <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="turbulence" />
+    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="170" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>
+
+<%- include('includes/header') %>
+
+<main class="availability-page">
+
+  <h1>Weekly Availability</h1>
+  <p id="formMessage" class="notice" style="display:none;"></p>
+
+  <form id="availabilityForm" class="availability-form">
+
+    <div class="availability-card">
+
+      <p class="availability-hint">
+        <img src="/images/lightbulbWeekly.svg" alt="" class="availability-hint-icon">
+        Setting your availability helps us match you with teammates who have similar schedules.
+      </p>
+
+      <table class="availability-table">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Available</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] %>
+          <% days.forEach(day => { %>
+            <tr class="day-row">
+              <td><%= day %></td>
+              <td>
+                <input
+                  type="checkbox"
+                  name="available_<%= day %>"
+                  class="day-toggle"
+                  data-day="<%= day %>"
+                />
+              </td>
+              <td>
+                <select name="start_<%= day %>" id="start_<%= day %>" class="time-select" disabled>
+                  <option value="">-- : --</option>
+                  <% for (let h = 0; h < 24; h++) {
+                       for (let m = 0; m < 60; m += 30) {
+                         const hour = h % 12 === 0 ? 12 : h % 12;
+                         const ampm = h < 12 ? 'AM' : 'PM';
+                         const min = m === 0 ? '00' : '30';
+                         const val = `${String(h).padStart(2,'0')}:${min}`;
+                         const label = `${hour}:${min} ${ampm}`; %>
+                    <option value="<%= val %>"><%= label %></option>
+                  <% }} %>
+                </select>
+              </td>
+              <td>
+                <select name="end_<%= day %>" id="end_<%= day %>" class="time-select" disabled>
+                  <option value="">-- : --</option>
+                  <% for (let h = 0; h < 24; h++) {
+                       for (let m = 0; m < 60; m += 30) {
+                         const hour = h % 12 === 0 ? 12 : h % 12;
+                         const ampm = h < 12 ? 'AM' : 'PM';
+                         const min = m === 0 ? '00' : '30';
+                         const val = `${String(h).padStart(2,'0')}:${min}`;
+                         const label = `${hour}:${min} ${ampm}`; %>
+                    <option value="<%= val %>"><%= label %></option>
+                  <% }} %>
+                </select>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+    </div>
+
+    <div class="editAvailActions">
+      <button type="button" id="exitBtn" class="cancel-btn-top">Exit</button>
+      <button type="button" id="saveBtn" class="save-btn save-btn-top">Save</button>
+    </div>
+
+  </form>
+
+</main>
+
+<%- include('includes/footer') %>
+
+<script src="/js/edit-availability.js"></script>
+<script src="/js/blobfollowing.js"></script>
+
+</body>
+</html>

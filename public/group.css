@@ -1,0 +1,443 @@
+
+/* blob colors */
+.userWorkPage.groupPage {
+  --wb-color1: 130, 70, 120;
+  --wb-color2: 135, 85, 100;
+  --wb-color3: 75, 105, 150;
+  --wb-color4: 115, 85, 150;
+  --wb-color5: 90, 100, 155;
+  --wb-color6: 125, 78, 110;
+  --wb-color7: 90, 110, 155;
+  --wb-color8: 110, 90, 135;
+  --wb-color-interactive: 140, 75, 130;
+  --wb-circle-size: 80%;
+  --wb-blending: normal;
+
+  /* box and button colors */
+  --box-top: rgba(12, 26, 76, 0.18);
+  --box-bottom: rgba(49, 14, 89, 0.18);
+  --box-hover-top: rgba(3, 15, 58, 0.16);
+  --box-hover-bottom: rgba(60, 22, 104, 0.16);
+
+  filter: contrast(1.2);
+  /* fall back */
+  background-color: #6E5A8A;
+  background-image: none;
+}
+
+.userWorkPage.groupPage::before {
+  display: block;
+  position: absolute;
+  inset: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: normal;
+  opacity: 1;
+  /* background color (no blobs) */
+  background:
+    radial-gradient(ellipse 32% 44% at 72% 28%, rgba(75, 105, 150, 1) 0%, rgba(75, 105, 150, 0) 100%),
+    radial-gradient(ellipse 36% 42% at 40% 44%, rgba(130, 70, 120, 1) 0%, rgba(130, 70, 120, 0) 100%),
+    radial-gradient(ellipse 38% 40% at 54% 80%, rgba(135, 85, 100, 1) 0%, rgba(135, 85, 100, 0) 100%),
+    radial-gradient(ellipse 42% 38% at 26% 8%,  rgba(115, 85, 150, 1) 0%, rgba(115, 85, 150, 0) 100%),
+    linear-gradient(160deg, #6A6E92 0%, #6E5A8A 50%, #735A82 100%);
+}
+
+.userWorkPage.groupPage .wb-gradients-container {
+  opacity: 0.95;
+}
+/* extra yellow blob */
+.groupPage .wb-lemon {
+  position: absolute;
+  top: 18%;
+  left: 55%;
+  width: 55vmax;
+  height: 55vmax;
+  max-width: 800px;
+  max-height: 800px;
+  pointer-events: none;
+  background: radial-gradient(circle at 40% 40%,
+    rgba(238, 222, 150, 0.75) 0%,
+    rgba(232, 214, 140, 0.35) 40%,
+    rgba(232, 214, 140, 0) 70%);
+  border-radius: 42% 58% 63% 37% / 45% 40% 60% 55%;
+  filter: blur(70px);
+  opacity: 0.55;
+  mix-blend-mode: soft-light;
+  will-change: transform, border-radius;
+  animation:
+    lemonDrift 26s ease-in-out infinite alternate,
+    lemonMorph 14s ease-in-out infinite;
+}
+
+/* lemon blob animated */
+@keyframes lemonDrift {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(-35vw, 22vh) scale(1.15); }
+  66%  { transform: translate(-12vw, 48vh) scale(0.9); }
+  100% { transform: translate(-45vw, 10vh) scale(1.1); }
+}
+
+/* lemon blob to change shape */
+@keyframes lemonMorph {
+  0%, 100% { border-radius: 42% 58% 63% 37% / 45% 40% 60% 55%; }
+  25%      { border-radius: 58% 42% 38% 62% / 55% 60% 40% 45%; }
+  50%      { border-radius: 38% 62% 55% 45% / 62% 38% 62% 38%; }
+  75%      { border-radius: 60% 40% 45% 55% / 40% 55% 45% 60%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .groupPage .wb-lemon { animation: none; }
+}
+
+/* cancel the page's contrast filter so modal works */
+.groupPage .workspaceMenuOptions,
+.groupPage .userWorkDropDown {
+  filter: contrast(0.8333);
+}
+
+@media (hover: hover) {
+  .groupPage .userWorkDropDownDim:not(.open):hover .userWorkDropDownNORMAL,
+  .groupPage .userWorkDropDownDim.open:hover .userWorkDropDownCLICKED {
+    filter: brightness(0.84) contrast(0.8333);
+  }
+}
+/* title of workspace */
+.groupPage .workspaceNameTitle {
+  color: #FFF5FA;
+  text-shadow: 0 2px 14px rgba(70, 40, 100, 0.4);
+}
+
+.groupPage .joinGroupMessage {
+  background: rgba(255, 255, 255, 0.22);
+  color: #FFF5FA;
+}
+
+/* boxes liquid glass */
+.groupPage .userWorkLeft,
+.groupPage .userWorkRightBox,
+.groupPage .userWorkbackButDimensions {
+  background: linear-gradient(to bottom, var(--box-top), var(--box-bottom));
+  filter: drop-shadow(0 12px 30px rgba(70, 40, 100, 0.3));
+}
+
+.groupPage .userWorkRightBox,
+.groupPage .userWorkbackButDimensions {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.3s ease;
+}
+
+.groupPage .userWorkRightBox::after,
+.groupPage .userWorkbackButDimensions::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--box-hover-top), var(--box-hover-bottom));
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.groupPage .userWorkRightBox > *,
+.groupPage .userWorkbackButDimensions > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* hover colors for boxes/button */
+.groupPage .userWorkRightBox:hover,
+.groupPage .userWorkbackButDimensions:hover {
+  background: linear-gradient(to bottom, var(--box-top), var(--box-bottom));
+  backdrop-filter: brightness(1.1) blur(2px) url(#displacementFilter);
+  transform: scale(1.015);
+}
+
+.groupPage .userWorkRightBox:hover::after,
+.groupPage .userWorkbackButDimensions:hover::after {
+  opacity: 1;
+}
+
+/* img transition effect on hovered */
+.groupPage .userWorkRightBox img,
+.groupPage .userWorkbackButDimensions img {
+  transition: filter 0.5s ease;
+}
+
+.groupPage .userWorkLeft::before,
+.groupPage .userWorkRightBox::before,
+.groupPage .userWorkbackButDimensions::before {
+  box-shadow: inset 3px 3px 4px -2px rgba(255, 255, 255, 0.55),
+              inset 0 0 8px 1px rgba(255, 255, 255, 0.4);
+}
+
+.groupPage .userWorkYourGroups,
+.groupPage .userWorkChatName,
+.groupPage .groupMember {
+  color: #FFF5FA;
+  text-shadow: 0 1px 8px rgba(70, 40, 100, 0.4);
+}
+
+.groupPage .userWorkLeftempty {
+  color: rgba(255, 250, 252, 0.9);
+}
+
+/* list of members in member box */
+.groupPage .groupMembersList {
+  display: grid;
+  grid-template-columns: minmax(0, max-content);
+  justify-content: center;
+  align-content: start;
+  gap: 0;
+}
+
+.groupPage .groupMember {
+  justify-content: flex-start;
+  text-align: left;
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+}
+
+.groupPage .groupMemberLink {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.groupPage .groupMemberLink:focus-visible {
+  outline: 3px solid #FFF5FA;
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+.groupPage .groupMemberAvatar {
+  box-shadow: 0 0 0 2px rgba(255, 245, 250, 0);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.35s ease;
+  will-change: transform;
+}
+
+.groupPage .groupMemberName {
+  align-self: center;
+  background-image: linear-gradient(#FFFCFB, #FFFCFB);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  padding-bottom: 2px;
+  transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* hover colors, when hovering over name, name and profile img have a hover effect */
+@media (hover: hover) {
+  .groupPage .groupMemberAvatar:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 2px #ec72b1;
+  }
+
+  .groupPage .groupMemberName:hover {
+    background-size: 100% 2px;
+  }
+
+  .groupPage .groupMemberLink:has(.groupMemberName:hover) .groupMemberAvatar {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 2px #ec72b1;
+  }
+}
+
+.groupPage .groupChatImg {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+  margin-top: 5px;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.groupPage .groupPlanningImg {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  margin-top: 10px;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* drop shadow on mobile */
+@media (max-width: 1100px) {
+  .groupPage .userWorkLeft,
+  .groupPage .userWorkRightBox,
+  .groupPage .userWorkbackButDimensions {
+    filter: none;
+    box-shadow: 0 10px 26px rgba(70, 40, 100, 0.28);
+  }
+
+  .groupPage .groupChatImg     { width: 90px; height: 90px; margin-top: 0; }
+  .groupPage .groupPlanningImg { width: 80px; height: 80px; margin-top: 0; }
+}
+
+@media (max-width: 480px) {
+  .groupPage .groupChatImg     { width: 60px; height: 60px; }
+  .groupPage .groupPlanningImg { width: 55px; height: 55px; }
+}
+
+@media (max-width: 390px) {
+  .groupPage .groupChatImg     { width: 48px; height: 48px; margin-top: -5px; }
+  .groupPage .groupPlanningImg { width: 44px; height: 44px; margin-top: -5px; }
+}
+
+/* background styling in mobile */
+@media (max-width: 1100px), (pointer: coarse) {
+  .userWorkPage.groupPage {
+    background-color: #6E5A8A;
+    background-image: none;
+    filter: contrast(1.2);
+  }
+
+  .userWorkPage.groupPage::before {
+    display: block;
+    filter: none;
+  }
+}
+
+.groupPage .groupMemberRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.groupPage .groupMemberRow:last-child {
+  border-bottom: none;
+}
+
+.groupPage .groupMemberRow .groupMember {
+  flex: 1;
+  min-width: 0;
+  border-bottom: none;
+  box-shadow: none;
+}
+
+.groupPage .groupRemoveBtn {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.25s ease;
+}
+
+.groupPage .groupRemoveIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform 0.25s ease, filter 0.3s ease;
+}
+
+.groupPage .groupRemoveBtn:focus-visible {
+  outline: 3px solid #FFF5FA;
+  outline-offset: 2px;
+}
+
+/* trash can */
+@media (hover: hover) {
+  .groupPage .groupRemoveBtn:hover .groupRemoveIcon {
+    transform: scale(1.2);
+    filter: brightness(0.8);
+  }
+}
+
+/* padding on bottom of mobile */
+@media (max-width: 1100px) {
+  .groupPage .userWorkGroupList {
+    padding-bottom: 110px;
+  }
+}
+
+.groupPage .groupMemberLink {
+  text-decoration: none;
+  cursor: default;
+  pointer-events: none;
+}
+
+.groupPage .groupMemberLink .groupMemberAvatar,
+.groupPage .groupMemberLink .groupMemberName {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.groupPage .groupMemberName {
+  width: fit-content;
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .groupPage .groupMembersPanel:has(.groupMembersList > :only-child) {
+    height: auto;
+    max-height: none;
+    min-height: 0;
+  }
+
+  .groupPage .groupMembersPanel:has(.groupMembersList > :only-child) .groupMembersList {
+    flex: none;
+    overflow: visible;
+  }
+}
+
+.groupPage .groupMemberRow {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.groupPage .groupMemberRow .groupMember,
+.groupPage .groupMemberLink {
+  min-width: 0;
+}
+
+.groupPage .groupMemberName {
+  flex: 0 1 auto;
+  width: fit-content;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.groupPage .groupRemoveBtn {
+  flex: 0 0 34px;
+}
+
+/* blobs move faster on mobile */
+@media (max-width: 1100px), (pointer: coarse) {
+  .userWorkPage.groupPage .wb-g1 { animation-duration: 15s; }
+  .userWorkPage.groupPage .wb-g2 { animation-duration: 10s; }
+  .userWorkPage.groupPage .wb-g3 { animation-duration: 20s; }
+  .userWorkPage.groupPage .wb-g4 { animation-duration: 20s; }
+  .userWorkPage.groupPage .wb-g5 { animation-duration: 10s; }
+  .userWorkPage.groupPage .wb-g6 { animation-duration: 13s; }
+  .userWorkPage.groupPage .wb-g7 { animation-duration: 17s; }
+  .userWorkPage.groupPage .wb-g8 { animation-duration: 15s; }
+  .userWorkPage.groupPage .wb-g9 { animation-duration: 18s; }
+}
+
+/* lemon blob more visible on mobile */
+@media (max-width: 1100px), (pointer: coarse) {
+  .groupPage .wb-lemon {
+    width: 90vmin;
+    height: 90vmin;
+    filter: blur(60px);
+    opacity: 0.6;
+    mix-blend-mode: normal;
+  }
+}

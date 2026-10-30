@@ -257,10 +257,6 @@
     const sk = document.getElementById('landingSkeleton');
     if (!sk) return;
 
-    if (document.documentElement.classList.contains('skip-skeleton')) {
-      sk.remove();
-      return;
-    }
 
     const hide = () => {
       sk.classList.add('hidden');

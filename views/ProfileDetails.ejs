@@ -2,33 +2,27 @@
 <html lang="en">
 <%- include('includes/head2') %>
 
-<body>
+<body class="profiledBody">
+  <div class="blob-container">
+  <svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="goo">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+      </filter>
+    </defs>
+  </svg>
+  <div class="blob-goo">
+    <div class="interactive"></div>
+  </div>
+</div>
 
-<svg class="profile-background-svg" viewBox="0 0 1440 829" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <g filter="url(#filter0_i_1295_539)">
-    <rect width="1440" height="829" fill="url(#paint0_radial_1295_539)"/>
-  </g>
-  <defs>
-    <filter id="filter0_i_1295_539" x="-21" y="0" width="1461" height="929" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-      <feOffset dx="-21" dy="121"/>
-      <feGaussianBlur stdDeviation="50"/>
-      <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
-      <feColorMatrix type="matrix" values="0 0 0 0 0.0476042 0 0 0 0 0.0852961 0 0 0 0 0.424523 0 0 0 0.4 0"/>
-      <feBlend mode="normal" in2="shape" result="effect1_innerShadow_1295_539"/>
-    </filter>
-    <radialGradient id="paint0_radial_1295_539" cx="0" cy="0" r="1" gradientTransform="matrix(534 896.5 -1560.19 883.968 353.5 -1.43084e-05)" gradientUnits="userSpaceOnUse">
-      <stop offset="0.238923" stop-color="#183B80"/>
-      <stop offset="0.548077" stop-color="#5478C0"/>
-      <stop offset="1" stop-color="#2A6571"/>
-    </radialGradient>
-  </defs>
+<svg style="display:none;">
+  <filter id="displacementFilter">
+    <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="turbulence" />
+    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="170" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
 </svg>
-
-<img class="profile-flowers" src="/images/skillsFlowers.webp" alt="" />
-
 <%- include('includes/banner') %>
 <main class="profile-page">
   <% if (errors && errors.length) { %>
@@ -54,7 +48,7 @@
     <div class="profile-details">
       <div class="left-side">
         <div class="profile-pic">
-          <img id="preview" src="/images/prof.png" alt="Profile" />
+          <img src="/images/default_user.png" id="profilePreview">
         </div>
         <input id="profilePictureInput" name="profilePicture" type="file" accept="image/*" hidden />
         <label class="changeButton" for="profilePictureInput">Change Photo</label>
@@ -62,19 +56,19 @@
 
       <div class="right-side">
           <div class="box1">
-            <label for="displayName">Display Name*</label>
+            <label for="displayName">Display Name<span class="req">*</span></label>
             <input type="text" id="displayName" name="displayName" placeholder="Enter The Name You Want To Go By" required />
           </div>
 
           <div class="parent">
             <div class="box2">       
-              <label for="currentRole">Current Role*</label>
-              <input type="text" id="currentRole" name="currentRole" placeholder="Select your Role" required />
+              <label for="currentRole">Current Role<span class="req">*</span></label>
+              <input type="text" id="currentRole" name="currentRole" placeholder="Example: &quot;Student&quot;" required />
             </div>
 
             <div class="box3">  
-              <label for="organization">Organization*</label>
-              <input type="text" id="organization" name="organization" placeholder="Enter School or Company" required />
+              <label for="organization">Organization<span class="req">*</span></label>
+              <input type="text" id="organization" name="organization" placeholder="Enter a School or Company" required />
             </div>
           </div>
 
@@ -84,8 +78,8 @@
               id="bio" 
               name="bio" 
               maxlength="150"
-              placeholder="Tell us a little about yourself"></textarea>
-            <p id="charCount">(0 / 150)</p>
+              placeholder="Tell Us a Little About Yourself"></textarea>
+            <p id="charCount">0 / 150</p>
           </div>
         </div>
     </div>
@@ -98,11 +92,11 @@
     </button>
   </div>
 
-  <a class="skip-link" href="/skills-selection">
-    Skip For Now >
-  </a>
+  <a class="skip-link" href="/skills-selection">Skip For Now</a>
 
 </main>
+
+<%- include('includes/footer') %>
 
 <script>
 const bio = document.getElementById("bio");
@@ -113,7 +107,7 @@ bio.addEventListener("input", () => {
 });
 
 const fileInput = document.getElementById("profilePictureInput");
-const preview = document.getElementById("preview");
+const preview = document.getElementById("profilePreview");
 
 fileInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
@@ -123,6 +117,7 @@ fileInput.addEventListener("change", (e) => {
   }
 });
 </script>
+<script src="/js/blobfollowing.js"></script>
 <script src="/js/enter-next.js"></script>
 </body>
 </html>

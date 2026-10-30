@@ -31,6 +31,7 @@
              data-username="<%= profileUser.username %>"
              data-profile-id="<%= profileUser.userID %>"
              data-own-profile="<%= isOwnProfile %>">
+
           <div class="profile-header-section">
             <div class="profile-image-block">
               <img
@@ -42,6 +43,13 @@
             </div>
 
             <div class="profile-title-block">
+              <% if (typeof backUrl !== 'undefined' && backUrl) { %>
+                <a href="<%= backUrl %>" class="profileBackLink" aria-label="Back to view members">
+                  <span class="profileBackCircle">
+                    <img src="/images/greenArrow.svg" alt="" class="profileBackArrow">
+                  </span>
+                </a>
+              <% } %>
               <h1 id="displayNameText" class="display-name skeleton">Display Name</h1>
               <p id="currentRoleText" class="current-role icon-line">
                 <img src="/images/briefcase.svg" class="icon-img" alt="Briefcase icon" />
@@ -70,22 +78,20 @@
               </div>
             </div>
 
-            <% if (isOwnProfile) { %>
-              <div class="profile-section">
-                <h3>Availability</h3>
-                <div id="availabilityList" class="availability-list">
-                  <div class="availability-row">
-                    <span class="availability-day skeleton">Monday</span>
-                    <span class="availability-time skeleton">00:00 AM - 00:00 PM</span>
-                  </div>
-                  <div class="availability-row">
-                    <span class="availability-day skeleton">Tuesday</span>
-                    <span class="availability-time skeleton">00:00 AM - 00:00 PM</span>
-                  </div>
+            <div class="profile-section">
+              <h3>Availability</h3>
+              <div id="availabilityList" class="availability-list">
+                <div class="availability-row">
+                  <span class="availability-day skeleton">Monday</span>
+                  <span class="availability-time skeleton">00:00 AM - 00:00 PM</span>
+                </div>
+                <div class="availability-row">
+                  <span class="availability-day skeleton">Tuesday</span>
+                  <span class="availability-time skeleton">00:00 AM - 00:00 PM</span>
                 </div>
               </div>
-            <% } %>
-          </div>
+            </div>
+          </div> 
 
           <% if (isOwnProfile) { %>
             <div class="profile-actions">

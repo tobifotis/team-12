@@ -3,29 +3,96 @@
 <%- include('includes/head2') %>
 
 <body class="group-suggestions-page">
+  <link rel="stylesheet" href="/aiSuggestions.css">
   <%- include('includes/header') %>
 
+  <svg style="display:none;">
+    <filter id="displacementFilter">
+      <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="turbulence" />
+      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="170" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </svg>
+
   <div class="aiSuggestPage">
-    <main class="aiSuggestContent">
 
-      <div class="workspacetitleTop">
-        <a href="/workspaces/<%= workspace.workspaceID %>" class="userWorkbackButDimensions">
-          <img src="/images/whiteArrow.svg" alt="Back" class="userWorkbackBut">
-        </a>
-        <h1 class="workspaceNameTitle"><%= workspace.workspaceName %></h1>
+    <div id="aiSkeleton" aria-hidden="true">
+      <section class="aiHero">
+        <div class="aiStage">
+          <div class="skBlock skRosie"></div>
+          <div class="aiHeroText">
+            <div class="workspacetitleTop">
+              <div class="skBlock skBack"></div>
+              <div class="skBlock skWsName"></div>
+            </div>
+            <div class="skBlock skHello"></div>
+            <div class="skBlock skSubtitle"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="skBg">
+        <div class="aiStage">
+          <div class="skGroup">
+            <div class="skBlock skGroupTitle"></div>
+            <div class="skBlock skGroupSub"></div>
+            <div class="skBlock skRow"></div>
+            <div class="skBlock skRow"></div>
+            <div class="skBlock skRow"></div>
+            <div class="skBlock skRow"></div>
+            <div class="skBlock skRow"></div>
+          </div>
+          <div class="skNotes">
+            <div class="skBlock skNote1"></div>
+            <div class="skBlock skNote2"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="skPartner">
+        <div class="aiStage">
+          <div class="skPHead">
+            <div class="skBlock skPTitle"></div>
+            <div class="skBlock skPSub"></div>
+          </div>
+          <div class="skBlock skPlanet"></div>
+          <div class="skBlock skPName"></div>
+          <div class="skBlock skPBlurb"></div>
+        </div>
+      </section>
+
+      <section class="skBottom"></section>
+    </div>
+
+    <section class="aiHero">
+      <div class="aiRain" id="aiRain" aria-hidden="true"></div>
+      <div class="aiStage">
+        <img class="aiGlow" src="/images/aiSuggGlow.webp" alt="">
+        <div class="aiSuperRosie">
+          <img class="superPart superBody" src="/images/superRosieBody.webp" alt="">
+          <img class="superPart superFist" src="/images/rosieFist.webp" alt="">
+        </div>
+
+        <div class="aiHeroText">
+          <div class="workspacetitleTop">
+            <a href="/workspaces/<%= workspace.workspaceID %>" class="userWorkbackButDimensions" aria-label="Back">
+              <img src="/images/whiteArrow.svg" alt="" class="userWorkbackBut">
+            </a>
+            <h1 class="workspaceNameTitle"><%= workspace.workspaceName %></h1>
+            <%- include('includes/workspaceMenu') %>
+          </div>
+
+          <h1 class="suggestionsHello">Hello, <%= user.username %>.</h1>
+          <p class="suggestionsSubtitle">Your Optimal Group Suggestions Await You.</p>
+        </div>
       </div>
+    </section>
 
-      <div class="suggestionsMain">
-        <h1 class="suggestionsHello">Hello, <%= user.username %>.</h1>
-        <p class="suggestionsSubtitle">Your Optimal Group Suggestions Await You.</p>
-
-        <% warnings.forEach(w => { %>
-          <p class="suggestionsWarning"><%= w %></p>
-        <% }) %>
-
-        <section class="optimalGroup">
+    <section class="aiBg">
+      <div class="aiStage">
+        <div class="optimalGroup">
           <h2>Your Optimal Group</h2>
           <p class="sectionSub">Created by using your skills and availability</p>
+
           <% if (group.length === 0) { %>
             <p class="suggestionsEmpty">No suggestions yet.</p>
           <% } else { %>
@@ -37,35 +104,413 @@
                   <% } else { %>
                     <span class="optimalAvatar"></span>
                   <% } %>
-                  <span><%= m.displayName || m.username %></span>
+                  <span class="optimalName"><%= m.displayName || m.username %></span>
                 </li>
               <% }) %>
             </ul>
           <% } %>
-        </section>
+        </div>
 
+        <div class="stickyNotes">
+          <div class="stickyHit stickyHit1">
+            <img class="stickyNote" src="/images/stickyN1.webp" alt="">
+          </div>
+          <div class="stickyHit stickyHit2">
+            <img class="stickyNote" src="/images/stickyN2.webp" alt="">
+          </div>
+          <img class="stickyYarn" src="/images/yarn.webp" alt="">
+
+          <% if (warnings.length) { %>
+            <div class="stickyWarnings" role="status">
+              <% warnings.forEach(w => { %>
+                <div class="warnRow">
+                  <img class="warnIcon" src="/images/groupinfo.svg" alt="">
+                  <p class="suggestionsWarning"><%= w %></p>
+                </div>
+              <% }) %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </section>
+
+    <section class="aiPartner" id="aiPartner">
+      <div class="aiStage">
         <% if (partner) { %>
-          <section class="partnerSection">
+          <% const partnerLabel = partner.displayName || partner.username; %>
+
+          <div class="partnerHead">
             <h2>Your Partner in Crime</h2>
             <p class="sectionSub">Created by using your skills and availability</p>
-            <button type="button" class="partnerPlanet" id="partnerPlanet" aria-label="Reveal your partner in crime"></button>
-            <p class="partnerName blurred" id="partnerName"><%= partner.displayName || partner.username %></p>
-            <p class="partnerBlurb">Your Partner in Crime Shares the Most Similar Skills and Availability as You Than Anyone Else!</p>
-          </section>
-        <% } %>
-      </div>
+          </div>
 
-    </main>
+          <img class="clickReveal" src="/images/clickReveal.webp" alt="">
+
+          <button type="button" class="partnerPlanet" id="partnerPlanet" aria-label="Reveal your partner in crime">
+            <span class="planetGlow"></span>
+            <% if (partner.profilePicture) { %>
+              <img class="partnerAvatar" src="<%= partner.profilePicture %>" alt="">
+            <% } else { %>
+              <span class="partnerAvatar partnerInitial"><%= partnerLabel.charAt(0).toUpperCase() %></span>
+            <% } %>
+            <canvas class="planetStatic" id="planetStatic"></canvas>
+          </button>
+
+          <img class="hoops" src="/images/hoops.png" alt="">
+
+          <p class="partnerName"><%= partnerLabel %></p>
+          <p class="partnerBlurb">Your Partner in Crime Shares the Most Similar Skills and Availability as You Than Anyone Else!</p>
+        <% } %>
+
+        <div class="aiChillRosie">
+          <div class="rosieRig">
+            <img class="rosiePart rosieBody" src="/images/rosieHeadBody.webp" alt="">
+            <img class="rosiePart rosieArm rosieArmL" src="/images/rosieLeftArm.webp" alt="">
+            <img class="rosiePart rosieArm rosieArmR" src="/images/rosieRightArm.webp" alt="">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="aiBottom">
+      <img class="aiBottomStars" src="/images/aiBottomStars.webp" alt="">
+    </section>
+
   </div>
 
+  <%- include('includes/workspaceModal') %>
   <%- include('includes/footer') %>
 
-<script>
-  const planet = document.getElementById('partnerPlanet');
-  const name = document.getElementById('partnerName');
-  if (planet && name) {
-    planet.addEventListener('click', () => name.classList.remove('blurred'));
-  }
-</script>
+  <script>
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+    // remember scroll position for refresh
+    const saveScroll = () => sessionStorage.setItem('aiScrollY', window.scrollY);
+    window.addEventListener('pagehide', saveScroll);
+    window.addEventListener('beforeunload', saveScroll);
+
+    const MOBILE = window.matchMedia('(max-width: 760px)');
+    const pageEl = document.querySelector('.aiSuggestPage');
+    const heroEl = pageEl.querySelector(':scope > .aiHero');
+    const heroTextEl = heroEl.querySelector('.aiHeroText');
+    const rain = document.getElementById('aiRain');
+    const ROSIE_RATIO = 880.35 / 736.21;
+    const ROSIE_MAX = 0.36;
+    const RAIN_INNER = 0.45;
+    const FIT_VARS = ['--hdr', '--rosie-w', '--rosie-cy', '--rain-top'];
+    let lastW = 0;
+    let lastRainKey = '';
+
+    function buildRain() {
+      if (!rain) return;
+
+      const rosieW = parseFloat(pageEl.style.getPropertyValue('--rosie-w')) || 0;
+      const key = MOBILE.matches ? 'm' + Math.round(rosieW / 8) : 'd';
+      if (key === lastRainKey) return;
+      lastRainKey = key;
+      rain.innerHTML = '';
+
+      const rand = (min, max) => min + Math.random() * (max - min);
+      const u = Math.min(rain.clientWidth / 1440, 1);
+      const layerH = rain.clientHeight;
+      let sides = [[-720, -230], [170, 720]];
+      let cols = 6;
+
+      if (MOBILE.matches) {
+        const inner = Math.max(rosieW * RAIN_INNER, 36) / u;
+        sides = [[-720, -inner], [inner, 720]];
+        cols = 3;
+      }
+
+      sides.forEach(([from, to]) => {
+        const step = (to - from) / cols;
+        for (let c = 0; c < cols; c++) {
+          const x = from + step * (c + 0.5) + rand(-step * 0.15, step * 0.15);
+          const n = Math.random() < 0.5 ? 2 : 3;
+          const dur = rand(5, 8);
+          const offset = rand(0, dur);
+          const maxH = Math.min(170, (layerH / n / u) * 0.7);
+          const variant = Math.random() < 0.5 ? '' : ' alt';
+
+          for (let j = 0; j < n; j++) {
+            const line = document.createElement('span');
+            line.className = 'rainLine' + variant;
+            line.style.setProperty('--x', x.toFixed(1));
+            line.style.setProperty('--h0', rand(maxH * 0.25, maxH * 0.45).toFixed(0));
+            line.style.setProperty('--h1', rand(maxH * 0.7, maxH).toFixed(0));
+            line.style.setProperty('--h2', rand(maxH * 0.4, maxH * 0.8).toFixed(0));
+            line.style.setProperty('--o', rand(0.75, 1).toFixed(2));
+            line.style.setProperty('--dur', dur.toFixed(2) + 's');
+            line.style.setProperty('--delay', (-(offset + (dur * j) / n)).toFixed(2) + 's');
+            rain.appendChild(line);
+          }
+        }
+      });
+    }
+
+    function fitHero() {
+      lastW = window.innerWidth;
+
+      if (!MOBILE.matches) {
+        FIT_VARS.forEach(v => pageEl.style.removeProperty(v));
+        buildRain();
+        return;
+      }
+
+      pageEl.style.setProperty('--hdr', Math.max(0, pageEl.getBoundingClientRect().top + window.scrollY) + 'px');
+
+      const uBg = Math.min(pageEl.clientWidth / 1180, 1);
+      const visibleH = heroEl.clientHeight - 197 * uBg;
+      const gap = 10;
+      const reserve = 12;
+      const textBottom = heroTextEl.offsetTop + heroTextEl.offsetHeight;
+      const space = visibleH - textBottom - gap - reserve;
+
+      const byHeight = space / ROSIE_RATIO;
+      const byWidth = heroEl.clientWidth * ROSIE_MAX;
+      const w = Math.max(Math.min(byHeight, byWidth), 90);
+      const h = w * ROSIE_RATIO;
+      const top = textBottom + gap + Math.max(0, (space - h) / 2);
+
+      pageEl.style.setProperty('--rosie-w', w + 'px');
+      pageEl.style.setProperty('--rosie-cy', (top + h / 2) + 'px');
+      pageEl.style.setProperty('--rain-top', textBottom + 'px');
+
+      buildRain();
+    }
+
+    fitHero();
+    window.addEventListener('resize', () => { if (window.innerWidth !== lastW) fitHero(); });
+    window.addEventListener('load', fitHero);
+    MOBILE.addEventListener('change', fitHero);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHero);
+
+    // skeleton, not used if cached
+    const sk = document.getElementById('aiSkeleton');
+    const aiBg = document.querySelector('.aiBg');
+    const bgProbe = new Image();
+    bgProbe.onload = () => aiBg.classList.add('bgLoaded');
+    bgProbe.src = '/images/aiBackground.webp';
+    const heavyImages = [
+      '/images/aiBackground.webp',
+      '/images/aiSuggGlow.webp',
+      '/images/superRosieBody.webp',
+      '/images/rosieFist.webp'
+    ];
+    const loadImg = u => new Promise(r => { const i = new Image(); i.onload = i.onerror = r; i.src = u; });
+
+    Promise.race([
+      Promise.all(heavyImages.map(loadImg)),
+      new Promise(r => setTimeout(r, 5000)) // never trap the user behind it
+    ]).then(() => {
+      sk.classList.add('hidden');
+      setTimeout(() => sk.remove(), 500);
+
+      const y = Number(sessionStorage.getItem('aiScrollY')) || 0;
+      window.scrollTo(0, y);
+    });
+
+    const planet = document.getElementById('partnerPlanet');
+    const partnerSection = document.getElementById('aiPartner');
+    const staticCanvas = document.getElementById('planetStatic');
+    let staticFrame = 0;
+
+    if (staticCanvas) {
+      const ctx = staticCanvas.getContext('2d');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let last = 0;
+
+      const gauss = () => {
+        let a = 0, b = 0;
+        while (a === 0) a = Math.random();
+        while (b === 0) b = Math.random();
+        return Math.sqrt(-2 * Math.log(a)) * Math.cos(2 * Math.PI * b);
+      };
+
+      const resize = () => {
+        const dpr = window.devicePixelRatio || 1;
+        staticCanvas.width = Math.round(staticCanvas.clientWidth * dpr);
+        staticCanvas.height = Math.round(staticCanvas.clientHeight * dpr);
+      };
+
+      const draw = () => {
+        const w = staticCanvas.width;
+        const h = staticCanvas.height;
+        const rx = w / 2;
+        const ry = h / 2;
+        const cx = rx + rx * 0.02;
+        const cy = ry + ry * 0.1;
+        const k = w / 255;
+        const dot = Math.max(1, Math.round(k));
+        const fill = (k * k) / (dot * dot);
+        const dense = Math.round(8064 * fill);
+        const sparse = Math.round(2276 * fill);
+
+        ctx.fillStyle = '#D6D2D5';
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = 'rgba(45, 42, 48, 0.9)';
+
+        for (let i = 0; i < dense; i++) {
+          ctx.fillRect(Math.floor(cx + gauss() * rx * 0.3), Math.floor(cy + gauss() * ry * 0.3), dot, dot);
+        }
+
+        for (let i = 0; i < sparse; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const dist = Math.sqrt(Math.random());
+          ctx.fillRect(Math.floor(rx + Math.cos(angle) * dist * rx), Math.floor(ry + Math.sin(angle) * dist * ry), dot, dot);
+        }
+      };
+
+      const tick = (t) => {
+        if (t - last > 70) {
+          last = t;
+          draw();
+        }
+        staticFrame = requestAnimationFrame(tick);
+      };
+
+      resize();
+      draw();
+      if (!reduceMotion) staticFrame = requestAnimationFrame(tick);
+
+      new ResizeObserver(() => {
+        resize();
+        draw();
+      }).observe(staticCanvas);
+    }
+
+    if (planet && partnerSection) {
+      planet.addEventListener('click', () => {
+        partnerSection.classList.add('revealed');
+        planet.disabled = true;
+        planet.setAttribute('aria-label', 'Your partner in crime');
+        setTimeout(() => cancelAnimationFrame(staticFrame), 900);
+      });
+    }
+
+    const members = [...document.querySelectorAll('.optimalMember')];
+    const memberList = document.querySelector('.optimalGroupList');
+    if (memberList && members.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const amp = 9;
+      const spring = members.map(() => ({ x: 0, v: 0, t: 0 }));
+      let lastY = null;
+      let dir = 0;
+      let focus = 0;
+      let running = false;
+
+      const step = () => {
+        let moving = false;
+        spring.forEach((s, i) => {
+          const dist = Math.abs(i - focus);
+          const stiffness = Math.max(0.025, 0.07 - dist * 0.012);
+          s.v += (s.t - s.x) * stiffness;
+          s.v *= 0.86;
+          s.x += s.v;
+          if (Math.abs(s.v) > 0.01 || Math.abs(s.t - s.x) > 0.01) moving = true;
+          members[i].style.setProperty('--by', s.x.toFixed(2));
+        });
+        if (moving) requestAnimationFrame(step);
+        else running = false;
+      };
+
+      const kick = () => {
+        if (!running) {
+          running = true;
+          requestAnimationFrame(step);
+        }
+      };
+
+      memberList.addEventListener('mouseenter', e => { lastY = e.clientY; });
+
+      memberList.addEventListener('mousemove', e => {
+        if (lastY !== null) {
+          const dy = e.clientY - lastY;
+          if (Math.abs(dy) > 1) dir = dy < 0 ? -1 : 1;
+        }
+        lastY = e.clientY;
+
+        let best = 0;
+        let bestDist = Infinity;
+        members.forEach((m, i) => {
+          const r = m.getBoundingClientRect();
+          const d = Math.abs(e.clientY - (r.top + r.height / 2));
+          if (d < bestDist) {
+            bestDist = d;
+            best = i;
+          }
+        });
+        focus = best;
+
+        spring.forEach((s, i) => {
+          const dist = Math.abs(i - focus);
+          s.t = dir * amp * Math.exp(-(dist * dist) / 2.2);
+        });
+        kick();
+      });
+
+      memberList.addEventListener('mouseleave', () => {
+        lastY = null;
+        dir = 0;
+        spring.forEach(s => { s.t = 0; });
+        kick();
+      });
+    }
+
+    const noteHits = [...document.querySelectorAll('.stickyHit')];
+    if (noteHits.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const swings = noteHits.map(() => ({ x: 0, v: 0, t: 0, lastX: null, timer: null }));
+      let swinging = false;
+
+      const swingStep = () => {
+        let active = false;
+        swings.forEach((s, i) => {
+          s.v += (s.t - s.x) * 0.045;
+          s.v *= 0.91;
+          s.x += s.v;
+          if (Math.abs(s.v) > 0.005 || Math.abs(s.t - s.x) > 0.005) active = true;
+          noteHits[i].firstElementChild.style.setProperty('--rot', s.x.toFixed(2));
+        });
+        if (active) requestAnimationFrame(swingStep);
+        else swinging = false;
+      };
+
+      const wakeSwing = () => {
+        if (!swinging) {
+          swinging = true;
+          requestAnimationFrame(swingStep);
+        }
+      };
+
+      noteHits.forEach((hit, i) => {
+        const s = swings[i];
+
+        hit.addEventListener('mouseenter', e => { s.lastX = e.clientX; });
+
+        hit.addEventListener('mousemove', e => {
+          if (s.lastX !== null) {
+            const dx = e.clientX - s.lastX;
+            if (Math.abs(dx) > 1) {
+              const strength = Math.min(1, Math.abs(dx) / 25);
+              s.t = -Math.sign(dx) * (4 + 8 * strength);
+              clearTimeout(s.timer);
+              s.timer = setTimeout(() => {
+                s.t = 0;
+                wakeSwing();
+              }, 160);
+            }
+          }
+          s.lastX = e.clientX;
+          wakeSwing();
+        });
+
+        hit.addEventListener('mouseleave', () => {
+          s.lastX = null;
+          clearTimeout(s.timer);
+          s.t = 0;
+          wakeSwing();
+        });
+      });
+    }
+  </script>
 </body>
 </html>

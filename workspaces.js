@@ -234,6 +234,51 @@ router.post("/:workspaceID/delete", mustBeLoggedIn, async (req, res) => {
   }
 });
 
+router.post("/:workspaceID/leave", mustBeLoggedIn, async (req, res) => {
+  const { workspaceID } = req.params;
+  let connection;
+  try {
+    const [workspaceRows] = await pool.query(
+      "SELECT userID FROM Workspace WHERE workspaceID = ?",
+      [workspaceID]
+    );
+    if (!workspaceRows.length) return res.redirect("/workspaces");
+
+    if (Number(workspaceRows[0].userID) === Number(req.user.userID)) {
+      return res.redirect(`/workspaces/${workspaceID}`);
+    }
+
+    connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    await connection.query(
+      "DELETE FROM Team_Request WHERE userID = ? AND workspaceID = ?",
+      [req.user.userID, workspaceID]
+    );
+    await connection.query(
+      "DELETE i FROM Group_Invite i JOIN Team t ON t.groupID = i.groupID WHERE i.invitedUserID = ? AND t.workspaceID = ?",
+      [req.user.userID, workspaceID]
+    );
+    await connection.query(
+      "DELETE FROM User_Team WHERE userID = ? AND workspaceID = ?",
+      [req.user.userID, workspaceID]
+    );
+    await connection.query(
+      "DELETE FROM User_Workspace WHERE userID = ? AND workspaceID = ? AND isOwner = FALSE",
+      [req.user.userID, workspaceID]
+    );
+
+    await connection.commit();
+    res.redirect("/workspaces");
+  } catch (err) {
+    if (connection) await connection.rollback();
+    console.error(err);
+    res.status(500).send("Database error");
+  } finally {
+    if (connection) connection.release();
+  }
+});
+
 // GET specific user workspace with groups
 router.get("/:workspaceID", mustBeLoggedIn, async (req, res) => {
   try {
@@ -295,7 +340,14 @@ router.get("/:workspaceID/suggestions", mustBeLoggedIn, async (req, res) => {
     const { group, partner, warnings } = await getGroupAndPartner(
   pool, workspaceID, req.user.userID, { groupSize: 5 }
 );
-res.render("GroupSuggestions", { workspace, user: req.user, group, partner, warnings });
+res.render("GroupSuggestions", {
+  workspace,
+  user: req.user,
+  group,
+  partner,
+  warnings,
+  isWorkspaceOwner: Number(workspace.userID) === Number(req.user.userID)
+});
   } catch (err) {
     console.error(err);
     res.status(500).send("Database error");
@@ -328,11 +380,18 @@ router.get("/:workspaceID/members", mustBeLoggedIn, async (req, res) => {
       ORDER BY uw.isOwner DESC, COALESCE(NULLIF(TRIM(up.displayName), ''), u.username) ASC`,
       [workspaceID]
     );
+
+    const [myGroups] = await pool.query(
+      "SELECT groupID, groupName FROM `Team` WHERE userID = ? AND workspaceID = ? ORDER BY groupName",
+      [req.user.userID, workspaceID]
+    );
  
     const workspace = workspaceRows[0];
     res.render("WorkspaceMembers", {
       workspace,
       members,
+      myGroups,
+      currentUserID: req.user.userID,
       isWorkspaceOwner: Number(workspace.userID) === Number(req.user.userID),
       message: req.query.message || "",
       preloads: membersPreloads
@@ -375,6 +434,14 @@ router.post("/:workspaceID/members/:memberID/remove", mustBeLoggedIn, async (req
     await connection.beginTransaction();
  
     await connection.query(
+      "DELETE FROM Team_Request WHERE userID = ? AND workspaceID = ?",
+      [memberID, workspaceID]
+    );
+    await connection.query(
+      "DELETE i FROM Group_Invite i JOIN Team t ON t.groupID = i.groupID WHERE i.invitedUserID = ? AND t.workspaceID = ?",
+      [memberID, workspaceID]
+    );
+    await connection.query(
       "DELETE FROM User_Team WHERE userID = ? AND workspaceID = ?",
       [memberID, workspaceID]
     );
@@ -400,4 +467,3 @@ router.post("/:workspaceID/members/:memberID/remove", mustBeLoggedIn, async (req
 
 
 module.exports = router;
-

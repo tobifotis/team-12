@@ -2,24 +2,25 @@
 <html lang="en">
 <%- include('includes/head2') %>
 
-<body class="user-workspace-page">
+<body class="user-workspace-page group-page">
+  <link rel="stylesheet" href="/group.css">
+
   <svg style="display:none;">
-  <filter id="displacementFilter">
-    <feTurbulence type="turbulence"
-      baseFrequency="0.01"
-      numOctaves="2"
-      result="turbulence" />
-    <feDisplacementMap in="SourceGraphic"
-      in2="turbulence"
-      scale="100"
-      xChannelSelector="R"
-      yChannelSelector="G" />
-  </filter>
-</svg>
+    <filter id="displacementFilter">
+      <feTurbulence type="turbulence"
+        baseFrequency="0.01"
+        numOctaves="2"
+        result="turbulence" />
+      <feDisplacementMap in="SourceGraphic"
+        in2="turbulence"
+        scale="100"
+        xChannelSelector="R"
+        yChannelSelector="G" />
+    </filter>
+  </svg>
   <%- include('includes/header') %>
 
-  <div class="userWorkPage">
-    <img src="/images/UserWorkspaceBack.webp" alt="" class="userWorkBackground">
+  <div class="userWorkPage groupPage">
 
     <svg class="wb-svg" aria-hidden="true">
       <defs>
@@ -42,14 +43,14 @@
       <div class="wb-g7"></div>
       <div class="wb-g8"></div>
       <div class="wb-g9"></div>
+      <div class="wb-lemon"></div>
     </div>
 
     <main class="userWorkGroupList">
 
       <div class="workspacetitleTop">
-        <a href="/workspaces/<%= workspace.workspaceID %>" class="userWorkbackButDimensions">
-          <img src="/images/workspacebackBut.svg" alt="Back" class="userWorkbackBut userWorkbackButNORMAL">
-          <img src="/images/workspacebackHOVER.svg" alt="Back" class="userWorkbackBut userWorkbackButHOVER">
+        <a href="/workspaces/<%= workspace.workspaceID %>" class="userWorkbackButDimensions" aria-label="Back">
+          <img src="/images/whiteArrow.svg" alt="" class="userWorkbackBut">
         </a>
         <h1 class="workspaceNameTitle"><%= group.groupName %></h1>
         <div class="workspaceMenu">
@@ -61,9 +62,11 @@
           <div class="workspaceMenuOptions">
             <% if (isGroupOwner) { %>
               <button type="button" data-group-name="<%= group.groupName %>" onclick="workspaceModal.openRename(this.dataset.groupName)">Rename</button>
+              <button type="button" onclick="workspaceModal.openInfo()">Info</button>
               <button type="button" class="workspaceDeleteOption" onclick="workspaceModal.openDelete()">Delete</button>
             <% } else { %>
               <button type="button" onclick="workspaceModal.openInfo()">Info</button>
+              <button type="button" class="workspaceDeleteOption" onclick="workspaceModal.openLeave()">Leave</button>
             <% } %>
           </div>
         </div>
@@ -75,29 +78,38 @@
         <!-- LEFT PANEL -->
         <section class="userWorkLeft groupMembersPanel">
           <h2 class="userWorkYourGroups">Members</h2>
-          <% if (isGroupOwner) { %>
-            <form class="groupInviteForm" method="post" action="/groups/<%= group.groupID %>/invite">
-              <label for="group-invitee">Invite a person</label>
-              <input id="group-invitee" name="invitee" type="text" placeholder="Username or email" required>
-              <button type="submit">Send invite</button>
-            </form>
-          <% } %>
           <div class="userWorkGroupsList groupMembersList">
             <% if (!members || members.length === 0) { %>
               <p class="userWorkLeftempty">No members yet.</p>
             <% } else { %>
               <% members.forEach(member => { %>
-                <div class="groupMember">
-                  <% if (member.profilePicture) { %>
-                    <img src="<%= member.profilePicture %>" alt="" class="groupMemberAvatar">
-                  <% } else { %>
-                    <svg class="groupMemberAvatar groupMemberAvatarEmpty" viewBox="0 0 24 24" fill="none" stroke="#fff5fa" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                      <circle cx="12" cy="12" r="11"></circle>
-                      <circle cx="12" cy="9.5" r="3.5"></circle>
-                      <path d="M5 19.5c1.5-3.2 4-4.5 7-4.5s5.5 1.3 7 4.5"></path>
-                    </svg>
+                <% const isSelf = typeof currentUserID !== 'undefined' && Number(member.userID) === Number(currentUserID); %>
+                <div class="groupMemberRow">
+                  <a class="groupMember groupMemberLink"
+                     href="<%= isSelf
+                       ? '/profile?fromGroup=' + group.groupID
+                       : '/profile/' + member.userID + '?fromGroup=' + group.groupID %>">
+                    <% if (member.profilePicture) { %>
+                      <img src="<%= member.profilePicture %>" alt="" class="groupMemberAvatar">
+                    <% } else { %>
+                      <svg class="groupMemberAvatar groupMemberAvatarEmpty" viewBox="0 0 24 24" fill="none" stroke="#fff5fa" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="11"></circle>
+                        <circle cx="12" cy="9.5" r="3.5"></circle>
+                        <path d="M5 19.5c1.5-3.2 4-4.5 7-4.5s5.5 1.3 7 4.5"></path>
+                      </svg>
+                    <% } %>
+                    <span class="groupMemberName"><%= member.name %></span>
+                  </a>
+                  <% if (isGroupOwner && !isSelf) { %>
+                    <button type="button"
+                            class="groupRemoveBtn"
+                            data-user-id="<%= member.userID %>"
+                            data-name="<%= member.name %>"
+                            aria-label="Remove <%= member.name %> from group"
+                            onclick="workspaceModal.openRemove(this.dataset.userId, this.dataset.name)">
+                      <img src="/images/groupTrash.svg" alt="" class="groupRemoveIcon">
+                    </button>
                   <% } %>
-                  <span class="groupMemberName"><%= member.name %></span>
                 </div>
               <% }) %>
             <% } %>
@@ -109,15 +121,11 @@
           <div class="userWorkRightorder groupRightorder">
             <a href="/groups/<%= group.groupID %>/chat" class="userWorkRightBox">
               <span class="userWorkChatName">Chat</span>
-              <img src="/images/workspacechat.svg" alt="Chat" class="userWorkGroupchatImg">
+              <img src="/images/groupGroupchatIMG.svg" alt="Chat" class="groupChatImg">
             </a>
             <a href="/groups/<%= group.groupID %>/planning" class="userWorkRightBox">
               <span class="userWorkChatName">Planning</span>
-              <svg class="groupPlanIcon" viewBox="0 0 24 24" fill="none" stroke="#FFA5E7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="3" y="4.5" width="18" height="16" rx="3"></rect>
-                <path d="M3 9.5h18M8 2.5v4M16 2.5v4"></path>
-                <path d="M9 9.5v11M15 9.5v11M3 13.5h18M3 17h18" stroke-width="1"></path>
-              </svg>
+              <img src="/images/planningIMG.svg" alt="Planning" class="groupPlanningImg">
             </a>
           </div>
         </section>
@@ -127,45 +135,70 @@
   </div>
 
   <div id="workspace-modal" class="workspaceModal" aria-hidden="true">
-  <section class="workspaceModalDialog" role="dialog" aria-modal="true" aria-labelledby="workspace-modal-title">
-    <button class="workspaceModalClose" type="button" aria-label="Close" onclick="workspaceModal.close()">&times;</button>
+    <section class="workspaceModalDialog" role="dialog" aria-modal="true" aria-labelledby="workspace-modal-title">
+      <button class="workspaceModalClose" type="button" aria-label="Close" onclick="workspaceModal.close()">&times;</button>
 
-    <% if (isGroupOwner) { %>
-      <form id="rename-modal-form" method="post" action="/groups/<%= group.groupID %>/rename">
-        <h2 id="workspace-modal-title">Rename Group</h2>
-        <label for="rename-workspace-input">Group Name</label>
-        <input id="rename-workspace-input" name="groupName" type="text" maxlength="100" required>
-        <div class="workspaceModalActions">
-          <button type="button" class="workspaceModalCancel" onclick="workspaceModal.close()">Cancel</button>
-          <button type="submit" class="workspaceModalPrimary">Save Name</button>
-        </div>
-      </form>
+      <% if (isGroupOwner) { %>
+        <form id="rename-modal-form" method="post" action="/groups/<%= group.groupID %>/rename">
+          <h2 id="workspace-modal-title">Rename Group</h2>
+          <label for="rename-workspace-input">Group Name</label>
+          <input id="rename-workspace-input" name="groupName" type="text" maxlength="100" required>
+          <div class="workspaceModalActions">
+            <button type="button" class="workspaceModalCancel" onclick="workspaceModal.close()">Cancel</button>
+            <button type="submit" class="workspaceModalPrimary">Save Name</button>
+          </div>
+        </form>
 
-      <form id="delete-modal-form" method="post" action="/groups/<%= group.groupID %>/delete" hidden>
-        <h2>Delete Group?</h2>
-        <p>This will permanently delete the group and remove all of its members.</p>
-        <div class="workspaceModalActions">
-          <button type="button" class="workspaceModalCancel" onclick="workspaceModal.close()">Cancel</button>
-          <button type="submit" class="workspaceModalDelete">Delete group</button>
-        </div>
-      </form>
-    <% } %>
+        <form id="delete-modal-form" method="post" action="/groups/<%= group.groupID %>/delete" hidden>
+          <h2>Delete Group?</h2>
+          <p>This will permanently delete the group and remove all of its members.</p>
+          <div class="workspaceModalActions">
+            <button type="button" class="workspaceModalCancel" onclick="workspaceModal.close()">Cancel</button>
+            <button type="submit" class="workspaceModalDelete">Delete group</button>
+          </div>
+        </form>
 
-    <div id="info-modal-content" hidden>
-      <h2>About This Group</h2>
-      <p><%= group.description || 'No Description Provided.' %></p>
-    </div>
-  </section>
-</div>
+        <form id="remove-modal-form" method="post" action="" hidden>
+          <h2>Remove Member?</h2>
+          <p><strong id="remove-member-name"></strong> will be removed from this group.</p>
+          <div class="workspaceModalActions">
+            <button type="button" class="workspaceModalCancel" onclick="workspaceModal.close()">Cancel</button>
+            <button type="submit" class="workspaceModalDelete">Remove</button>
+          </div>
+        </form>
+      <% } else { %>
+        <form id="leave-modal-form" method="post" action="/groups/<%= group.groupID %>/leave" hidden>
+          <h2>Leave Group?</h2>
+          <p>You will no longer be a member of this group.</p>
+          <div class="workspaceModalActions">
+            <button type="button" class="workspaceModalCancel" onclick="workspaceModal.close()">Cancel</button>
+            <button type="submit" class="workspaceModalDelete">Leave group</button>
+          </div>
+        </form>
+      <% } %>
+
+      <div id="info-modal-content" hidden>
+        <h2>About This Group</h2>
+        <p><%= group.description || 'No Description Provided.' %></p>
+      </div>
+    </section>
+  </div>
+
+  <%- include('includes/footer') %>
+
 <script>
   window.workspaceModal = {
     modal: document.getElementById('workspace-modal'),
     renameForm: document.getElementById('rename-modal-form'),
     deleteForm: document.getElementById('delete-modal-form'),
+    removeForm: document.getElementById('remove-modal-form'),
+    leaveForm: document.getElementById('leave-modal-form'),
     infoContent: document.getElementById('info-modal-content'),
     hideAll() {
       if (this.renameForm) this.renameForm.hidden = true;
       if (this.deleteForm) this.deleteForm.hidden = true;
+      if (this.removeForm) this.removeForm.hidden = true;
+      if (this.leaveForm) this.leaveForm.hidden = true;
       if (this.infoContent) this.infoContent.hidden = true;
     },
     show() {
@@ -186,6 +219,18 @@
       this.deleteForm.hidden = false;
       this.show();
     },
+    openRemove(userID, name) {
+      this.hideAll();
+      this.removeForm.action = '/groups/<%= group.groupID %>/members/' + encodeURIComponent(userID) + '/remove';
+      document.getElementById('remove-member-name').textContent = name;
+      this.removeForm.hidden = false;
+      this.show();
+    },
+    openLeave() {
+      this.hideAll();
+      this.leaveForm.hidden = false;
+      this.show();
+    },
     openInfo() {
       this.hideAll();
       this.infoContent.hidden = false;
@@ -198,6 +243,14 @@
   };
   workspaceModal.modal.addEventListener('click', (event) => {
     if (event.target === workspaceModal.modal) workspaceModal.close();
+  });
+  document.addEventListener('click', (e) => {
+    document.querySelectorAll('.workspaceMenu.open').forEach(menu => {
+      if (!menu.contains(e.target)) {
+        menu.classList.remove('open');
+        menu.querySelector('.userWorkDropDownDim')?.classList.remove('open');
+      }
+    });
   });
 </script>
 

@@ -187,3 +187,43 @@
 .members-page .userWorkGroupList {
   transition: padding 0.3s ease;
 }
+
+body.profiledBody :is(.profile-details, .skills-container, .availability-card) {
+  padding: clamp(1.1rem, 1.5vw + 0.6rem, 1.5rem) clamp(1.1rem, 3vw, 2rem);
+  transition: padding 0.3s ease;
+}
+
+.profile-details {
+  gap: clamp(1.25rem, 4vw, 40px);
+  transition: gap 0.3s ease;
+}
+
+.profile-details .right-side {
+  padding-left: clamp(0px, 3vw, 30px);
+  transition: padding 0.3s ease;
+}
+
+.profile-details .parent {
+  gap: clamp(8px, 1.2vw, 12px);
+}
+
+.profile-details input[type="text"],
+.profile-details textarea {
+  padding: clamp(10px, 0.6vw + 7px, 12px) clamp(16px, 1.5vw, 22px);
+  font-size: clamp(14px, 0.5vw + 11px, 16px);
+}
+
+body.profiledBody .step {
+  font-size: clamp(9px, 0.4vw + 6px, 11px);
+  min-height: calc(2.5em + 11px);
+}
+
+body.profiledBody .authButton,
+.profile-details .changeButton {
+  font-size: clamp(14px, 0.4vw + 11px, 16px);
+  padding: clamp(8px, 0.4vw + 6px, 10px) clamp(20px, 2vw, 28px);
+}
+
+html body.profiledBody .skip-link {
+  font-size: clamp(13px, 0.3vw + 11px, 15px);
+}

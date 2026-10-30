@@ -6,7 +6,7 @@
   <svg style="display:none;">
     <filter id="displacementFilter">
       <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="turbulence" />
-      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="100" xChannelSelector="R" yChannelSelector="G" />
+      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="7" xChannelSelector="R" yChannelSelector="G" />
     </filter>
   </svg>
   <%- include('includes/header') %>
@@ -47,43 +47,64 @@
               <tr>
                 <th>Name</th>
                 <th>Role</th>
-                <% if (isWorkspaceOwner) { %><th class="wmActionsCol">Actions</th><% } %>
+                <th class="wmActionsCol">Actions</th>
               </tr>
             </thead>
             <tbody id="memberRows">
               <% members.forEach(m => { const owner = Number(m.isOwner) === 1; %>
                 <tr data-search="<%= (m.displayName + ' ' + m.username + ' ' + m.email).toLowerCase() %>">
                   <td>
-                    <div class="wmPerson">
-                      <span class="wmAvatar">
-                        <% if (m.profilePicture) { %>
+                    <a class="wmPersonLink"
+                      href="<%= Number(m.userID) === Number(currentUserID)
+                        ? '/profile?fromWorkspace=' + workspace.workspaceID
+                        : '/profile/' + m.userID + '?fromWorkspace=' + workspace.workspaceID %>">
+                      <div class="wmPerson">
+                        <span class="wmAvatar">
+                          <% if (m.profilePicture) { %>
                           <img src="<%= m.profilePicture %>" alt="">
-                        <% } else { %>
-                          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+                         <% } else { %>
+                            <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
                             <circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5" fill="none"/>
                             <path d="M3 17c0-3.3 3.1-5 7-5s7 1.7 7 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
                           </svg>
-                        <% } %>
-                      </span>
-                      <span class="wmIdentity">
-                        <span class="wmName"><%= m.displayName %></span>
-                        <span class="wmEmail"><%= m.email %></span>
-                      </span>
-                    </div>
+                          <% } %>
+                        </span>
+                          <span class="wmIdentity">
+                          <span class="wmName" title="<%= m.displayName %>"><%= m.displayName %></span>
+                          <span class="wmEmail" title="<%= m.email %>"><%= m.email %></span>
+                        </span>
+                      </div>
+                    </a>
                   </td>
                   <td><span class="wmBadge"><%= owner ? "Owner" : "Member" %></span></td>
-                  <% if (isWorkspaceOwner) { %>
-                    <td class="wmActionsCol">
-                      <% if (!owner) { %>
-                        <form method="POST"
-                              action="/workspaces/<%= workspace.workspaceID %>/members/<%= m.userID %>/remove"
-                              data-name="<%= m.username %>"
-                              class="wmRemoveForm">
-                          <button type="submit" class="wmRemove">Remove</button>
-                        </form>
-                      <% } %>
-                    </td>
-                  <% } %>
+                  <td class="wmActionsCol">
+                    <% if (Number(m.userID) !== Number(currentUserID)) { %>
+                      <div class="wmActions">
+                        <% if (isWorkspaceOwner) { %>
+                          <button type="button"
+                                  class="wmInviteIcon"
+                                  data-user-id="<%= m.userID %>"
+                                  data-name="<%= m.displayName %>"
+                                  aria-label="Invite <%= m.displayName %> to a group">
+                            <img src="/images/envelopeInvite.svg" alt="" width="20" height="20">
+                          </button>
+                          <% if (!owner) { %>
+                            <form method="POST"
+                                  action="/workspaces/<%= workspace.workspaceID %>/members/<%= m.userID %>/remove"
+                                  data-name="<%= m.displayName %>"
+                                  class="wmRemoveForm">
+                              <button type="submit" class="wmRemove">Remove</button>
+                            </form>
+                          <% } %>
+                        <% } else { %>
+                          <button type="button"
+                                  class="wmInvite"
+                                  data-user-id="<%= m.userID %>"
+                                  data-name="<%= m.displayName %>">Invite</button>
+                        <% } %>
+                      </div>
+                    <% } %>
+                  </td>
                 </tr>
               <% }) %>
             </tbody>
@@ -94,6 +115,35 @@
             <img src="/images/rosieWM.webp" alt="" aria-hidden="true" class="wmRosieImg">
         </div>
     </main>
+  </div>
+
+  <div class="workspaceModal" id="inviteModal" aria-hidden="true">
+    <div class="workspaceModalDialog" role="dialog" aria-modal="true" aria-labelledby="inviteModalTitle">
+      <button type="button" class="workspaceModalClose" id="inviteModalClose" aria-label="Close">&times;</button>
+      <h2 id="inviteModalTitle">Invite <span id="inviteTargetName"></span> to a Group</h2>
+      <p id="inviteModalText">Choose One of Your Groups.</p>
+      <% if (typeof myGroups !== 'undefined' && myGroups && myGroups.length) { %>
+        <div class="workspaceModalActions inviteGroupList" id="inviteGroupList">
+          <% myGroups.forEach(g => { %>
+            <button type="button" class="inviteGroupBtn" data-group-id="<%= g.groupID %>"><%= g.groupName %></button>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <p class="inviteEmpty">You haven't created any groups yet.</p>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="workspaceModal" id="removeModal" aria-hidden="true">
+    <div class="workspaceModalDialog" role="dialog" aria-modal="true" aria-labelledby="removeModalTitle">
+      <button type="button" class="workspaceModalClose" id="removeModalClose" aria-label="Close">&times;</button>
+      <h2 id="removeModalTitle">Remove Member?</h2>
+      <p><strong id="removeTargetName"></strong> will be removed from this workspace.</p>
+      <div class="workspaceModalActions">
+        <button type="button" class="workspaceModalCancel" id="removeCancel">Cancel</button>
+        <button type="button" class="workspaceModalDelete" id="removeConfirm">Remove</button>
+      </div>
+    </div>
   </div>
 
   <%- include('includes/workspaceModal') %>
@@ -125,6 +175,108 @@
       search.focus();
     });
 
+    const inviteModal = document.getElementById("inviteModal");
+    const inviteText = document.getElementById("inviteModalText");
+    const inviteName = document.getElementById("inviteTargetName");
+    const inviteClose = document.getElementById("inviteModalClose");
+    const inviteGroupBtns = document.querySelectorAll(".inviteGroupBtn");
+    const workspaceID = "<%= workspace.workspaceID %>";
+    let inviteUserID = null;
+
+    function openInvite(userID, name) {
+      inviteUserID = userID;
+      inviteName.textContent = name;
+      inviteText.textContent = "Choose one of your groups.";
+      inviteText.classList.remove("inviteError");
+      inviteGroupBtns.forEach(b => b.disabled = false);
+      inviteModal.classList.add("is-open");
+      inviteModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeInvite() {
+      inviteModal.classList.remove("is-open");
+      inviteModal.setAttribute("aria-hidden", "true");
+      inviteUserID = null;
+    }
+
+    document.querySelectorAll(".wmInvite, .wmInviteIcon").forEach(btn => {
+      btn.addEventListener("click", () => openInvite(btn.dataset.userId, btn.dataset.name));
+    });
+
+    inviteClose.addEventListener("click", closeInvite);
+    inviteModal.addEventListener("click", e => {
+      if (e.target === inviteModal) closeInvite();
+    });
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && inviteModal.classList.contains("is-open")) closeInvite();
+    });
+
+    inviteGroupBtns.forEach(btn => {
+      btn.addEventListener("click", async () => {
+        inviteGroupBtns.forEach(b => b.disabled = true);
+        try {
+          const res = await fetch("/workspaces/" + workspaceID + "/groups/" + btn.dataset.groupId + "/invite", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userID: inviteUserID })
+          });
+          const data = await res.json();
+          inviteText.textContent = data.message || (data.success ? "Invite sent." : "Could not send invite.");
+          inviteText.classList.toggle("inviteError", !data.success);
+          if (data.success) {
+            setTimeout(closeInvite, 1200);
+          } else {
+            inviteGroupBtns.forEach(b => b.disabled = false);
+          }
+        } catch (err) {
+          inviteText.textContent = "Something went wrong. Try again.";
+          inviteText.classList.add("inviteError");
+          inviteGroupBtns.forEach(b => b.disabled = false);
+        }
+      });
+    });
+    const removeModal = document.getElementById("removeModal");
+    const removeName = document.getElementById("removeTargetName");
+    const removeClose = document.getElementById("removeModalClose");
+    const removeCancel = document.getElementById("removeCancel");
+    const removeConfirm = document.getElementById("removeConfirm");
+    let pendingRemoveForm = null;
+
+    function openRemove(form) {
+      pendingRemoveForm = form;
+      removeName.textContent = form.dataset.name;
+      removeConfirm.disabled = false;
+      removeModal.classList.add("is-open");
+      removeModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeRemove() {
+      removeModal.classList.remove("is-open");
+      removeModal.setAttribute("aria-hidden", "true");
+      pendingRemoveForm = null;
+    }
+
+    document.querySelectorAll(".wmRemoveForm").forEach(form => {
+      form.addEventListener("submit", e => {
+        e.preventDefault();
+        openRemove(form);
+      });
+    });
+
+    removeConfirm.addEventListener("click", () => {
+      if (!pendingRemoveForm) return;
+      removeConfirm.disabled = true; // prevent double submit
+      pendingRemoveForm.submit();    // native submit skips the listener above
+    });
+
+    removeClose.addEventListener("click", closeRemove);
+    removeCancel.addEventListener("click", closeRemove);
+    removeModal.addEventListener("click", e => {
+      if (e.target === removeModal) closeRemove();
+    });
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && removeModal.classList.contains("is-open")) closeRemove();
+    });
   </script>
 </body>
 </html>

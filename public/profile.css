@@ -973,8 +973,18 @@
 }
 
 .empty-state {
-  color: #718A7B !important;
-  font-size: 0.95rem;
+  font-family: 'Geologica', sans-serif;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  color: #8DA296 !important;
+}
+
+.profile-info-section input,
+.profile-info-section textarea,
+.bio-form-section textarea {
+  font-family: 'Geologica', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 
@@ -1514,4 +1524,353 @@ textarea.skeleton {
     rgba(255, 255, 255, 0.28) 75%
   );
   background-size: 200% 100%;
+}
+
+input.skeleton::placeholder,
+textarea.skeleton::placeholder {
+  color: transparent;
+}
+
+.profile-info-section input::placeholder,
+.profile-info-section textarea::placeholder {
+  color: #8DA296;
+  opacity: 1;
+}
+
+.profile-info-section label .req {
+  color: #E2308D;
+}
+
+.skills-section .skill-input-row input {
+  font-family: 'Geologica', sans-serif;
+  font-size: 16px;
+  color: #1F4436;
+  background: #FFFCFB;
+  border: 1.5px solid #d6cfe8;
+  border-radius: 20px;
+  padding: 12px 20px;
+  outline: none;
+}
+
+.skills-section .skill-input-row input::placeholder {
+  color: #8DA296;
+  opacity: 1;
+}
+
+.skills-section .skill-input-row input:focus {
+  border-color: #d6cfe8;
+  box-shadow: 0 0 0 4px rgba(226, 48, 141, 0.15);
+}
+
+.profile-body,
+.editprofile-body {
+  min-height: 100svh;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: 0 60px;
+  background-size: 100% calc(100% - 60px);
+}
+
+.profile-body {
+  background-image: linear-gradient(160deg, #bc76a1 0%, #d5e2e3 30%, #E8F2F5 100%);
+}
+
+.editprofile-body {
+  background-image: linear-gradient(160deg, #bc76a1 0%, #d5e2e3 20%, #E8F2F5 100%);
+}
+
+@media (max-width: 767px) {
+  .edit-profile-form .profile-info-section input,
+  .edit-profile-form .profile-info-section textarea,
+  .edit-profile-form .bio-form-section textarea,
+  .edit-profile-form .skills-section .skill-input-row input {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 479px) {
+  .edit-profile-form .profile-info-section input,
+  .edit-profile-form .profile-info-section textarea,
+  .edit-profile-form .bio-form-section textarea,
+  .edit-profile-form .skills-section .skill-input-row input {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .empty-state {
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 479px) {
+  .empty-state {
+    font-size: 0.85rem !important;
+  }
+}
+
+@media (pointer: coarse) {
+  .skill-pills.view-mode {
+    background: rgba(255, 252, 251, 0.45);
+  }
+}
+
+.profileBackCircle {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 16px rgba(92, 65, 133, 0.28),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+              inset 3px 3px 4px -2px rgba(255, 255, 255, 1);
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.profileBackArrow {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  pointer-events: none;
+  transition: filter 0.2s ease;
+}
+
+.profileBackLink:hover .profileBackCircle {
+  background: rgba(194, 92, 169, 0.2);
+  transform: scale(1.05);
+}
+
+.profileBackLink:hover .profileBackArrow {
+  filter: brightness(0.84);
+}
+
+.profileBackLink:focus-visible {
+  outline: 3px solid #E2308D;
+  outline-offset: 3px;
+  border-radius: 50%;
+}
+
+.profile-title-block .profileBackLink {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  display: flex;
+  width: fit-content;
+  margin: 0 0 8px 0 !important;
+  text-decoration: none;
+}
+
+.availability-list .availability-row {
+  grid-template-columns: 110px 1fr !important;
+  column-gap: 1.5rem !important;
+}
+
+.editAvailActions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(8px, 1vw, 12px);
+}
+
+.editAvailActions .cancel-btn-top,
+.editAvailActions .save-btn-top {
+  width: auto;
+  font-size: clamp(13px, 1.2vw + 8px, 20px);
+  padding: clamp(8px, 0.8vw + 4px, 12px) clamp(12px, 2.4vw, 33px);
+  border-radius: clamp(12px, 1.2vw, 15px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.editAvailActions .cancel-btn-top::before,
+.editAvailActions .save-btn-top::before {
+  border-radius: inherit;
+}
+
+.editAvailActions {
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 479px) {
+  .profile-page {
+    padding: 0 0.5rem;
+    margin: 0.75rem auto 5rem;
+  }
+
+  .profile-cardEdit,
+  .profile-card {
+    max-width: 100%;
+  }
+
+  .edit-profile-header {
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+  }
+
+  .edit-header-actions {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    order: 0;
+    width: auto;
+    justify-content: flex-end;
+  }
+
+  .edit-profile-image-block {
+    margin-left: 0;
+    margin-top: 3rem;
+  }
+
+  .edit-sections-container {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0.75rem;
+    row-gap: 1rem;
+  }
+
+  .edit-section-wrapper,
+  .edit-section-box,
+  .profile-info-section,
+  .skills-section,
+  .availability-section,
+  .form-row,
+  .form-section {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .edit-section-box {
+    padding: 0.9rem;
+  }
+
+  .profile-info-section input,
+  .profile-info-section textarea {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 16px;
+  }
+
+  .skills-section .skill-input-row {
+    gap: 0.4rem;
+  }
+
+  .skills-section .skill-input-row input {
+    min-width: 0;
+    padding: 10px 14px;
+    border-radius: 16px;
+  }
+
+  .skill-input-row .add-btn {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
+
+  .availability-list .availability-row {
+    grid-template-columns: 78px minmax(0, 1fr) !important;
+    column-gap: 0.6rem !important;
+  }
+
+  .availability-day,
+  .availability-time {
+    font-size: 0.8rem;
+  }
+
+  .editAvailActions {
+    flex-wrap: wrap;
+  }
+
+  .change-photo-btn {
+    margin-top: 0.75rem;
+    padding: 6px 16px;
+    font-size: 12px;
+    border-radius: 11px;
+  }
+
+  .change-photo-btn::before {
+    border-radius: 11px;
+  }
+}
+.editAvailActions .cancel-btn-top::before,
+.editAvailActions .save-btn-top::before,
+.editAvailActions .save-btn-top::after {
+  display: none;
+}
+
+.editAvailActions .cancel-btn-top,
+.editAvailActions .save-btn-top {
+  position: relative;
+  overflow: visible;
+  border: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.editAvailActions .save-btn-top {
+  box-shadow: inset 2px 2px 3px -2px rgba(255, 255, 255, 0.9),
+              inset 0 0 8px 1px rgba(255, 255, 255, 0.6);
+}
+
+.editAvailActions .cancel-btn-top {
+  box-shadow: inset 2px 2px 3px -2px rgba(255, 255, 255, 0.9),
+              inset 0 0 8px 1px rgba(255, 255, 255, 0.3);
+}
+
+@media (hover: hover) {
+  .editAvailActions .save-btn-top:hover {
+    box-shadow: inset 2px 2px 3px -2px rgba(255, 255, 255, 0.9),
+                inset 0 0 8px 1px rgba(255, 255, 255, 0.6),
+                0 0 35px 12px rgba(226, 48, 141, 0.5);
+  }
+
+  .editAvailActions .cancel-btn-top:hover {
+    box-shadow: inset 2px 2px 3px -2px rgba(255, 255, 255, 0.9),
+                inset 0 0 8px 1px rgba(255, 255, 255, 0.3),
+                0 0 35px 12px rgba(30, 144, 111, 0.5);
+  }
+}
+
+.editAvailActions .cancel-btn-top:focus-visible,
+.editAvailActions .save-btn-top:focus-visible {
+  outline: 2px solid #FFF5FA;
+  outline-offset: 2px;
+}
+
+@media (max-width: 479px) {
+  .skills-section .update-btn,
+  .availability-section .update-btn {
+    padding: 6px 16px;
+    font-size: 12px;
+    border-radius: 11px;
+  }
+
+  .skill-input-row .add-btn,
+  .skills-section .update-btn,
+  .availability-section .update-btn {
+    overflow: visible;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: inset 2px 2px 3px -2px rgba(255, 255, 255, 0.9),
+                inset 0 0 8px 1px rgba(255, 255, 255, 0.6);
+  }
+
+  .skill-input-row .add-btn::before,
+  .skill-input-row .add-btn::after,
+  .skills-section .update-btn::before,
+  .skills-section .update-btn::after,
+  .availability-section .update-btn::before,
+  .availability-section .update-btn::after {
+    display: none;
+  }
+
+  .profile-info-section input::placeholder,
+  .profile-info-section textarea::placeholder,
+  .skills-section .skill-input-row input::placeholder {
+    font-size: 0.75rem;
+  }
 }

@@ -70,10 +70,10 @@ function updateEditBioCount() {
 function renderEditSkills() {
   editSkillsList.innerHTML = "";
 
-  if (editCurrentSkills.length === 0) {
+    if (editCurrentSkills.length === 0) {
     const empty = document.createElement("p");
+    empty.className = "empty-state";
     empty.textContent = "No skills added yet.";
-    empty.style.color = "#999";
     editSkillsList.appendChild(empty);
     return;
   }
@@ -110,10 +110,10 @@ function renderEditAvailability(availability) {
   editAvailabilityList.innerHTML = "";
 
   const days = getOrderedDays(Object.keys(availability || {}));
-  if (days.length === 0) {
+    if (days.length === 0) {
     const empty = document.createElement("p");
+    empty.className = "empty-state";
     empty.textContent = "No availability saved yet.";
-    empty.style.color = "#999";
     editAvailabilityList.appendChild(empty);
     return;
   }
