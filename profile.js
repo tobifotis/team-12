@@ -132,7 +132,15 @@ async function sharesWorkspace(viewerID, targetID) {
      WHERE a.userID = ? AND b.userID = ? LIMIT 1`,
     [viewerID, targetID]
   )
-  return rows.length > 0
+  if (rows.length > 0) return true
+
+  // users who have a private conversation can open each other's profiles from the chat
+  const [convRows] = await pool.query(
+    `SELECT 1 FROM PrivateConversation
+     WHERE userOneID = LEAST(?, ?) AND userTwoID = GREATEST(?, ?) LIMIT 1`,
+    [viewerID, targetID, viewerID, targetID]
+  )
+  return convRows.length > 0
 }
 
 router.get("/:userID", mustBeLoggedIn, async (req, res) => {

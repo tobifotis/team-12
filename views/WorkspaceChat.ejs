@@ -82,16 +82,10 @@
         <% }) %>
       </div>
 
-      <div class="chat-individual-placeholder"
-           id="individual-conversations"
-           role="tabpanel"
-           aria-labelledby="individual-tab"
-           hidden>
-        Individual messaging is not available yet.
-      </div>
+      <%- include('includes/private-chat-sidebar') %>
     </aside>
 
-    <section class="chat-panel" aria-label="Workspace conversation">
+    <section class="chat-panel" id="group-panel" aria-label="Workspace conversation">
       <header class="chat-panel-header">
         <span class="chat-avatar chat-group-avatar" aria-hidden="true"><%= workspace.workspaceName.trim().charAt(0).toUpperCase() %></span>
         <h2><%= workspace.workspaceName %></h2>
@@ -130,9 +124,11 @@
         </button>
       </form>
     </section>
+    <%- include('includes/private-chat-panel') %>
   </main>
 
   <script src="/socket.io/socket.io.js" defer></script>
   <script src="/js/workspace-chat.js" defer></script>
+  <script src="/js/private-chat.js" defer></script>
 </body>
 </html>

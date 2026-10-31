@@ -92,6 +92,15 @@ For an existing database that does not yet have the workspace description column
 
 Do not run this migration if `Workspace.description` already exists; fresh databases get it from `schema.sql`.
 
+### Individual (private) messaging tables
+
+Individual messaging needs two extra tables, which `schema.sql` does not create. Run these in order (both fresh and existing databases):
+
+	- SOURCE /yourPath/migrations/010_private_messages.sql;
+	- SOURCE /yourPath/migrations/011_cleanup_empty_private_conversations.sql;
+
+`010` creates `PrivateConversation` and `PrivateMessage`. `011` removes empty conversations left over from earlier versions (it never deletes messages) and is safe to run on a database with none. Without `010`, starting a private conversation or sending a private message fails. The `CHECK` constraint in `010` is only enforced on MySQL 8.0.16+; older versions ignore it. After running them, restart the server and reload the Chat page.
+
 - npm run dev
 - Visit localhost:3000 on browser
 
