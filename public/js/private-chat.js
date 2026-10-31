@@ -254,6 +254,7 @@
     selectedID = Number(match.conversationID);
     draftPerson = null;
     draftConversationID = null;
+    setSearchMode(false);
     if (pending) {
       failed.delete(key);
       failed.set(selectedID, pending);
@@ -295,7 +296,7 @@
     selectedID = conversationID;
     draftPerson = null;
     draftConversationID = null;
-    picker.hidden = true;
+    setSearchMode(false);
     renderList();
     showHeader(conversation);
 
@@ -326,7 +327,6 @@
       displayName: user.displayName,
       profilePicture: user.profilePicture
     };
-    picker.hidden = true;
     renderList();
     showHeader(draftPerson);
     renderMessages(true);
@@ -374,14 +374,18 @@
     }
   }
 
-  newButton.addEventListener("click", () => {
-    picker.hidden = !picker.hidden;
-    if (!picker.hidden) {
+  function setSearchMode(on) {
+    picker.hidden = !on;
+    list.hidden = on;
+    newButton.textContent = on ? "← Back to Messages" : "+ New Message";
+    if (on) {
       searchInput.value = "";
       searchInput.focus();
       searchUsers();
     }
-  });
+  }
+
+  newButton.addEventListener("click", () => setSearchMode(picker.hidden));
 
   searchInput.addEventListener("input", () => {
     clearTimeout(searchTimer);
@@ -430,6 +434,7 @@
       selectedID = id;
       draftPerson = null;
       draftConversationID = null;
+      setSearchMode(false);
       if (pending) {
         failed.delete(`u${conversation.otherUserID}`);
         failed.set(id, pending);
