@@ -428,9 +428,25 @@
 
 .chat-user-picker {
   display: flex;
-  max-height: 260px;
+  min-height: 0;
+  flex: 1;
   flex-direction: column;
   margin: 0 12px 10px;
+}
+
+.chat-individual > .chat-conversation-list {
+  min-height: 0;
+  flex: 1;
+}
+
+.chat-conversation-list[hidden] {
+  display: none;
+}
+
+.chat-user-results {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
 }
 
 .chat-user-picker input {
