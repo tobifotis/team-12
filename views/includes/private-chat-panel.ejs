@@ -1,0 +1,28 @@
+<section class="chat-panel" id="private-panel" aria-label="Private conversation" hidden>
+  <header class="chat-panel-header" id="pc-header" hidden>
+    <a class="chat-header-link" id="pc-header-link" href="#" aria-label="View profile">
+      <span id="pc-header-avatar"></span>
+    </a>
+    <h2><a class="chat-header-link" id="pc-header-name" href="#"></a></h2>
+  </header>
+
+  <div class="chat-messages" id="pc-messages" role="log" aria-live="polite"
+       aria-relevant="additions text" aria-label="Private messages">
+    <p class="chat-feedback" id="pc-empty">Select a conversation or start a new message.</p>
+  </div>
+
+  <p class="chat-feedback chat-status" id="pc-status" role="status" aria-live="polite"></p>
+
+  <form class="chat-composer" id="pc-form" hidden>
+    <label class="visually-hidden" for="pc-input">Type your message</label>
+    <textarea id="pc-input" name="content" placeholder="Type your message"
+              maxlength="2000" rows="1" required></textarea>
+    <button type="submit" id="pc-send" aria-label="Send message">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3.5 11.2 20 3.8l-5.4 16.5-3.2-6.9-7.9-2.2Z"></path>
+        <path d="m11.4 13.4 4.2-4.2"></path>
+      </svg>
+      <span>Send</span>
+    </button>
+  </form>
+</section>
