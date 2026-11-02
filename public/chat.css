@@ -605,3 +605,11 @@
     padding: 0 11px;
   }
 }
+
+.group-chat-page.group-chat-page--full {
+  grid-template-columns: minmax(0, 1fr);   
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 16px 24px;
+}

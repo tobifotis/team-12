@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <%- include('includes/head2') %>
@@ -30,63 +29,18 @@
     </div>
   </div>
 
-  <main class="group-chat-page"
+  <main class="group-chat-page group-chat-page--full"
         id="workspace-chat"
         data-workspace-id="<%= workspace.workspaceID %>"
         data-current-user-id="<%= currentUserID %>">
 
-    <aside class="chat-sidebar" aria-label="Conversations">
-      <div class="chat-sidebar-heading">
-        <a class="chat-back-link"
-           href="/workspaces"
-           aria-label="Back to workspaces">
-          <img src="/images/workspacebackBut.svg" alt="">
-        </a>
-        <h1>Chat</h1>
-      </div>
-
-      <div class="chat-tabs" role="tablist" aria-label="Conversation type">
-        <button class="chat-tab"
-                id="individual-tab"
-                type="button"
-                role="tab"
-                aria-selected="false"
-                aria-controls="individual-conversations">
-          Individual
-        </button>
-
-        <button class="chat-tab is-active"
-                id="group-tab"
-                type="button"
-                role="tab"
-                aria-selected="true"
-                aria-controls="workspace-conversations">
-          Workspace
-        </button>
-      </div>
-
-      <div class="chat-conversation-list"
-           id="workspace-conversations"
-           role="tabpanel"
-           aria-labelledby="group-tab">
-
-        <% conversations.forEach(conversation => { %>
-          <a class="chat-conversation<%= Number(conversation.workspaceID) === Number(workspace.workspaceID) ? ' is-selected' : '' %>"
-             href="/workspaces/<%= conversation.workspaceID %>/chat"
-             <%= Number(conversation.workspaceID) === Number(workspace.workspaceID) ? 'aria-current="page"' : '' %>>
-
-            <span class="chat-avatar chat-conversation-avatar" aria-hidden="true"><%= conversation.workspaceName.trim().charAt(0).toUpperCase() %></span>
-
-            <span class="chat-conversation-name"><%= conversation.workspaceName %></span>
-          </a>
-        <% }) %>
-      </div>
-
-      <%- include('includes/private-chat-sidebar') %>
-    </aside>
-
     <section class="chat-panel" id="group-panel" aria-label="Workspace conversation">
       <header class="chat-panel-header">
+        <a class="chat-back-link"
+           href="/workspaces/<%= workspace.workspaceID %>"
+           aria-label="Back to workspaces">
+          <img src="/images/whiteArrow.svg" alt="">
+        </a>
         <span class="chat-avatar chat-group-avatar" aria-hidden="true"><%= workspace.workspaceName.trim().charAt(0).toUpperCase() %></span>
         <h2><%= workspace.workspaceName %></h2>
       </header>
@@ -124,11 +78,9 @@
         </button>
       </form>
     </section>
-    <%- include('includes/private-chat-panel') %>
   </main>
 
   <script src="/socket.io/socket.io.js" defer></script>
   <script src="/js/workspace-chat.js" defer></script>
-  <script src="/js/private-chat.js" defer></script>
 </body>
 </html>
