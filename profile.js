@@ -90,7 +90,7 @@ router.get("/data", mustBeLoggedIn, async (req, res) => {
     // get profile info
     const [profileRows] = await pool.query(
       `SELECT displayName, currentRole, organization, bio, profilePicture
-       FROM user_profile
+       FROM User_Profile
        WHERE userID = ?`,
       [userID]
     )
@@ -98,7 +98,7 @@ router.get("/data", mustBeLoggedIn, async (req, res) => {
     // get skills
     const [skillRows] = await pool.query(
       `SELECT skills
-       FROM skills
+       FROM Skills
        WHERE userID = ?`,
       [userID]
     )
@@ -106,7 +106,7 @@ router.get("/data", mustBeLoggedIn, async (req, res) => {
     // get availability
     const [availabilityRows] = await pool.query(
       `SELECT day, start, end
-       FROM availability
+       FROM Availability
        WHERE userID = ?`,
       [userID]
     )
@@ -208,16 +208,16 @@ router.get("/:userID/data", mustBeLoggedIn, async (req, res) => {
 
     const [profileRows] = await pool.query(
       `SELECT displayName, currentRole, organization, bio, profilePicture
-       FROM user_profile
+       FROM User_Profile
        WHERE userID = ?`,
       [profileUserID]
     )
     const [skillRows] = await pool.query(
-      "SELECT skills FROM skills WHERE userID = ?",
+      "SELECT skills FROM Skills WHERE userID = ?",
       [profileUserID]
     )
     const [availabilityRows] = await pool.query(
-      "SELECT day, start, end FROM availability WHERE userID = ?",
+      "SELECT day, start, end FROM Availability WHERE userID = ?",
       [profileUserID]
     )
 
@@ -249,7 +249,7 @@ router.patch("/save", mustBeLoggedIn, async (req, res) => {
 
     try {
         await pool.query(
-            'UPDATE user_profile SET displayName = ?, currentRole = ?, organization = ?, bio = ? WHERE userID = ?',
+            'UPDATE User_Profile SET displayName = ?, currentRole = ?, organization = ?, bio = ? WHERE userID = ?',
             [displayName, currentRole, organization, bio, userID]
         )
         res.json({ message: "Profile updated successfully" })
@@ -316,7 +316,7 @@ router.patch("/upload-picture", mustBeLoggedIn, upload.single("profilePicture"),
       const result = await uploadFromBuffer();
 
       await pool.query(
-        "UPDATE user_profile SET profilePicture = ? WHERE userID = ?",
+        "UPDATE User_Profile SET profilePicture = ? WHERE userID = ?",
         [result.secure_url, userID]
       );
 
