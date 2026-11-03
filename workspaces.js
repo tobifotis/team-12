@@ -387,7 +387,7 @@ router.get("/:workspaceID/members", mustBeLoggedIn, async (req, res) => {
     );
  
     const workspace = workspaceRows[0];
-    res.render("WorkspaceMembers", {
+   res.render("Workspacemembers", {
       workspace,
       members,
       myGroups,
