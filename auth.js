@@ -98,7 +98,7 @@ router.post("/signup", async (req, res) => {
     const profilePicture = "/images/default_user.png";
 
     await pool.query(
-        "INSERT INTO user_profile (userID, profilePicture) VALUES (?, ?)",
+        "INSERT INTO User_Profile (userID, profilePicture) VALUES (?, ?)",
         [newUserID, profilePicture]
     )
 
@@ -214,13 +214,13 @@ router.post("/forgot-password", async (req, res) => {
             service: 'gmail',
             auth: 
             {
-                user: 'groupifya@gmail.com',
-                pass: 'ovyh yiea lyhz mspj',
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
             }
         });
         
         await transporter.sendMail({
-            from: 'groupifya@gmail.com',
+            from: process.env.EMAIL_USER,
             to: email,
             subject: 'Groupify: Password Reset OTP',
             text: `Your OTP is: ${otp}\n\nExpires in 10 minutes.`
