@@ -41,6 +41,18 @@ async function getUserSummary(userID) {
     return rows[0] || null
 }
 
+async function shareAGroup(a, b) {
+    const [rows] = await pool.query(
+        `SELECT 1
+         FROM User_Team x
+         JOIN User_Team y ON y.groupID = x.groupID
+         WHERE x.userID = ? AND y.userID = ?
+         LIMIT 1`,
+        [a, b]
+    )
+    return rows.length > 0
+}
+
 router.use(requireUser)
 
 router.get("/conversations", async (req, res) => {
@@ -76,10 +88,16 @@ router.get("/users", async (req, res) => {
              FROM User u
              LEFT JOIN User_Profile up ON up.userID = u.userID
              WHERE u.userID <> ?
+               AND EXISTS (
+                   SELECT 1
+                   FROM User_Team x
+                   JOIN User_Team y ON y.groupID = x.groupID
+                   WHERE x.userID = ? AND y.userID = u.userID
+               )
                AND (? = '' OR u.username LIKE ? OR up.displayName LIKE ?)
              ORDER BY COALESCE(NULLIF(up.displayName, ''), u.username), u.userID
              LIMIT 30`,
-            [req.user.userID, q, like, like]
+            [req.user.userID, req.user.userID, q, like, like]
         )
         return res.json({ success: true, users: rows })
     } catch (err) {
@@ -99,6 +117,11 @@ router.get("/with/:userID", async (req, res) => {
     }
 
     try {
+        const groupID = parseID(req.query.groupID)
+        if (!(await shareAGroup(me, otherID))) {
+            return res.status(403).json({ success: false, message: "You can only message people you share a group with" })
+        }
+
         const other = await getUserSummary(otherID)
         if (!other) return res.status(404).json({ success: false, message: "User not found" })
 
@@ -178,6 +201,11 @@ function attachPrivateChatSockets(io) {
 
             try {
                 if (!conversationID) {
+                    const groupID = parseID(payload?.groupID)
+                    if (!(await shareAGroup(userID, recipientID))) {
+                        return sendAck(ack, { success: false, message: "You can only message people you share a group with" })
+                    }
+
                     if (!(await getUserSummary(recipientID))) {
                         return sendAck(ack, { success: false, message: "User not found" })
                     }

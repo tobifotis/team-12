@@ -1874,3 +1874,12 @@ textarea.skeleton::placeholder {
     font-size: 0.75rem;
   }
 }
+
+.profileBackCircle {
+  will-change: transform;
+}
+
+.profileBackArrow {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}

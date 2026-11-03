@@ -191,16 +191,50 @@
 
   /* ---------- card buttons (edit, move, delete) ---------- */
 
+  const DONE_KEY = "planningCompleted:" + groupID
+
+  function loadDone() {
+    try { return JSON.parse(localStorage.getItem(DONE_KEY)) || {} } catch (e) { return {} }
+  }
+  function saveDone(map) {
+    try { localStorage.setItem(DONE_KEY, JSON.stringify(map)) } catch (e) {}
+  }
+  const doneMap = loadDone()
+
+  function applyCompleted(card, done) {
+    card.dataset.completed = done ? "true" : "false"
+    card.classList.toggle("completed", done)
+    const check = card.querySelector(".planningCheckBtn")
+    check.setAttribute("aria-pressed", done ? "true" : "false")
+    check.setAttribute("aria-label", done ? "Mark as not done" : "Mark as done")
+    card.querySelector(".planningToggleBtn").textContent = done ? "Reopen" : "Mark Done"
+  }
+
+  document.querySelectorAll(".planningCard").forEach(function (card) {
+    applyCompleted(card, !!doneMap[card.dataset.taskId])
+  })
+
+  function toggleComplete(card) {
+    const id = card.dataset.taskId
+    const next = card.dataset.completed !== "true"
+    if (next) doneMap[id] = true
+    else delete doneMap[id]
+    saveDone(doneMap)
+    applyCompleted(card, next)
+
+    const entry = allCards.find(function (c) { return c.id === id })
+    if (entry) entry.completed = next
+    renderCalendar()
+  }
+
   document.addEventListener("click", async function (event) {
     const card = event.target.closest(".planningCard")
     if (!card) return
-    const id = card.dataset.taskId
 
     if (event.target.closest(".planningEditBtn")) {
       openModal(card)
-    } else if (event.target.closest(".planningMoveBtn")) {
-      const target = event.target.closest(".planningMoveBtn").dataset.target
-      if (await send(base + "/" + id + "/move", { status: target })) location.reload()
+    } else if (event.target.closest(".planningToggleBtn, .planningCheckBtn")) {
+      toggleComplete(card)
     } else if (event.target.closest(".planningDeleteBtn")) {
       openDelete(card)
     }
@@ -284,7 +318,13 @@
 
   // read every card on the page so the calendar needs no extra requests
   const allCards = Array.from(document.querySelectorAll(".planningCard")).map(function (card) {
-    return { id: card.dataset.taskId, title: card.dataset.title, description: card.dataset.description, due: card.dataset.due }
+    return {
+      id: card.dataset.taskId,
+      title: card.dataset.title,
+      description: card.dataset.description,
+      due: card.dataset.due,
+      completed: card.dataset.completed === "true"
+    }
   })
 
   function dateKey(d) {
@@ -386,6 +426,7 @@
     due.forEach(function (c) {
       const item = document.createElement("div")
       item.className = "planningDayTask"
+      if (c.completed) item.classList.add("completed")
       const title = document.createElement("span")
       title.className = "planningDayTaskTitle"
       title.textContent = c.title

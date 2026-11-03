@@ -184,7 +184,17 @@
       });
     })();
   </script>
-
+  <script>
+    document.addEventListener('click', event => {
+      const link = event.target.closest('.chat-message-avatar-link, .chat-header-link');
+      if (!link) return;
+      const url = new URL(link.getAttribute('href'), location.origin);
+      url.searchParams.delete('fromGroup');
+      url.searchParams.delete('fromWorkspace');
+      url.searchParams.set('fromGroupChat', '<%= group.groupID %>');
+      link.setAttribute('href', url.pathname + url.search);
+    }, true);
+  </script>
   <script src="/socket.io/socket.io.js" defer></script>
   <script src="/js/group-chat.js" defer></script>
   <script src="/js/private-chat.js" defer></script>

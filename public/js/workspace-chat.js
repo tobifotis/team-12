@@ -78,7 +78,7 @@
       if (Number.isSafeInteger(senderID) && senderID > 0) {
         const profileLink = document.createElement("a");
         profileLink.className = "chat-message-avatar-link";
-        profileLink.href = `/profile/${encodeURIComponent(senderID)}`;
+        profileLink.href = `/profile/${encodeURIComponent(senderID)}?fromWorkspaceChat=${workspaceID}`;
         profileLink.setAttribute(
           "aria-label",
           `View ${message.senderName}'s profile`

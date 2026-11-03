@@ -244,6 +244,15 @@ editAddSkillBtn.addEventListener("click", () => {
   const skill = editNewSkillInput.value.trim();
   if (!skill) return;
 
+  const alreadyExists = editCurrentSkills.some(
+    existingSkill => existingSkill.toLowerCase() === skill.toLowerCase()
+  );
+
+  if (alreadyExists) {
+    editNewSkillInput.value = "";
+    return;
+  }
+
   editCurrentSkills.push(skill);
   editNewSkillInput.value = "";
   renderEditSkills();

@@ -13,11 +13,21 @@ const upload = multer({
   },
 });
 
+function parseID(value) {
+  const id = Number(value)
+  return Number.isSafeInteger(id) && id > 0 ? id : null
+}
+
 function getBackUrl(req) {
-  const groupID = Number(req.query.fromGroup)
-  if (Number.isSafeInteger(groupID) && groupID > 0) return `/groups/${groupID}`
-  const id = Number(req.query.fromWorkspace)
-  return Number.isSafeInteger(id) && id > 0 ? `/workspaces/${id}/members` : null
+  const groupID = parseID(req.query.fromGroup)
+  if (groupID) return `/groups/${groupID}`
+  const workspaceID = parseID(req.query.fromWorkspace)
+  if (workspaceID) return `/workspaces/${workspaceID}/members`
+  const groupChatID = parseID(req.query.fromGroupChat)
+  if (groupChatID) return `/groups/${groupChatID}/chat`
+  const workspaceChatID = parseID(req.query.fromWorkspaceChat)
+  if (workspaceChatID) return `/workspaces/${workspaceChatID}/chat`
+  return null
 }
 
 router.get("/", mustBeLoggedIn, (req, res) => {
@@ -159,12 +169,9 @@ router.get("/:userID", mustBeLoggedIn, async (req, res) => {
     const profileUser = users[0]
     const isOwnProfile = Number(req.user.userID) === Number(profileUser.userID)
     if (isOwnProfile) {
-      let qs = ""
-      if (req.query.fromGroup) {
-        qs = `?fromGroup=${encodeURIComponent(req.query.fromGroup)}`
-      } else if (req.query.fromWorkspace) {
-        qs = `?fromWorkspace=${encodeURIComponent(req.query.fromWorkspace)}`
-      }
+      const keys = ["fromGroup", "fromWorkspace", "fromGroupChat", "fromWorkspaceChat"]
+      const key = keys.find(k => parseID(req.query[k]))
+      const qs = key ? `?${key}=${parseID(req.query[key])}` : ""
       return res.redirect("/profile" + qs)
     }
 

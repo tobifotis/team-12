@@ -7872,3 +7872,21 @@ html body .wmTable .wmInviteIcon {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.userWorkbackButDimensions {
+  will-change: transform;
+}
+
+.userWorkbackBut {
+  transform: translateY(1px) translateZ(0);
+  backface-visibility: hidden;
+}
+
+.jwbacktext .userWorkbackButDimensions-jw {
+  will-change: transform;
+}
+
+.jwbacktext .userWorkbackButDimensions-jw img {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
