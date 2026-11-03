@@ -20,6 +20,8 @@ const workspaceChat = require("./workspace-chat")
 const privateChat = require("./private-chat")
 
 const app = express()
+app.set("trust proxy", 1)
+app.get("/healthz", (req, res) => res.status(200).send("OK"))
 const server = http.createServer(app)
 const io = new Server(server)
 groupChat.attachGroupChatSockets(io)
@@ -167,7 +169,8 @@ app.use((req, res) => res.status(404).send("404 - Page Not Found"));
 async function startServer() {
     try {
         await pool.query("SELECT 1")
-        server.listen(3000, () => console.log("Running on http://localhost:3000"))
+        const PORT = process.env.PORT || 3000
+        server.listen(PORT, () => console.log(`Running on port ${PORT}`))
     } catch (err) {
         console.error("Could not connect to MySQL:", err.message)
         process.exit(1)
