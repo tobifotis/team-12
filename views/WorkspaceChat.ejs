@@ -77,7 +77,7 @@
 
         <textarea id="chat-input"
                   name="content"
-                  placeholder="Message your workspace..."
+                  placeholder="Message workspace..."
                   maxlength="2000"
                   rows="1"
                   required></textarea>
@@ -92,7 +92,13 @@
       </form>
     </section>
   </main>
-
+  <script>
+    document.addEventListener('focusout', event => {
+      if (event.target.matches('.chat-composer textarea, .chat-user-picker input')) {
+        setTimeout(() => window.scrollTo(0, 0), 100);
+      }
+    });
+  </script>
   <script src="/socket.io/socket.io.js" defer></script>
   <script src="/js/workspace-chat.js" defer></script>
 </body>

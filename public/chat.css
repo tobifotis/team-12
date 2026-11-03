@@ -781,3 +781,23 @@ body.group-chat-body {
   color: inherit;
   opacity: 1;
 }
+
+@media (max-width: 800px) {
+  .chat-composer textarea,
+  .chat-composer input,
+  .chat-user-picker input {
+    font-size: 16px !important;
+  }
+
+  .chat-composer textarea::placeholder {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 800px) {
+  .chat-composer textarea::placeholder {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

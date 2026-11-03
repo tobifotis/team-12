@@ -195,6 +195,13 @@
       link.setAttribute('href', url.pathname + url.search);
     }, true);
   </script>
+  <script>
+    document.addEventListener('focusout', event => {
+      if (event.target.matches('.chat-composer textarea, .chat-user-picker input')) {
+        setTimeout(() => window.scrollTo(0, 0), 100);
+      }
+    });
+  </script>
   <script src="/socket.io/socket.io.js" defer></script>
   <script src="/js/group-chat.js" defer></script>
   <script src="/js/private-chat.js" defer></script>

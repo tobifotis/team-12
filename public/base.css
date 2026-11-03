@@ -7890,3 +7890,9 @@ html body .wmTable .wmInviteIcon {
   transform: translateZ(0);
   backface-visibility: hidden;
 }
+
+@media (max-width: 1100px) {
+  .members-page .workspacetitleTop {
+    margin-bottom: calc(var(--rw) * 1.1 + 24px) !important;
+  }
+}
