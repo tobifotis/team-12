@@ -19,7 +19,7 @@ async function attachUser(req, res, next) {
         // fetch profile picture
         try {
             const [profileRows] = await pool.query(
-                "SELECT profilePicture FROM user_profile WHERE userID = ?",
+                "SELECT profilePicture FROM User_Profile WHERE userID = ?",
                 [decoded.userID]
             );
             if (profileRows.length > 0) {
