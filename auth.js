@@ -3,11 +3,12 @@ const bcrypt = require("bcrypt")
 const router = express.Router()
 const pool = require("./config/db")
 const jwt = require("jsonwebtoken")
+const { Resend } = require("resend");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // For Forgot Password Functionality
 const { isEmpty } = require('./utils/object_isEmpty');
 const { FORGOT_PASSWORD_MODEL, RESET_PASSWORD_MODEL } = require('./validation_models/user');
-const nodemailer = require('nodemailer');
 
 //block logged in users from visiting authentication pages uses middleware function must be guest
 const { mustBeGuest} = require("./middleware/auth")
@@ -210,21 +211,14 @@ router.post("/forgot-password", async (req, res) => {
         await pool.query("UPDATE User SET otp = ?, otpExpire = ? WHERE email = ?", [otp, otpExpire, email]);
         
         // nodemailer to send email
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: 
-            {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            }
-        });
-        
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
+        const { error } = await resend.emails.send({
+            from: "Groupify <onboarding@resend.dev>",
             to: email,
-            subject: 'Groupify: Password Reset OTP',
-            text: `Your OTP is: ${otp}\n\nExpires in 10 minutes.`
+            subject: "Your Groupify reset code",
+            html: `<p>Your reset code is <strong>${otp}</strong>.</p>`
         });
+
+        if (error) throw new Error(error.message);
         
         // cookie, email is sent to reset password page
         res.cookie("resetEmail", email, {
