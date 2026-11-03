@@ -7896,3 +7896,12 @@ html body .wmTable .wmInviteIcon {
     margin-bottom: calc(var(--rw) * 1.1 + 24px) !important;
   }
 }
+
+@media (min-width: 1101px) {
+  .create-workspace-page { --page-floor: 640px; }
+
+  html body:has(.create-workspace-page) .header.header {
+    position: sticky !important;
+    top: 0 !important;
+  }
+}
