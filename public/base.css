@@ -7808,3 +7808,67 @@ html body .wmTable .wmInviteIcon {
     width: 215px;
   }
 }
+
+.workspacetitle {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspace-link,
+.workspaceCard {
+  min-width: 0;
+}
+
+.workspacetitleTop {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.workspacetitleTop .workspaceNameTitle {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspacetitleTop .workspaceMenu {
+  flex-shrink: 0;
+}
+
+.joinGroupTitle .workspaceNameTitle {
+  overflow-wrap: normal;
+}
+
+.joinGroupCard h3,
+.joinGroupCard p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspaceModalDialog p strong {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+#inviteTargetName {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.workspaceModalActions .inviteGroupBtn {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

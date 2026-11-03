@@ -3,6 +3,19 @@
 <%- include('includes/head2') %>
 
 <body class="user-workspace-page group-chat-body">
+  <svg style="display:none;">
+    <filter id="displacementFilter">
+      <feTurbulence type="turbulence"
+        baseFrequency="0.01"
+        numOctaves="2"
+        result="turbulence" />
+      <feDisplacementMap in="SourceGraphic"
+        in2="turbulence"
+        scale="100"
+        xChannelSelector="R"
+        yChannelSelector="G" />
+    </filter>
+  </svg>
   <%- include('includes/header') %>
 
   <div class="userWorkPage group-chat-background" aria-hidden="true">
@@ -36,10 +49,10 @@
 
     <section class="chat-panel" id="group-panel" aria-label="Workspace conversation">
       <header class="chat-panel-header">
-        <a class="chat-back-link"
+        <a class="userWorkbackButDimensions"
            href="/workspaces/<%= workspace.workspaceID %>"
            aria-label="Back to workspaces">
-          <img src="/images/whiteArrow.svg" alt="">
+          <img src="/images/whiteArrow.svg" alt="" class="userWorkbackBut">
         </a>
         <span class="chat-avatar chat-group-avatar" aria-hidden="true"><%= workspace.workspaceName.trim().charAt(0).toUpperCase() %></span>
         <h2><%= workspace.workspaceName %></h2>
@@ -60,7 +73,7 @@
          aria-live="polite"></p>
 
       <form class="chat-composer" id="chat-form">
-        <label class="visually-hidden" for="chat-input">Type your message</label>
+        <label class="visually-hidden" for="chat-input">Type your message…</label>
 
         <textarea id="chat-input"
                   name="content"

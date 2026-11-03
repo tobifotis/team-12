@@ -81,12 +81,18 @@
 }
 
 /* back button mobile responsive */
-.workspacetitleTop .userWorkbackButDimensions {
+.workspacetitleTop .userWorkbackButDimensions,
+.planningTitleBar .userWorkbackButDimensions,
+.chat-sidebar-heading .userWorkbackButDimensions,
+.chat-panel-header .userWorkbackButDimensions {
   width: clamp(30px, 4vw, 40px);
   height: clamp(30px, 4vw, 40px);
 }
 
-.workspacetitleTop .userWorkbackButDimensions .userWorkbackBut {
+.workspacetitleTop .userWorkbackButDimensions .userWorkbackBut,
+.planningTitleBar .userWorkbackButDimensions .userWorkbackBut,
+.chat-sidebar-heading .userWorkbackButDimensions .userWorkbackBut,
+.chat-panel-header .userWorkbackButDimensions .userWorkbackBut {
   width: clamp(15px, 2.3vw, 23px);
   height: clamp(15px, 2.3vw, 23px);
 }

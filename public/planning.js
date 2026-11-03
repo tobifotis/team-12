@@ -3,7 +3,6 @@
   if (!page) return
 
   const groupID = page.dataset.groupId
-  const isLeader = page.dataset.isLeader === "true"
   const base = "/groups/" + groupID + "/planning/tasks"
 
   const messageBox = document.getElementById("planningMessage")
@@ -13,8 +12,14 @@
   const titleInput = document.getElementById("cardTitle")
   const descInput = document.getElementById("cardDescription")
   const dueInput = document.getElementById("cardDue")
+  const deleteModal = document.getElementById("deleteModal")
+  const deleteName = document.getElementById("deleteCardName")
+
+  const MAX_PER_DAY = 99
 
   let editingID = null
+  let deletingID = null
+  let addingStatus = "To Do"
 
   function showMessage(text) {
     messageBox.textContent = text
@@ -43,8 +48,9 @@
 
   /* ---------- add / edit modal ---------- */
 
-  function openModal(card) {
+  function openModal(card, status) {
     form.reset()
+    dueInput.setCustomValidity("")
     if (card) {
       editingID = card.dataset.taskId
       modalTitle.textContent = "Edit Card"
@@ -53,18 +59,23 @@
       dueInput.value = card.dataset.due
     } else {
       editingID = null
+      addingStatus = status || "To Do"
       modalTitle.textContent = "Add Card"
     }
-    modal.hidden = false
+    modal.classList.add("is-open")
+    modal.setAttribute("aria-hidden", "false")
     titleInput.focus()
   }
 
   function closeModal() {
-    modal.hidden = true
+    modal.classList.remove("is-open")
+    modal.setAttribute("aria-hidden", "true")
     editingID = null
   }
 
   document.getElementById("cardCancel").addEventListener("click", closeModal)
+  document.getElementById("cardModalClose").addEventListener("click", closeModal)
+  modal.addEventListener("click", function (e) { if (e.target === modal) closeModal() })
 
   form.addEventListener("submit", async function (event) {
     event.preventDefault()
@@ -73,12 +84,110 @@
       description: descInput.value,
       dueDate: dueInput.value
     }
+    if (!editingID) data.status = addingStatus
+
+    if (data.dueDate) {
+      const onDay = allCards.filter(function (c) {
+        return c.due === data.dueDate && c.id !== editingID
+      }).length
+      if (onDay >= MAX_PER_DAY) {
+        dueInput.setCustomValidity("That day already has " + MAX_PER_DAY + " tasks. Pick another date.")
+        dueInput.reportValidity()
+        return
+      }
+    }
+
     const url = editingID ? base + "/" + editingID + "/edit" : base
     if (await send(url, data)) location.reload()
   })
 
-  const addBtn = document.getElementById("addCardBtn")
-  if (addBtn) addBtn.addEventListener("click", function () { openModal(null) })
+  dueInput.addEventListener("input", function () { dueInput.setCustomValidity("") })
+
+  document.querySelectorAll(".planningAddBtn").forEach(function (btn) {
+    btn.addEventListener("click", function () { openModal(null, btn.dataset.status) })
+  })
+
+  /* ---------- delete modal ---------- */
+
+  function openDelete(card) {
+    deletingID = card.dataset.taskId
+    deleteName.textContent = card.dataset.title
+    deleteModal.classList.add("is-open")
+    deleteModal.setAttribute("aria-hidden", "false")
+  }
+
+  function closeDelete() {
+    deleteModal.classList.remove("is-open")
+    deleteModal.setAttribute("aria-hidden", "true")
+    deletingID = null
+  }
+
+  document.getElementById("deleteCancel").addEventListener("click", closeDelete)
+  document.getElementById("deleteModalClose").addEventListener("click", closeDelete)
+  deleteModal.addEventListener("click", function (e) { if (e.target === deleteModal) closeDelete() })
+  document.getElementById("deleteConfirm").addEventListener("click", async function () {
+    if (!deletingID) return
+    const id = deletingID
+    if (await send(base + "/" + id + "/delete")) location.reload()
+    else closeDelete()
+  })
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { closeModal(); closeDelete() }
+  })
+
+  /* rename columns */
+
+  const NAMES_KEY = "planningColumnNames:" + groupID
+
+  function loadNames() {
+    try { return JSON.parse(localStorage.getItem(NAMES_KEY)) || {} } catch (e) { return {} }
+  }
+  function saveNames(names) {
+    try { localStorage.setItem(NAMES_KEY, JSON.stringify(names)) } catch (e) {}
+  }
+  const columnNames = loadNames()
+
+  function startRename(title, status) {
+    if (title.querySelector("input")) return
+    const input = document.createElement("input")
+    input.type = "text"
+    input.className = "planningColumnInput"
+    input.maxLength = 30
+    input.value = title.textContent.trim()
+    input.setAttribute("aria-label", "Column name")
+    title.textContent = ""
+    title.classList.add("editing")
+    title.appendChild(input)
+    input.focus()
+    input.select()
+
+    let finished = false
+    function finish(save) {
+      if (finished) return
+      finished = true
+      if (save) {
+        const value = input.value.trim()
+        if (value && value !== status) columnNames[status] = value
+        else delete columnNames[status]
+        saveNames(columnNames)
+      }
+      title.classList.remove("editing")
+      title.textContent = columnNames[status] || status
+    }
+
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") finish(true)
+      else if (e.key === "Escape") finish(false)
+    })
+    input.addEventListener("blur", function () { finish(true) })
+  }
+
+  document.querySelectorAll(".planningColumnName").forEach(function (title) {
+    const status = title.dataset.status
+    if (columnNames[status]) title.textContent = columnNames[status]
+    title.addEventListener("dblclick", function () { startRename(title, status) })
+  })
 
   /* ---------- card buttons (edit, move, delete) ---------- */
 
@@ -93,9 +202,7 @@
       const target = event.target.closest(".planningMoveBtn").dataset.target
       if (await send(base + "/" + id + "/move", { status: target })) location.reload()
     } else if (event.target.closest(".planningDeleteBtn")) {
-      if (!isLeader) return
-      if (!confirm("Delete this card?")) return
-      if (await send(base + "/" + id + "/delete")) location.reload()
+      openDelete(card)
     }
   })
 
@@ -161,6 +268,8 @@
 
   /* ---------- weekly calendar ---------- */
 
+  const calendarPanel = document.getElementById("calendarPanel")
+  const calendarToggle = document.getElementById("calendarToggle")
   const weekLabel = document.getElementById("weekLabel")
   const weekDays = document.getElementById("weekDays")
   const dayTasks = document.getElementById("dayTasks")
@@ -168,9 +277,14 @@
   const weekViewBtn = document.getElementById("weekViewBtn")
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
+  calendarToggle.addEventListener("click", function () {
+    const collapsed = calendarPanel.classList.toggle("collapsed")
+    calendarToggle.setAttribute("aria-expanded", collapsed ? "false" : "true")
+  })
+
   // read every card on the page so the calendar needs no extra requests
   const allCards = Array.from(document.querySelectorAll(".planningCard")).map(function (card) {
-    return { title: card.dataset.title, description: card.dataset.description, due: card.dataset.due }
+    return { id: card.dataset.taskId, title: card.dataset.title, description: card.dataset.description, due: card.dataset.due }
   })
 
   function dateKey(d) {
@@ -195,7 +309,7 @@
     return new Date(date.getFullYear(), targetMonth, Math.min(date.getDate(), lastDay), 12)
   }
 
-  function renderCalendar() {
+  function renderCalendar(slide) {
     const selectedDate = new Date(selected + "T12:00:00")
     const monthStart = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1)
     const gridStart = calendarView === "week" ? startOfWeek(selectedDate) : startOfWeek(monthStart)
@@ -240,7 +354,7 @@
       if (count) {
         const badge = document.createElement("span")
         badge.className = "planningDayCount"
-        badge.textContent = count
+        badge.textContent = count > MAX_PER_DAY ? MAX_PER_DAY + "+" : count
         badge.setAttribute("aria-label", count + (count === 1 ? " task" : " tasks"))
         btn.appendChild(badge)
       }
@@ -249,6 +363,12 @@
         renderCalendar()
       })
       weekDays.appendChild(btn)
+    }
+
+    weekDays.classList.remove("slideFromRight", "slideFromLeft")
+    if (slide) {
+      void weekDays.offsetWidth
+      weekDays.classList.add(slide === "right" ? "slideFromRight" : "slideFromLeft")
     }
 
     dayTasks.innerHTML = ""
@@ -292,8 +412,16 @@
     else { period.setDate(period.getDate() + 7); selected = dateKey(period) }
     renderCalendar()
   })
-  monthViewBtn.addEventListener("click", function () { calendarView = "month"; renderCalendar() })
-  weekViewBtn.addEventListener("click", function () { calendarView = "week"; renderCalendar() })
+  monthViewBtn.addEventListener("click", function () {
+    if (calendarView === "month") return
+    calendarView = "month"
+    renderCalendar("left")
+  })
+  weekViewBtn.addEventListener("click", function () {
+    if (calendarView === "week") return
+    calendarView = "week"
+    renderCalendar("right")
+  })
 
   renderCalendar()
 })()

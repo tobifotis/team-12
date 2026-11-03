@@ -4,24 +4,32 @@
 <link rel="stylesheet" href="/planning.css" />
 
 <body class="user-workspace-page">
+  <svg style="display:none;">
+    <filter id="displacementFilter">
+      <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="turbulence" />
+      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="100" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </svg>
   <%- include('includes/header') %>
 
-  <main class="planningPage" data-group-id="<%= group.groupID %>" data-is-leader="<%= isGroupOwner %>">
+  <main class="planningPage" data-group-id="<%= group.groupID %>">
 
-    <div class="planningTitleBar">
-      <a href="/groups/<%= group.groupID %>" class="planningBackLink">Back</a>
-      <h1 class="planningTitle"><%= group.groupName %> Planning</h1>
-    </div>
+    <div class="planningMain">
 
-    <p id="planningMessage" class="planningMessage" hidden></p>
+      <div class="planningTitleBar">
+        <a href="/groups/<%= group.groupID %>" class="userWorkbackButDimensions" aria-label="Back">
+          <img class="userWorkbackBut" src="/images/greenArrow.svg" alt="">
+        </a>
+        <h1 class="planningTitle"><%= group.groupName %> Planning</h1>
+      </div>
 
-    <div class="planningLayout">
+      <p id="planningMessage" class="planningMessage" hidden></p>
 
       <!-- BOARD -->
       <section class="planningBoard">
         <% ['To Do', 'Done'].forEach(columnStatus => { %>
           <div class="planningColumn" data-status="<%= columnStatus %>">
-            <h2 class="planningColumnTitle"><%= columnStatus %></h2>
+            <h2 class="planningColumnTitle planningColumnName" data-status="<%= columnStatus %>" title="Double-click to rename"><%= columnStatus %></h2>
 
             <div class="planningCardList" data-status="<%= columnStatus %>">
               <% tasks.filter(t => t.status === columnStatus).forEach(task => { %>
@@ -32,70 +40,100 @@
                      data-description="<%= task.description || '' %>"
                      data-due="<%= task.dueDate ? new Date(task.dueDate).toISOString().slice(0, 10) : '' %>">
                   <span class="planningCardTitle"><%= task.title %></span>
-                  <% if (task.dueDate) { %>
-                    <span class="planningCardDue"><%= new Date(task.dueDate).toISOString().slice(0, 10) %></span>
+                  <% if (task.description && task.description.trim()) { %>
+                    <span class="planningCardDescription"><%= task.description %></span>
+                  <% } %>
+                  <% if (task.dueDate) { const p = new Date(task.dueDate).toISOString().slice(0, 10).split('-'); %>
+                    <span class="planningCardDue">
+                      <svg class="planningClockIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M12 7V12L13.5 14.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#D84592" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                      <%= p[1] + '/' + p[2] + '/' + p[0] %>
+                    </span>
                   <% } %>
                   <div class="planningCardActions">
                     <button type="button" class="planningEditBtn">Edit</button>
                     <button type="button" class="planningMoveBtn" data-target="<%= columnStatus === 'To Do' ? 'Done' : 'To Do' %>">
                       <%= columnStatus === 'To Do' ? 'Mark Done' : 'Reopen' %>
                     </button>
-                    <% if (isGroupOwner) { %>
-                      <button type="button" class="planningDeleteBtn">Delete</button>
-                    <% } %>
+                    <button type="button" class="planningDeleteBtn">Delete</button>
                   </div>
                 </div>
               <% }) %>
             </div>
 
-            <% if (columnStatus === 'To Do' && isGroupOwner) { %>
-              <button type="button" class="planningAddBtn" id="addCardBtn">+ Add Card</button>
-            <% } %>
+            <button type="button" class="planningAddBtn" data-status="<%= columnStatus %>">+ Add Card</button>
           </div>
         <% }) %>
       </section>
 
-      <!-- CALENDAR (filled in by JavaScript) -->
-      <aside class="planningCalendar" aria-labelledby="calendarTitle">
-        <div class="planningCalendarHeader">
-          <div>
-            <p class="planningEyebrow">Your schedule</p>
-            <h2 id="calendarTitle" class="planningColumnTitle">Tasks</h2>
-          </div>
-          <div class="planningCalendarControls">
-            <div class="planningViewToggle" role="group" aria-label="Calendar view">
-              <button type="button" class="active" id="monthViewBtn" aria-pressed="true">Month</button>
-              <button type="button" id="weekViewBtn" aria-pressed="false">Week</button>
-            </div>
-            <div class="planningWeekNav" aria-label="Calendar period">
-              <button type="button" id="weekPrev" aria-label="Previous period">&#8249;</button>
-              <span id="weekLabel" aria-live="polite"></span>
-              <button type="button" id="weekNext" aria-label="Next period">&#8250;</button>
-            </div>
-          </div>
-        </div>
-        <div id="weekDays" class="planningWeekDays" role="group" aria-label="Choose a day"></div>
-        <section id="dayTasks" class="planningDayTasks" aria-live="polite" aria-label="Tasks due on selected day"></section>
-      </aside>
-
     </div>
+
+    <aside class="planningCalendar" id="calendarPanel" aria-labelledby="calendarTitle">
+      <button type="button" class="planningCalendarToggle" id="calendarToggle" aria-expanded="true" aria-label="Toggle calendar">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </button>
+      <div class="planningCalendarClip">
+        <div class="planningCalendarBody">
+          <div class="planningCalendarHeader">
+            <div>
+              <p class="planningEyebrow">Your schedule</p>
+              <h2 id="calendarTitle" class="planningColumnTitle">Tasks</h2>
+            </div>
+            <div class="planningCalendarControls">
+              <div class="planningViewToggle" role="group" aria-label="Calendar view">
+                <button type="button" class="active" id="monthViewBtn" aria-pressed="true">Month</button>
+                <button type="button" id="weekViewBtn" aria-pressed="false">Week</button>
+              </div>
+              <div class="planningWeekNav" aria-label="Calendar period">
+                <button type="button" id="weekPrev" aria-label="Previous period">&#8249;</button>
+                <span id="weekLabel" aria-live="polite"></span>
+                <button type="button" id="weekNext" aria-label="Next period">&#8250;</button>
+              </div>
+            </div>
+          </div>
+          <div id="weekDays" class="planningWeekDays" role="group" aria-label="Choose a day"></div>
+          <section id="dayTasks" class="planningDayTasks" aria-live="polite" aria-label="Tasks due on selected day"></section>
+        </div>
+      </div>
+    </aside>
+
   </main>
 
-  <!-- ADD / EDIT MODAL -->
-  <div id="cardModal" class="planningModal" hidden>
-    <form id="cardForm" class="planningModalBox">
-      <h2 id="cardModalTitle">Add Card</h2>
-      <label for="cardTitle">Title</label>
-      <input id="cardTitle" type="text" maxlength="100" required>
-      <label for="cardDescription">Description</label>
-      <textarea id="cardDescription" rows="3"></textarea>
-      <label for="cardDue">Due date</label>
-      <input id="cardDue" type="date">
-      <div class="planningModalActions">
-        <button type="button" id="cardCancel">Cancel</button>
-        <button type="submit" id="cardSave">Save</button>
+  <%- include('includes/footer') %>
+
+  <div class="workspaceModal" id="cardModal" aria-hidden="true">
+    <div class="workspaceModalDialog" role="dialog" aria-modal="true" aria-labelledby="cardModalTitle">
+      <button type="button" class="workspaceModalClose" id="cardModalClose" aria-label="Close">&times;</button>
+      <form id="cardForm">
+        <h2 id="cardModalTitle">Add Card</h2>
+        <label for="cardTitle">Title</label>
+        <input id="cardTitle" type="text" maxlength="100" required>
+        <label for="cardDescription">Description</label>
+        <textarea id="cardDescription" rows="3"></textarea>
+        <label for="cardDue">Due date</label>
+        <input id="cardDue" type="date">
+        <div class="workspaceModalActions">
+          <button type="button" class="workspaceModalCancel" id="cardCancel">Cancel</button>
+          <button type="submit" id="cardSave">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DELETE MODAL -->
+  <div class="workspaceModal" id="deleteModal" aria-hidden="true">
+    <div class="workspaceModalDialog" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+      <button type="button" class="workspaceModalClose" id="deleteModalClose" aria-label="Close">&times;</button>
+      <h2 id="deleteModalTitle">Delete Card?</h2>
+      <p><strong id="deleteCardName"></strong> will be permanently deleted. This can't be undone.</p>
+      <div class="workspaceModalActions">
+        <button type="button" class="workspaceModalCancel" id="deleteCancel">Cancel</button>
+        <button type="button" class="workspaceModalDelete" id="deleteConfirm">Delete</button>
       </div>
-    </form>
+    </div>
   </div>
 
   <script src="/planning.js"></script>

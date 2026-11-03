@@ -3,9 +3,24 @@
 <%- include('includes/head2') %>
 
 <body class="user-workspace-page group-chat-body">
+  <link rel="stylesheet" href="/group.css">
+
+  <svg style="display:none;">
+    <filter id="displacementFilter">
+      <feTurbulence type="turbulence"
+        baseFrequency="0.01"
+        numOctaves="2"
+        result="turbulence" />
+      <feDisplacementMap in="SourceGraphic"
+        in2="turbulence"
+        scale="100"
+        xChannelSelector="R"
+        yChannelSelector="G" />
+    </filter>
+  </svg>
   <%- include('includes/header') %>
 
-  <div class="userWorkPage group-chat-background" aria-hidden="true">
+  <div class="userWorkPage groupPage group-chat-background" aria-hidden="true">
     <svg class="wb-svg">
       <defs>
         <filter id="workspace-bubb">
@@ -26,16 +41,17 @@
       <div class="wb-g7"></div>
       <div class="wb-g8"></div>
       <div class="wb-g9"></div>
+      <div class="wb-lemon"></div>
     </div>
   </div>
 
-  <main class="group-chat-page" id="group-chat"
+  <main class="group-chat-page has-chooser" id="group-chat"
         data-group-id="<%= group.groupID %>"
         data-current-user-id="<%= currentUserID %>">
     <aside class="chat-sidebar" aria-label="Conversations">
       <div class="chat-sidebar-heading">
-        <a class="chat-back-link" href="/groups/<%= group.groupID %>" aria-label="Back to <%= group.groupName %>">
-          <img src="/images/workspacebackBut.svg" alt="">
+        <a class="userWorkbackButDimensions" href="/groups/<%= group.groupID %>" aria-label="Back to <%= group.groupName %>">
+          <img src="/images/whiteArrow.svg" alt="" class="userWorkbackBut">
         </a>
         <h1>Chat</h1>
       </div>
@@ -51,10 +67,12 @@
         </button>
       </div>
 
+      <p class="chat-choose-label" id="chat-choose-label">Choose a group to message.</p>
+
       <div class="chat-conversation-list" id="group-conversations" role="tabpanel" aria-labelledby="group-tab">
         <% conversations.forEach(conversation => { %>
           <a class="chat-conversation<%= Number(conversation.groupID) === Number(group.groupID) ? ' is-selected' : '' %>"
-             href="/groups/<%= conversation.groupID %>/chat"
+             href="/groups/<%= conversation.groupID %>/chat#chat"
              <%= Number(conversation.groupID) === Number(group.groupID) ? 'aria-current="page"' : '' %>>
             <span class="chat-avatar chat-conversation-avatar" aria-hidden="true"><%= conversation.groupName.trim().charAt(0).toUpperCase() %></span>
             <span class="chat-conversation-name"><%= conversation.groupName %></span>
@@ -67,6 +85,9 @@
 
     <section class="chat-panel" id="group-panel" aria-label="Group conversation">
       <header class="chat-panel-header">
+        <a class="userWorkbackButDimensions chat-mobile-back" href="/groups/<%= group.groupID %>/chat" aria-label="Back to conversations">
+          <img src="/images/whiteArrow.svg" alt="" class="userWorkbackBut">
+        </a>
         <span class="chat-avatar chat-group-avatar" aria-hidden="true"><%= group.groupName.trim().charAt(0).toUpperCase() %></span>
         <h2><%= group.groupName %></h2>
       </header>
@@ -79,8 +100,8 @@
       <p class="chat-feedback chat-status" id="chat-status" role="status" aria-live="polite"></p>
 
       <form class="chat-composer" id="chat-form">
-        <label class="visually-hidden" for="chat-input">Type your message</label>
-        <textarea id="chat-input" name="content" placeholder="Type your message"
+        <label class="visually-hidden" for="chat-input">Type your message…</label>
+        <textarea id="chat-input" name="content" placeholder="Type your message…"
                   maxlength="2000" rows="1" required></textarea>
         <button type="submit" id="chat-send" aria-label="Send message">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -93,6 +114,76 @@
     </section>
     <%- include('includes/private-chat-panel') %>
   </main>
+
+  <script>
+    (() => {
+      const page = document.getElementById('group-chat');
+      const label = document.getElementById('chat-choose-label');
+      const individualTab = document.getElementById('individual-tab');
+      const groupTab = document.getElementById('group-tab');
+      const backHref = '/groups/<%= group.groupID %>/chat';
+      const isMobile = () => window.matchMedia('(max-width: 800px)').matches;
+
+      function sync() {
+        page.classList.toggle('is-chat-open', location.hash === '#chat');
+      }
+
+      function ensureBackButtons() {
+        page.querySelectorAll('.chat-panel-header').forEach(header => {
+          if (header.querySelector('.chat-mobile-back')) return;
+          const link = document.createElement('a');
+          link.className = 'userWorkbackButDimensions chat-mobile-back';
+          link.href = backHref;
+          link.setAttribute('aria-label', 'Back to conversations');
+          const img = document.createElement('img');
+          img.src = '/images/whiteArrow.svg';
+          img.alt = '';
+          img.className = 'userWorkbackBut';
+          link.append(img);
+          header.prepend(link);
+        });
+      }
+
+      let slideIn = false;
+      try {
+        slideIn = sessionStorage.getItem('chatSlideIn') === '1';
+        sessionStorage.removeItem('chatSlideIn');
+      } catch (error) {}
+
+      if (slideIn && location.hash === '#chat' && isMobile()) {
+        requestAnimationFrame(() => requestAnimationFrame(sync));
+      } else {
+        sync();
+      }
+
+      ensureBackButtons();
+      window.addEventListener('hashchange', sync);
+      new MutationObserver(ensureBackButtons).observe(page, { childList: true, subtree: true });
+
+      individualTab.addEventListener('click', () => {
+        label.textContent = 'Choose a person to message.';
+      });
+      groupTab.addEventListener('click', () => {
+        label.textContent = 'Choose a group to message.';
+      });
+
+      document.addEventListener('click', event => {
+        if (event.target.closest('.chat-mobile-back')) {
+          event.preventDefault();
+          history.replaceState(null, '', location.pathname + location.search);
+          sync();
+          return;
+        }
+        if (event.target.closest('.chat-private-conversation, .chat-user-option')) {
+          location.hash = '#chat';
+          return;
+        }
+        if (event.target.closest('a.chat-conversation') && isMobile()) {
+          try { sessionStorage.setItem('chatSlideIn', '1'); } catch (error) {}
+        }
+      });
+    })();
+  </script>
 
   <script src="/socket.io/socket.io.js" defer></script>
   <script src="/js/group-chat.js" defer></script>
