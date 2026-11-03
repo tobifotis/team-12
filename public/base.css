@@ -7892,7 +7892,7 @@ html body .wmTable .wmInviteIcon {
 }
 
 @media (max-width: 1100px) {
-  .members-page .workspacetitleTop {
+  .viewMembersPage .workspacetitleTop {
     margin-bottom: calc(var(--rw) * 1.1 + 24px) !important;
   }
 }
